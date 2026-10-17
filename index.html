@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5cad">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Vita">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Vita da Calciatore</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Noto+Sans+JP:wght@400;500;700&family=Oswald:wght@500;700&display=swap">
+<style>
+/* Layout: sticky player card on the left, a growing life-story feed on the right; on phones the card becomes a compact bar. */
+:root{
+  --bg:#f3f1ec; --panel:#fffefb; --ink:#14233a; --muted:#5d6b80; --line:#dcd8cf;
+  --azzurri:#0b5cad; --azzurri-soft:#e3eefa; --verde:#0f8a4b; --rosso:#c8302f; --gold:#b8860b; --gold-soft:#f7edd0;
+  --good:#0f8a4b; --bad:#c8302f; --chip:#ece9e1;
+  --f-display:'Shippori Mincho','Hiragino Mincho ProN',serif;
+  --f-body:'Noto Sans JP','Hiragino Kaku Gothic ProN',system-ui,sans-serif;
+  --f-num:'Oswald','Arial Narrow',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c1524; --panel:#13203a; --ink:#e9eef7; --muted:#9bacc6; --line:#263757;
+  --azzurri:#5aa2ee; --azzurri-soft:#17325a; --verde:#3cc27d; --rosso:#ef6b69; --gold:#e6b94a; --gold-soft:#3a3016;
+  --good:#3cc27d; --bad:#ef6b69; --chip:#1b2b49; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1524; --panel:#13203a; --ink:#e9eef7; --muted:#9bacc6; --line:#263757;
+  --azzurri:#5aa2ee; --azzurri-soft:#17325a; --verde:#3cc27d; --rosso:#ef6b69; --gold:#e6b94a; --gold-soft:#3a3016;
+  --good:#3cc27d; --bad:#ef6b69; --chip:#1b2b49; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--azzurri);outline-offset:2px}
+.tri{height:5px;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));background:linear-gradient(90deg,var(--verde) 33.3%,#fff 33.3% 66.6%,var(--rosso) 66.6%)}
+header.top{max-width:1080px;margin:0 auto;padding:14px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header.top h1{font-family:var(--f-display);font-weight:800;font-size:1.35rem;margin:0;letter-spacing:.02em;text-wrap:balance}
+header.top h1 small{display:block;font-family:var(--f-body);font-weight:500;font-size:.72rem;color:var(--muted);letter-spacing:.08em}
+.btn{border:1px solid var(--line);background:var(--panel);padding:8px 14px;border-radius:6px;font-weight:500}
+.btn:hover{border-color:var(--azzurri)}
+.btn.primary{background:var(--azzurri);border-color:var(--azzurri);color:#fff;font-weight:700}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.small{padding:4px 10px;font-size:.82rem}
+main{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
+@media(max-width:1000px),(orientation:portrait){main{grid-template-columns:minmax(0,1fr)}}
+#card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;position:sticky;top:8px;display:flex;flex-direction:column;gap:12px;min-width:0}
+@media(max-width:1000px),(orientation:portrait){#card{position:static}}
+.pname{font-family:var(--f-display);font-weight:800;font-size:1.3rem;line-height:1.3}
+.psub{color:var(--muted);font-size:.82rem}
+.ovr{display:flex;align-items:baseline;gap:10px}
+.ovr b{font-family:var(--f-num);font-size:3rem;line-height:1;color:var(--azzurri);font-variant-numeric:tabular-nums}
+.ovr span{font-size:.8rem;color:var(--muted)}
+.bars{display:grid;gap:7px}
+.bar{display:grid;grid-template-columns:7em 1fr 2.4em;gap:8px;align-items:center;font-size:.8rem}
+.bar i{display:block;height:7px;background:var(--chip);border-radius:4px;overflow:hidden}
+.bar i u{display:block;height:100%;background:var(--azzurri);border-radius:4px;transition:width .5s}
+.bar.h i u{background:var(--verde)}.bar.f i u{background:var(--gold)}.bar.j i u{background:var(--rosso)}
+.bar em{font-style:normal;font-family:var(--f-num);text-align:right;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:.82rem}
+.kv div{background:var(--chip);border-radius:6px;padding:5px 9px;min-width:0}
+.kv span{display:block;color:var(--muted);font-size:.7rem}
+.kv b{font-family:var(--f-num);font-weight:500;font-size:1rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{border:0;background:var(--chip);padding:4px 10px;border-radius:5px;font-size:.78rem}
+.tabs button[aria-pressed="true"]{background:var(--azzurri);color:#fff}
+.tabbody{font-size:.78rem;max-height:240px;overflow:auto;overflow-x:auto}
+.tabbody table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.tabbody th,.tabbody td{padding:3px 5px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+.tabbody th:first-child,.tabbody td:first-child,.tabbody td.l{text-align:left}
+.tabbody th{color:var(--muted);font-weight:500;position:sticky;top:0;background:var(--panel)}
+.trophy{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dashed var(--line)}
+.trophy b{font-family:var(--f-num)}
+#stage{min-width:0;display:flex;flex-direction:column;gap:14px}
+.yr{display:flex;align-items:baseline;gap:12px;margin-top:10px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.yr b{font-family:var(--f-num);font-size:1.9rem;line-height:1}
+.yr span{color:var(--muted);font-size:.85rem}
+.yr .ph{margin-left:auto;font-size:.72rem;letter-spacing:.1em;background:var(--azzurri-soft);color:var(--azzurri);padding:2px 8px;border-radius:4px;font-weight:700}
+.entry{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;max-width:68ch;overflow-wrap:anywhere}
+.entry h3{font-family:var(--f-display);font-size:1.02rem;margin:0 0 4px}
+.entry p{margin:0}
+.entry.res{background:var(--azzurri-soft);border-color:transparent}
+.entry.big{background:var(--gold-soft);border-color:var(--gold)}
+.entry.bad{border-left:4px solid var(--rosso)}
+.entry.good{border-left:4px solid var(--verde)}
+.delta{display:inline-block;font-family:var(--f-num);font-size:.78rem;padding:0 6px;margin:0 3px 0 0;border-radius:3px;background:var(--chip)}
+.delta.up{color:var(--good)}.delta.dn{color:var(--bad)}
+.season{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:8px;margin-top:8px}
+.season div{background:var(--chip);border-radius:6px;padding:6px 8px;text-align:center}
+.season b{display:block;font-family:var(--f-num);font-size:1.3rem;font-weight:500;line-height:1.2}
+.season span{font-size:.68rem;color:var(--muted)}
+#actions{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 78%,transparent);padding:14px 0 max(14px,env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;max-width:68ch}
+.ask{font-family:var(--f-display);font-weight:800;font-size:1.05rem}
+.choice{text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--azzurri);border-radius:6px;padding:10px 14px}
+.choice:hover{border-color:var(--azzurri);background:var(--azzurri-soft)}
+.choice small{display:block;color:var(--muted);font-size:.78rem}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.title-screen{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:28px 24px;max-width:68ch}
+.title-screen h2{font-family:var(--f-display);font-size:1.9rem;margin:0 0 8px;text-wrap:balance;line-height:1.35}
+.title-screen label{display:block;font-size:.82rem;color:var(--muted);margin-top:14px}
+.title-screen input{width:100%;max-width:340px;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.end{background:var(--panel);border:2px solid var(--ink);border-radius:10px;padding:22px;max-width:68ch}
+.end h2{font-family:var(--f-display);font-size:1.7rem;margin:0 0 6px}
+.score{font-family:var(--f-num);font-size:3rem;color:var(--gold);line-height:1}
+@media (prefers-reduced-motion:reduce){.bar i u{transition:none}}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:40}
+.ctl{display:flex;gap:6px;flex-wrap:wrap}
+.auto{text-align:center;color:var(--muted);font-size:.82rem;padding:10px 0;letter-spacing:.05em}
+.sheet-close{display:none}
+#mini{display:none}
+#scrim{position:fixed;inset:0;background:rgba(5,12,25,.55);z-index:25}
+.title-screen input{font-size:16px}
+@media(max-width:1000px),(orientation:portrait){
+ body{font-size:15px}
+ header.top{padding:10px 0 8px;gap:8px}
+ header.top h1{font-size:1.1rem}
+ header.top h1 small{font-size:.68rem}
+ .ctl{width:100%}.ctl .btn{flex:1;min-height:40px;padding:6px 8px;font-size:.8rem}
+ #mini{display:block;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:6px max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));background:var(--bg);border-bottom:1px solid var(--line)}
+ #mini button{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;min-height:56px}
+ .m-ovr{font-family:var(--f-num);font-size:1.9rem;line-height:1;color:var(--azzurri);min-width:1.6em;text-align:center}
+ .m-main b{display:block;font-family:var(--f-display);font-size:1rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .m-main small,.m-r small{display:block;color:var(--muted);font-size:.74rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .m-r{text-align:right}.m-r b{font-family:var(--f-num);font-weight:500}
+ main{gap:12px}
+ #card{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;max-height:82vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px max(16px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));transform:translateY(110%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
+ #card.open{transform:none;visibility:visible;transition:transform .25s}
+ .sheet-close{display:block;align-self:flex-end;min-height:40px}
+ .tabbody{max-height:none}
+ .tabs button{padding:8px 14px;font-size:.85rem}
+ .entry{max-width:none;padding:12px 14px}
+ .season{grid-template-columns:repeat(3,1fr)}
+ #actions{max-width:none;max-height:58vh;overflow:auto;padding-top:10px}
+ .choice{min-height:52px;padding:12px 14px;font-size:.98rem}
+ .btn.primary{min-height:52px}
+ .title-screen{padding:22px 16px}.title-screen h2{font-size:1.5rem}
+ .end{padding:16px}
+ .yr b{font-size:1.6rem}
+}
+@media (prefers-reduced-motion:reduce){#card{transition:none}}
+
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button{touch-action:manipulation}
+.title-screen select{display:block;width:100%;max-width:340px;font:inherit;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.tbscroll{overflow-x:auto;margin-bottom:12px}
+.tbl{border-collapse:collapse;width:100%;font-size:.8rem;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{padding:5px 7px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+.tbl th.l,.tbl td.l{text-align:left;white-space:normal;min-width:7em}
+.tbl th{color:var(--muted);font-weight:500}
+h3.rv{font-family:var(--f-display);font-size:1rem;margin:16px 0 6px}
+@media (max-width:1000px),(orientation:portrait){#card{max-height:min(82vh,82dvh)}#actions{max-height:min(58vh,58dvh)}}
+</style>
+<div class="tri"></div>
+<header class="top">
+  <h1>Vita da Calciatore<small>イタリアに生まれ、ボールとともに生きて、死ぬ。</small></h1>
+  <div class="ctl"><button class="btn small" id="btn-pause" type="button" aria-pressed="false">一時停止</button><button class="btn small" id="btn-speed" type="button">速度：ふつう</button><button class="btn small" id="btn-restart" type="button">最初から</button></div>
+</header>
+<div id="mini" hidden></div>
+<div id="scrim" hidden></div>
+<main>
+  <aside id="card" aria-label="選手カード"></aside>
+  <section id="stage">
+    <div id="feed" aria-live="polite"></div>
+    <div id="actions"></div>
+  </section>
+</main>
+<script>
+'use strict';
+/* ===== utils ===== */
+const $=s=>document.querySelector(s);
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const ri=(a,b)=>Math.floor(rnd(a,b+1));
+const chance=p=>Math.random()<p;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const gauss=()=>{let u=0;for(let i=0;i<6;i++)u+=Math.random();return (u-3)/Math.sqrt(0.5)};
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur=n=>{n=Math.round(n);const a=Math.abs(n),s=n<0?'-':'';return a>=1e8?s+'€'+(a/1e6).toFixed(0)+'M':a>=1e6?s+'€'+(a/1e6).toFixed(1)+'M':a>=1e3?s+'€'+Math.round(a/1e3)+'K':s+'€'+a};
+const FIRST=['Luca','Marco','Matteo','Lorenzo','Alessandro','Andrea','Davide','Federico','Riccardo','Giovanni','Simone','Tommaso','Gabriele','Edoardo','Nicolò','Pietro','Emanuele','Filippo'];
+const LAST=['Ferrari','Esposito','Bianchi','Romano','Colombo','Ricci','Marino','Greco','Bruno','Gallo','Conti','De Luca','Costa','Giordano','Rizzo','Lombardi','Moretti','Barbieri','Fontana','Santoro','Mariani','Rinaldi','Caruso','Galli','Martini','Leone','Longo','Gentile','Vitale','Serra','Coppola','De Santis','Marchetti','Parisi','Villa','Sanna','Fabbri','Benedetti','Orlando'];
+const GIRLS=['Giulia','Sofia','Francesca','Chiara','Martina','Elena','Sara','Valentina','Alessia','Giorgia','Federica','Ilaria'];
+const KID_M=['Leonardo','Francesco','Tommaso','Diego','Mattia','Santiago','Riccardo'];
+const KID_F=['Aurora','Ginevra','Beatrice','Alice','Vittoria','Bianca','Emma'];
+const MEN=['Paolo','Carlo','Giuseppe','Roberto','Enzo','Sergio','Franco','Gino','Beppe','Nando'];
+
+/* ===== data ===== */
+const REGIONS=[
+ {n:'ロンバルディア',inc:5,city:['ミラノ郊外','ベルガモ','ブレシア','コモ'],clubs:['INT','MIL','ATA'],fl:'霧の朝と工場の煙突、日曜はサン・シーロの歓声。'},
+ {n:'ピエモンテ',inc:4,city:['トリノ','アレッサンドリア','クーネオ'],clubs:['JUV','TOR'],fl:'アルプスの風と、白黒かグラナータかを決める日曜日。'},
+ {n:'カンパニア',inc:1.5,city:['ナポリ','サレルノ','カゼルタ'],clubs:['NAP','SAL'],fl:'路地には洗濯物が揺れ、壁画の英雄が子どもたちを見下ろしている。'},
+ {n:'ラツィオ',inc:4,city:['ローマ','ラティーナ','ティヴォリ'],clubs:['ROM','LAZ'],fl:'永遠の都。ローマ派かラツィオ派か、家庭の食卓でさえ陣営が分かれる。'},
+ {n:'トスカーナ',inc:4,city:['フィレンツェ','リヴォルノ','エンポリ'],clubs:['FIO','EMP'],fl:'丘の上のオリーブ畑。紫のシャツを着た祖父がいる。'},
+ {n:'エミリア＝ロマーニャ',inc:5,city:['ボローニャ','パルマ','モデナ'],clubs:['BOL','PAR','SAS'],fl:'パスタ工場とサーキットの町。食と車とボールの国。'},
+ {n:'ヴェネト',inc:5,city:['ヴェローナ','ヴィチェンツァ','パドヴァ'],clubs:['VER','VEN'],fl:'運河と霧、そして小さな町のスタジアム。'},
+ {n:'リグーリア',inc:4,city:['ジェノヴァ','ラ・スペツィア','サヴォーナ'],clubs:['GEN','SAM'],fl:'港町。イタリア最古のクラブがここにある。'},
+ {n:'シチリア',inc:1.5,city:['パレルモ','カターニア','メッシーナ'],clubs:['PAL','CAT'],fl:'レモンの香る海辺の町。裸足でボールを蹴る子どもが絶えない。'},
+ {n:'プーリア',inc:2,city:['バーリ','レッチェ','ターラント'],clubs:['BAR','LEC'],fl:'白い街と青い海。夏の夕方、広場はいつもサッカー場だ。'},
+ {n:'サルデーニャ',inc:2,city:['カリャリ','サッサリ'],clubs:['CAG'],fl:'海に囲まれた島。島のチームは島の誇りだ。'},
+ {n:'フリウリ',inc:4,city:['ウーディネ','トリエステ'],clubs:['UDI','TRI'],fl:'北東の国境の町。静かだが、粘り強い人々が住む。'},
+ {n:'カラブリア',inc:1,city:['レッジョ・カラブリア','コゼンツァ','カタンツァーロ'],clubs:['CAT','NAP'],fl:'長靴のつま先。海と山に挟まれた町で、若者は島の外に夢を見る。'},
+ {n:'マルケ',inc:3,city:['アンコーナ','ペーザロ','マチェラータ'],clubs:['CES','BOL'],fl:'アドリア海沿いの小さな町。靴工場の音が聞こえる。'},
+ {n:'ウンブリア',inc:3,city:['ペルージャ','テルニ','スポレート'],clubs:['FIO','ROM'],fl:'イタリアの緑の心臓。中世の石畳の坂が、いつもの練習場だった。'},
+ {n:'アブルッツォ',inc:2.5,city:['ペスカーラ','ラクイラ','キエーティ'],clubs:['PES','ROM'],fl:'山と海が近い。冬は雪、夏は海で、ボールはいつも友達だった。'},
+ {n:'トレンティーノ',inc:5,city:['トレント','ロヴェレート'],clubs:['VER','INT'],fl:'ドロミテの麓。きれいな空気と、几帳面な人々の町。'},
+];
+const FAMS=[
+ {n:'建築家の父と大学講師の母',m:3,sup:60,foot:0,w:1,tx:'広い家と本棚のある、恵まれた家庭。両親は「勉強もしなさい」と言う。'},
+ {n:'町のバールを営む一家',m:2,sup:80,foot:0,w:2,tx:'朝はエスプレッソの香り。常連客がみんなあなたの成長を見守っている。'},
+ {n:'工場勤めの父と、パートの母',m:1,sup:70,foot:0,w:3,tx:'贅沢はできないが、日曜の食卓にはいつも家族が揃う。'},
+ {n:'母子家庭、祖母と暮らす',m:0,sup:85,foot:0,w:1.2,tx:'母は二つの仕事を掛け持ち、祖母がパスタを茹でて待っている。'},
+ {n:'元セリエC選手の父を持つサッカー一家',m:1,sup:75,foot:1,w:1.3,tx:'父の棚にはくたびれたスパイクと色あせた集合写真。物心つく前からボールが足元にあった。'},
+ {n:'オリーブ農家',m:1,sup:70,foot:0,w:1.5,tx:'朝は畑、夜は祖父のラジオ。実況の声が子守唄だった。'},
+];
+const LG={
+ A:{n:'セリエA',m:71,cup:'コッパ・イタリア',title:'スクデット',eu:4,g:38,ct:'IT',pay:1},
+ B:{n:'セリエB',m:54,cup:'コッパ・イタリア',title:'セリエB優勝',eu:0,g:38,ct:'IT',pay:1},
+ C:{n:'セリエC',m:43,cup:'コッパ・イタリア',title:'セリエC優勝',eu:0,g:36,ct:'IT',pay:1},
+ D:{n:'セリエD',m:32,cup:'',title:'セリエD優勝',eu:0,g:34,ct:'IT',pay:1},
+ EPL:{n:'プレミアリーグ',m:79,cup:'FAカップ',title:'プレミアリーグ優勝',eu:4,g:38,ct:'UK',pay:1.7},
+ LIGA:{n:'ラ・リーガ',m:76,cup:'コパ・デル・レイ',title:'ラ・リーガ優勝',eu:4,g:38,ct:'ES',pay:1.4},
+ BUN:{n:'ブンデスリーガ',m:73,cup:'DFBポカール',title:'ブンデスリーガ優勝',eu:4,g:34,ct:'DE',pay:1.3},
+ L1:{n:'リーグ・アン',m:68,cup:'クープ・ド・フランス',title:'リーグ・アン優勝',eu:3,g:34,ct:'FR',pay:1.2},
+ POR:{n:'リーガ・ポルトガル',m:62,cup:'タッサ・デ・ポルトガル',title:'ポルトガル優勝',eu:2,g:34,ct:'PT',pay:.9},
+ NED:{n:'エールディヴィジ',m:62,cup:'KNVBカップ',title:'オランダ優勝',eu:2,g:34,ct:'NL',pay:.9},
+ TUR:{n:'スュペル・リグ',m:62,cup:'トルコ杯',title:'トルコ優勝',eu:0,g:38,ct:'TR',pay:1.5},
+ SAU:{n:'サウジ・プロリーグ',m:62,cup:'キング・カップ',title:'サウジ優勝',eu:0,g:34,ct:'SA',pay:3.2},
+ MLS:{n:'MLS',m:58,cup:'USオープンカップ',title:'MLSカップ優勝',eu:0,g:34,ct:'US',pay:1.2},
+};
+const C={}; const addC=(lg,arr)=>arr.forEach(([k,jp,lv])=>C[k]={k,jp,lv,lg});
+addC('A',[['INT','インテル',84],['JUV','ユヴェントス',83],['MIL','ミラン',82],['NAP','ナポリ',82],['ATA','アタランタ',80],['ROM','ローマ',79],['LAZ','ラツィオ',77],['FIO','フィオレンティーナ',75],['BOL','ボローニャ',74],['TOR','トリノ',70],['GEN','ジェノア',67],['UDI','ウディネーゼ',66],['SAS','サッスオーロ',64],['PAR','パルマ',62],['COM','コモ',63],['VER','ヴェローナ',63],['CAG','カリアリ',62],['LEC','レッチェ',60],['EMP','エンポリ',60]]);
+addC('B',[['PAL','パレルモ',58],['SAM','サンプドリア',56],['BAR','バーリ',54],['CRE','クレモネーゼ',55],['SPE','スペツィア',53],['MOD','モデナ',51],['PIS','ピサ',54],['SAL','サレルニターナ',52],['BRE','ブレシア',52],['VEN','ヴェネツィア',55],['CES','チェゼーナ',50]]);
+addC('C',[['CAT','カターニア',45],['TRI','トリエスティーナ',42],['ARE','アレッツォ',43],['PES','ペスカーラ',45],['LUC','ルッケーゼ',42],['TRN','ターラント',41],['ALE','アレッサンドリア',40]]);
+addC('D',[['D1','ASD ボルゴ・サンタンドレア',32],['D2','US モンテ・ヴェルデ',33],['D3','ASD ポルト・フランコ',30],['D4','FC リヴィエラ',34]]);
+addC('EPL',[['MCI','マンチェスター・C',90],['ARS','アーセナル',88],['LIV','リヴァプール',87],['CHE','チェルシー',83],['TOT','トッテナム',81],['NEW','ニューカッスル',80],['BHA','ブライトン',74],['WHU','ウェストハム',72]]);
+addC('LIGA',[['RMA','レアル・マドリード',90],['FCB','バルセロナ',88],['ATM','アトレティコ',83]]);
+addC('BUN',[['BAY','バイエルン',89],['BVB','ドルトムント',82],['LEV','レヴァークーゼン',82]]);
+addC('L1',[['PSG','パリ・サンジェルマン',86],['MON','モナコ',76]]);
+addC('POR',[['BEN','ベンフィカ',76],['PTO','ポルト',75],['SCP','スポルティング',75]]);
+addC('NED',[['AJX','アヤックス',74]]);
+addC('TUR',[['GAL','ガラタサライ',72]]);
+addC('SAU',[['HIL','アル・ヒラル',76],['NAS','アル・ナスル',74]]);
+addC('MLS',[['MIA','インテル・マイアミ',66],['LAF','ロサンゼルスFC',64]]);
+const cname=k=>C[k]?C[k].jp:'';
+// 直近15年（2011-12〜2025-26）の平均最終順位の概算。シーズンごとに ±揺らして順位表を作る
+const AVG={JUV:2.9,INT:3.8,MIL:5.1,NAP:3.9,ATA:6.6,ROM:5.0,LAZ:6.3,FIO:8.5,BOL:11.5,TOR:11.8,GEN:12.5,UDI:10.5,SAS:11.5,PAR:14.5,COM:16,VER:14,CAG:14,LEC:16,EMP:14.5,
+ PAL:8,SAM:7,BAR:9,CRE:11,SPE:9,MOD:13,PIS:11,SAL:10,BRE:10,VEN:7,CES:12,CAT:8,TRI:10,ARE:9,PES:8,LUC:10,TRN:11,ALE:9,D1:8,D2:9,D3:10,D4:7,
+ MCI:2.2,ARS:4.5,LIV:3.8,CHE:4.5,TOT:5.5,NEW:9.5,BHA:11,WHU:10.5,RMA:1.9,FCB:2.2,ATM:3.0,BAY:1.3,BVB:2.8,LEV:4.5,PSG:1.6,MON:4.7,BEN:2.4,PTO:2.2,SCP:2.9,AJX:2.6,GAL:2.2,HIL:1.8,NAS:2.3,MIA:9,LAF:7};
+const LGN={A:20,B:20,C:20,D:18,EPL:20,LIGA:20,BUN:18,L1:18,POR:18,NED:18,TUR:20,SAU:18,MLS:30};
+const FROM={HIL:2023,NAS:2023,MIA:2020,LAF:2018};
+const avail=c=>(S?S.year:2026)>=(FROM[c.k]||0);
+const infl=y=>clamp(Math.pow(1.065,(y||2026)-2026),.03,1.8);
+const UCLN=()=>S.year<1992?'ヨーロッパ・チャンピオンズカップ':'チャンピオンズリーグ';
+function leagueRank(key,adj){
+ const lg=C[key].lg,n=LGN[lg];
+ const known=Object.values(C).filter(c=>c.lg===lg&&c.k!=='KID'&&AVG[c.k]!=null);
+ const taken=known.map(c=>Math.round(AVG[c.k])),free=[];
+ for(let r=1;r<=n;r++){const i=taken.indexOf(r);if(i>=0)taken.splice(i,1);else free.push(r)}
+ const teams=known.map(c=>({k:c.k,p:AVG[c.k]}));
+ free.slice(0,Math.max(0,n-known.length)).forEach((r,i)=>teams.push({k:'x'+i,p:r}));
+ for(const t of teams)t.v=t.p+gauss()*(1.3+t.p*.2)-(t.k===key?(adj||0):0);
+ teams.sort((a,b)=>a.v-b.v);return teams.findIndex(t=>t.k===key)+1;
+}
+const BYEARS=[];for(let y=1970;y<=2025;y+=5)BYEARS.push(y);BYEARS.push(2026);
+const ERAFL={1970:'ラジオとテレビの時代。広場で蹴るボールは、擦り切れたゴム製だった。',1975:'カルチョの黄金期へ向かう時代。日曜の午後は、家族でラジオの実況を聞いた。',1980:'スタジアムの熱気は高まり、少年たちはみんな自分の英雄のユニフォームを欲しがった。',1985:'衛星放送が始まり、世界のサッカーが居間に届くようになった。',1990:'イタリアでW杯が開かれた世代。大人たちはいつもサッカーの話をしていた。',1995:'セリエAが世界最高峰と呼ばれた時代。あらゆる名手が町にやってきた。',2000:'携帯電話が普及し始めた頃。ゲーム機のサッカーにも夢中になった。',2005:'インターネットで世界中の試合を見られるようになった世代。',2010:'スマートフォンとSNSの時代。プレーの動画は、世界中に一瞬で届く。',2015:'データと映像分析の時代。少年たちはタブレットで試合を研究した。',2020:'パンデミックを経た世代。新しい時代のサッカーが始まっている。',2025:'AIとデータが当たり前になった時代。新しい世代のサッカーが始まっている。'};
+const hoodRoll=inc=>{const pr=clamp(.5-inc*.085,.04,.42),ps=clamp(.12+inc*.07,.1,.5),r=Math.random();return r<pr?'rough':r<pr+ps?'safe':'normal'};
+const HOODTX={rough:'シャッターの下りた商店と落書きの壁が続く、治安のよくない地区。',safe:'整った並木道と見守る大人たちが多い、穏やかな地区。',normal:'どこにでもある、普通の住宅街。'};
+const YOUTH_FAV_FALLBACK=['INT','JUV','MIL','NAP','ROM'];
+const POS={
+ FW:{n:'フォワード',w:{pac:.22,sho:.30,pas:.12,dri:.22,def:.04,phy:.10},off:{pac:4,sho:8,pas:0,dri:5,def:-12,phy:0}},
+ MF:{n:'ミッドフィルダー',w:{pac:.08,sho:.12,pas:.30,dri:.24,def:.14,phy:.12},off:{pac:0,sho:0,pas:8,dri:6,def:-2,phy:0}},
+ DF:{n:'ディフェンダー',w:{pac:.14,sho:.05,pas:.12,dri:.07,def:.38,phy:.24},off:{pac:2,sho:-10,pas:-2,dri:-6,def:10,phy:7}},
+ GK:{n:'ゴールキーパー',w:{pac:.15,sho:.02,pas:.13,dri:.05,def:.45,phy:.20},off:{pac:0,sho:-20,pas:-2,dri:-15,def:14,phy:4}}};
+const KEYS=['pac','sho','pas','dri','def','phy'];
+const SN={pac:'ペース',sho:'シュート',pas:'パス',dri:'ドリブル',def:'ディフェンス',phy:'フィジカル'};
+const SA={pac:'PAC',sho:'SHO',pas:'PAS',dri:'DRI',def:'DEF',phy:'PHY'};
+const GROW=[[0,.08],[6,.25],[12,.5],[16,.72],[19,.86],[22,.95],[25,1]];
+const growF=a=>{if(a>=25)return 1;for(let i=1;i<GROW.length;i++)if(a<=GROW[i][0]){const[a0,v0]=GROW[i-1],[a1,v1]=GROW[i];return v0+(v1-v0)*(a-a0)/(a1-a0)}return 1};
+
+/* ===== state ===== */
+let S=null, tabSel='st', AUTO=false, RUN=0, PAUSED=false, SPEED=1, HOLD=0, sheetOpen=false;
+const PACES=[2400,1300,450], waiters=[];
+const SAVE='vita-da-calciatore-v3';
+function newState(name,regIdx,byYear){
+ const reg=regIdx>=0?REGIONS[regIdx]:pick(REGIONS), fam=(()=>{let t=FAMS.reduce((a,f)=>a+f.w,0)*Math.random();for(const f of FAMS){t-=f.w;if(t<=0)return f}return FAMS[0]})();
+ const by=byYear>0?byYear:pick(BYEARS);
+ const hood=hoodRoll(reg.inc);
+ const t=clamp(1+gauss()*.2+(chance(.03)?.35:0),.6,1.55);
+ const base=16+46*t;
+ const P=()=>clamp(Math.round(base+ri(-7,7)),25,97);
+ return {name:name||(pick(FIRST)+' '+pick(LAST)),by,year:by,age:0,region:reg,city:pick(reg.city),fam,t,
+  pot:{pac:P(),sho:P(),pas:P(),dri:P(),def:P(),phy:P()},bonus:{pac:0,sho:0,pas:0,dri:0,def:0,phy:0},pos:null,peakMV:0,
+  health:90,fame:0,joy:70,money:Math.round(fam.m*2000*infl(by+18)),hood,risk:clamp(40+(3-reg.inc)*5+({rough:14,safe:-8,normal:0}[hood])+(2-fam.m)*5+(75-fam.sup)*.15-(fam.foot?3:0),5,95),coach:{g:0,w:0,d:0,l:0,by:{}},club:null,lv:'child',parent:null,role:'',sal:0,cy:0,
+  fav:null,friend:pick(MEN),rival:pick(FIRST)+' '+pick(LAST),agent:null,spouse:null,kids:[],
+  caps:0,capGoals:0,ycaps:0,honors:[],rows:[],tot:{apps:0,goals:0,assists:0},post:null,dead:false,
+  log:[],flags:{},focus:null,peak:0,abroad:0,injuries:0,wcs:[],cause:'',lastPos:null};
+}
+const decl=(k,a)=>k==='pac'?Math.max(0,a-27)*1.9:k==='phy'?Math.max(0,a-29)*1.6:k==='dri'?Math.max(0,a-31)*1.2:Math.max(0,a-32)*.9;
+const st=k=>clamp(Math.round(S.pot[k]*growF(S.age)+S.bonus[k]-decl(k,S.age)+((k==='pas'||k==='def')?Math.min(5,Math.max(0,S.age-23)*.5):0)),1,99);
+const ovrOf=()=>{const w=POS[S.pos||'MF'].w;return Math.round(Object.keys(w).reduce((a,k)=>a+w[k]*st(k),0))};
+const ovr=ovrOf;
+function ovrAt(a){const k=S.age;S.age=a;const v=ovr();S.age=k;return v}
+function marketValue(){
+ if(!S||S.lv==='retired'||S.lv==='child'||S.age<12)return null;
+ const o=ovr(),a=S.age;let eff=o;
+ if(a<25)eff=o+(ovrAt(25)-o)*clamp((25-a)/10,0,.7);
+ let v=30000*Math.exp((eff-45)*.19);
+ v*=a<=17?.8:a<=21?1.2:a<=26?1.1:a<=28?1:a===29?.85:a===30?.7:a===31?.55:a===32?.4:a===33?.28:a===34?.2:.12;
+ if(a<18)v*=Math.pow(a/18,3);
+ v*=(1+S.fame/200)*infl(S.year);
+ if(S.role==='bench'||S.role==='out')v*=.85;
+ return Math.max(1000,Math.round(v/1000)*1000);
+}
+const LEGACY={
+ tec:{FW:['sho','dri'],MF:['dri','pas'],DF:['pas','def'],GK:['pas','def'],_:['dri','pas']},
+ iq:{FW:['pas','sho'],MF:['pas','def'],DF:['def','pas'],GK:['def'],_:['pas']},
+ men:{FW:['sho'],MF:['pas','def'],DF:['def','phy'],GK:['def'],_:['phy']}};
+function chg(o0){ // apply changes, return chips html
+ let h='';const o={};
+ for(const k0 in o0){let k=k0;if(LEGACY[k0]){const l=LEGACY[k0];k=pick(l[S.pos]||l._)}o[k]=(o[k]||0)+o0[k0]}
+ for(const k in o){let v=o[k];if(!v)continue;
+  if(k in S.bonus){S.bonus[k]+=v;h+=`<span class="delta ${v>0?'up':'dn'}">${SA[k]} ${v>0?'+':''}${v}</span>`}
+  else if(k==='money'){S.money+=v;h+=`<span class="delta ${v>0?'up':'dn'}">${v>0?'+':''}${eur(v)}</span>`}
+  else{const lab={health:'健康',fame:'人気',joy:'幸福'}[k];const b=S[k];S[k]=clamp(S[k]+v,0,100);const d=S[k]-b;if(d)h+=`<span class="delta ${d>0?'up':'dn'}">${lab} ${d>0?'+':''}${d}</span>`}
+ }
+ renderCard();return h;
+}
+function honor(n,pts=1,extra=''){S.honors.push({y:S.year,a:S.age,n,p:pts,x:extra});}
+const countH=n=>S.honors.filter(h=>h.n===n).length;
+const clubLv=()=>S.club&&C[S.club]?C[S.club].lv:30;
+const lgOf=()=>S.club&&C[S.club]?LG[C[S.club].lg]:null;
+const phase=()=>({child:'幼少期',kid:'少年期',youth:'ユース',pro:'プロ',retired:'引退後'}[S.lv]);
+
+/* ===== UI ===== */
+const feed=$('#feed'),act=$('#actions');
+const calmMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const toEnd=force=>requestAnimationFrame(()=>{const de=document.documentElement;const dist=de.scrollHeight-(window.scrollY+innerHeight);if(force||dist<800)window.scrollTo({top:de.scrollHeight,behavior:calmMotion?'auto':'smooth'})});
+function addEntry(h,c,store=true){const e=document.createElement('div');e.className='entry '+(c||'');e.innerHTML=h;feed.appendChild(e);if(store&&S)S.log.push({t:'e',h,c});if(/big/.test(c||''))HOLD=1500;toEnd();return e}
+const say=(h,c)=>addEntry(h,c);
+function yrHead(){
+ const h=`<b>${S.year}</b><span>${S.age}歳${S.club?'　'+(S.lv==='youth'?cname(S.club)+' ユース':cname(S.club)):''}</span><span class="ph">${phase()}</span>`;
+ const e=document.createElement('div');e.className='yr';e.innerHTML=h;feed.appendChild(e);S.log.push({t:'y',h});toEnd();
+}
+function renderLog(){feed.innerHTML='';for(const l of S.log){if(l.t==='y'){const e=document.createElement('div');e.className='yr';e.innerHTML=l.h;feed.appendChild(e)}else addEntry(l.h,l.c,false)}toEnd()}
+function ask(q,opts){if(AUTO)return Promise.resolve(Math.floor(Math.random()*opts.length));return new Promise(r=>{act.innerHTML='';
+ if(q){const d=document.createElement('div');d.className='ask';d.textContent=q;act.appendChild(d)}
+ opts.forEach((o,i)=>{const b=document.createElement('button');b.type='button';b.className='choice';
+  b.innerHTML=esc(o.label)+(o.sub?`<small>${esc(o.sub)}</small>`:'');
+  b.onclick=()=>{act.innerHTML='';r(i)};act.appendChild(b)});toEnd(true)})}
+function tick(extra){const tk=RUN;return new Promise(res=>{
+ const show=()=>{if(!act.querySelector('.choice,.btn'))act.innerHTML=`<div class="auto" role="status">${PAUSED?'一時停止中':'人生が進んでいます…'}</div>`};
+ show();const t=PACES[SPEED]+(extra||0)+HOLD;HOLD=0;
+ setTimeout(()=>{if(tk!==RUN)return;if(PAUSED){show();waiters.push(()=>{if(tk===RUN)res()})}else res()},t)})}
+function setPaused(p){PAUSED=p;const b=$('#btn-pause');b.textContent=p?'再開':'一時停止';b.setAttribute('aria-pressed',p);const a=act.querySelector('.auto');if(a)a.textContent=p?'一時停止中':'人生が進んでいます…';if(!p)waiters.splice(0).forEach(f=>f())}
+function more(label){return new Promise(r=>{act.innerHTML='';const b=document.createElement('button');b.type='button';b.className='btn primary';b.textContent=label||'次へ';b.onclick=()=>{act.innerHTML='';r()};act.appendChild(b);toEnd();b.focus({preventScroll:true})})}
+function bar(cls,lab,v){return `<div class="bar ${cls}"><span>${lab}</span><i><u style="width:${v}%"></u></i><em>${v}</em></div>`}
+function renderCard(){
+ const c=$('#card'),mini=$('#mini');c.hidden=!S;mini.hidden=!S;if(!S){c.innerHTML='';return}
+ const o=ovr();if(S.lv!=='child'&&S.lv!=='retired')S.peak=Math.max(S.peak,o);
+ const mv=marketValue();if(mv)S.peakMV=Math.max(S.peakMV||0,mv);
+ const clubTxt=S.lv==='retired'?((S.post&&S.post.title)||'引退'):S.club?cname(S.club)+(S.lv==='youth'?'（ユース）':''):'—';
+ mini.innerHTML=`<button type="button" id="mini-btn" aria-expanded="${sheetOpen}" aria-controls="card"><span class="m-ovr">${S.lv==='retired'?'—':S.pos?o:'--'}</span><span class="m-main"><b>${esc(S.name)}</b><small>${S.age}歳・${esc(clubTxt)}</small></span><span class="m-r"><b>${eur(S.money)}</b><small>詳細 ▴</small></span></button>`;
+ $('#mini-btn').onclick=()=>setSheet(!sheetOpen);
+ let h=`<button type="button" class="btn small sheet-close" id="sheet-close">閉じる ▾</button><div><div class="pname">${esc(S.name)}</div><div class="psub">${S.by}年生まれ・${esc(S.city)}（${esc(S.region.n)}）</div></div>
+ <div class="ovr"><b>${S.lv==='retired'?'—':S.pos?o:'--'}</b><span>${S.age}歳 / ${S.pos?POS[S.pos].n:'ポジション未定'}<br>${esc(clubTxt)}</span></div>
+ <div class="kv"><div><span>資産</span><b>${eur(S.money)}</b></div><div><span>年俸</span><b>${S.sal?eur(S.sal):'—'}</b></div><div><span>市場価値</span><b>${mv?eur(mv):'—'}</b></div><div><span>通算</span><b>${S.tot.apps}試合 ${S.tot.goals}得点</b></div></div>
+ <div class="tabs" role="group" aria-label="表示切替">${[['st','能力'],['sn','成績'],['ho','栄誉']].map(([k,l])=>`<button type="button" data-t="${k}" aria-pressed="${tabSel===k}">${l}</button>`).join('')}</div><div class="tabbody">`;
+ if(tabSel==='st'){h+=`<div class="bars">${S.lv==='retired'?bar('',postLabel(),postScore()):KEYS.map(k=>bar('',SN[k],st(k))).join('')}${bar('h','健康',S.health)}${bar('f','人気',S.fame)}${bar('j','幸福',S.joy)}</div>`}
+ else if(tabSel==='sn'){h+=S.rows.length?`<table><thead><tr><th>年齢</th><th>クラブ</th><th>出</th><th>点</th><th>A</th><th>評</th></tr></thead><tbody>${S.rows.map(r=>`<tr><td>${r.a}</td><td class="l">${esc(r.c)}</td><td>${r.ap}</td><td>${r.g}</td><td>${r.as}</td><td>${r.r}</td></tr>`).join('')}</tbody></table>`:'<p class="psub">まだ記録はありません。</p>'}
+ else{const g={};S.honors.forEach(x=>g[x.n]=(g[x.n]||0)+1);const ks=Object.keys(g);h+=ks.length?ks.map(k=>`<div class="trophy"><span>${esc(k)}</span><b>×${g[k]}</b></div>`).join(''):'<p class="psub">まだ栄誉はありません。</p>'}
+ c.innerHTML=h+'</div>';
+ $('#sheet-close').onclick=()=>setSheet(false);
+ c.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tabSel=b.dataset.t;renderCard()});
+}
+function save(){try{localStorage.setItem(SAVE,JSON.stringify(S))}catch(e){}}
+function loadSave(){try{const j=localStorage.getItem(SAVE);return j?JSON.parse(j):null}catch(e){return null}}
+function clearSave(){try{localStorage.removeItem(SAVE)}catch(e){}}
+
+function setSheet(o){sheetOpen=o;$('#card').classList.toggle('open',o);$('#scrim').hidden=!o;const m=$('#mini-btn');if(m)m.setAttribute('aria-expanded',o)}
+$('#scrim').onclick=()=>setSheet(false);
+addEventListener('keydown',e=>{if(e.key==='Escape')setSheet(false)});
+
+function postScore(){const P=S.post;if(!P)return 30;return clamp(Math.round(P.t==='biz'?(P.size||1)*20:P.t==='media'?(P.rep||20):(P.t==='coach'||P.t==='sd')?(P.cr||20):40),1,99)}
+function postLabel(){const t=S.post&&S.post.t;return {coach:'指導者評価',sd:'経営手腕',biz:'事業規模',media:'解説者の評価',quiet:'穏やかさ'}[t]||'評価'}
+/* ===== simulation ===== */
+const ROLE={ace:['絶対的エース',.95],starter:['レギュラー',.82],rotation:['ローテーション要員',.5],bench:['控え',.25],out:['構想外',.05]};
+const roleOf=d=>d>=10?'ace':d>=3?'starter':d>=-4?'rotation':d>=-11?'bench':'out';
+const salaryAt=k=>{const c=C[k],o=ovr();let s=20000*infl(S.year)*Math.exp((c.lv-30)*.105)*LG[c.lg].pay*Math.pow(clamp(o/c.lv,.75,1.35),3);if(o>=88)s*=1.5;if(S.age<19)s*=.3;return Math.max(1000,Math.round(s/1000)*1000)};
+const rankFor=(ts,lg)=>clamp(Math.round(10.5-(ts-LG[lg].m)/8*5.5+gauss()*1.2),1,20);
+const wasStage=['グループ敗退','ベスト16','ベスト8','ベスト4','準優勝','優勝'];
+function euRun(ts){const r=clamp((ts-75)/20,0,1.2),p=clamp(.32+r*.36,.2,.82);if(!chance(clamp(p+.2,.4,.95)))return 0;let s=1;for(let i=0;i<4;i++){if(chance(p))s++;else return s}return 5}
+function cupRun(ts,lg){const p=clamp(.5+(ts-LG[lg].m)*.012,.25,.85);let w=0;for(let i=0;i<5;i++){if(chance(p))w++;else break}return w} // 5 = champion
+const cupName=['初戦敗退','2回戦敗退','ベスト16','ベスト8','準決勝敗退','優勝'];
+function applyFocus(f){
+ if(f==='rest')return chg({health:ri(4,8),joy:ri(3,6)});
+ const room=S.bonus[f]>12?.2:S.bonus[f]>6?.55:1;
+ const gain=Math.max(0,Math.round(ri(1,3)*Math.sqrt(S.t)*room*(S.age<=14?1.25:1)*(S.age>30?.5:1)));
+ return chg({[f]:gain,health:-ri(0,1)});
+}
+async function injuryEvent(){
+ const p=.1+(S.age>28?(S.age-28)*.012:0)+(100-S.health)/500-st('phy')/1500;
+ if(!chance(p))return 0;
+ S.injuries++;
+ const r=Math.random(),sev=r<.58?0:r<.88?1:2;
+ const nm=pick([['ハムストリングの肉離れ','足首の捻挫','太ももの打撲'],['膝の内側靭帯損傷','恥骨の炎症','足首の靭帯損傷'],['前十字靭帯断裂','脛骨の疲労骨折','アキレス腱の部分断裂']][sev]);
+ if(sev===0){say(`<h3>故障</h3><p>${nm}。数週間ピッチを離れた。</p>`,'bad');return .06}
+ say(`<h3>故障：${nm}</h3><p>${sev===2?'ピッチに倒れ込んだまま、あなたは立ち上がれなかった。担架の上から見た夜空を、一生忘れないだろう。':'試合中に嫌な音がした。検査の結果、長めの離脱になるという。'}</p>`,'bad');
+ const base=sev===2?.55:.25;
+ const was=AUTO;if(sev<2)AUTO=true;
+ const i=await ask('治療方針は？',[{label:'クラブの医療チームに任せる',sub:'標準的な回復。費用はかからない'},{label:'ドイツの権威ある外科医に執刀を頼む',sub:'費用 €40K。回復が早く、後遺症も減らせる'},{label:'無理をして早く復帰する',sub:'離脱は短い。ただし再発のリスクがある'}]);
+ AUTO=was;
+ let miss=base,h='';
+ if(i===0){h=chg({health:-ri(2,5),phy:sev===2?-ri(1,3):(chance(.25)?-1:0)})}
+ else if(i===1){miss=base*.65;h=chg({money:-40000,health:-ri(0,2),phy:sev===2?-ri(0,1):0})}
+ else{miss=base*.5;if(chance(.45)){miss+=.25;h=chg({health:-9,phy:-ri(2,4)});say(`<p>復帰直後に同じ箇所を痛めてしまった。無理は代償を伴った。</p>${h}`,'bad');return miss}h=chg({health:-4,phy:sev===2?-ri(1,2):0})}
+ say(`<p>${i===1?'手術は成功。リハビリは順調に進んだ。':i===2?'歯を食いしばって復帰した。幸い再発はなかった。':'クラブのスタッフと、長いリハビリの日々を過ごした。'}</p>${h}`,'res');
+ return miss;
+}
+const rate={FW:{g:.45,a:.18},MF:{g:.1,a:.22},DF:{g:.035,a:.06},GK:{g:0,a:0}};
+/* 5大リーグ1部の1人当たり得点数（年間総得点≒4,900 ÷ 登録選手≒2,700）をもとにGKの得点確率を算出 */
+const TOP5={goals:4900,players:2700,apps:21};
+const GK_FACTOR=1/150; // GKが得点機会を得る割合（セットプレー終盤の攻撃参加など）
+const gkGoalP=lgk=>(TOP5.goals/TOP5.players/TOP5.apps)*GK_FACTOR*((lgk==='D'||lgk==='C')?1.5:1);
+async function finalEvent(name,ctx){
+ const was=AUTO;if(S.role==='bench'||S.role==='out'||ctx.ap<10)AUTO=true;
+ say(`<h3>${name}決勝</h3><p>大舞台がやってきた。スタジアムは観客で埋め尽くされ、国歌のあと、あなたはピッチに立った。ここまで来た全ての努力が、この90分に詰まっている。</p>`,'big');
+ const i=await ask('決勝の戦い方は？',[{label:'ゴールを狙いにいく',sub:'エースの仕事をする'},{label:'チームのためにハードワークする',sub:'守備も運動量も惜しまない'},{label:'PK戦に備えて蹴る順を志願する',sub:'延長・PK戦にもつれたとき'}]);
+ AUTO=was;
+ const p=clamp(.5+(ctx.ts-80)*.01+[.02,.03,.04][i],.25,.8),win=chance(p);
+ let g=0;if(win&&i===0&&S.pos!=='GK'&&chance(.5)){g=1;ctx.g+=1}
+ say(`<p>${win?`${g?'あなたのゴールが勝負を決めた。':''}終了の笛。歓喜の輪の中で、あなたは膝から崩れ落ちた。`:'あと一歩届かなかった。表彰式の間、銀色のメダルがやけに重かった。'}${chg({fame:win?5:-1,joy:win?12:-6})}</p>`,win?'good':'bad');
+ return win;
+}
+async function seasonMoments(ctx){
+ const {lgk,lg}=ctx,n=LGN[lgk],played=S.role==='ace'||S.role==='starter';
+ const was=AUTO;if(!played)AUTO=true;
+ try{
+  // 1) 優勝争い／首位攻防
+  if(ctx.rank<=3&&lg.g>=30&&lgk!=='D'){
+   const lead=ctx.rank===1;
+   say(`<h3>${lead?'首位を守り切れるか':'逆転優勝を懸けた最終盤'}</h3><p>${lg.n}、最終節。${lead?'わずか勝点1のリードで首位に立っている。':'首位との差は、あと1勝で並ぶところまで縮まった。'}スタジアムは超満員、街中が固唾をのんで見守っている。</p>`,'big');
+   const i=await ask('この大一番、あなたの役割は？',[{label:'エースとして決めにいく',sub:'PKも自分で蹴る'},{label:'チームの勝利を最優先、役割に徹する',sub:'守備もハードワーク'},{label:'負傷を隠して強行出場する',sub:'賭けに出る'}]);
+   const hit=chance(clamp(.5+(ctx.o-ctx.L)*.012+[0,.04,.08][i],.3,.85));
+   let t='';
+   if(hit){ctx.rank=1;if(i===0){ctx.g+=S.pos==='FW'?2:1;t='値千金のゴール。';ctx.fame+=4}t+=lead?'守り切った。クラブは歓喜に包まれた。':'劇的な逆転で、ついに頂点に立った。';ctx.fame+=3;ctx.joy+=8}
+   else{ctx.rank=lead?2:Math.max(2,ctx.rank);t=lead?'最後の最後で勝ち点を落とし、首位の座は他クラブの手に渡った。':'あと一歩届かなかった。シーズン最後の夜、ピッチに座り込んだまま、あなたは動けなかった。';ctx.joy-=6}
+   if(i===2&&chance(.35)){ctx.ap=Math.max(0,ctx.ap-4);S.bonus.phy-=1;t+=' 無理がたたり、負傷が悪化した。'}
+   say(`<p>${t}</p>`,hit?'good':'bad');
+  }
+  // 2) 残留争い
+  else if(ctx.rank>=n-3&&lgk!=='D'){
+   say(`<h3>残留を懸けた最終節</h3><p>降格圏との差はわずか。勝たなければ、クラブは来季、一つ下のリーグで戦うことになる。サポーターのバナーには「最後まで一緒に」と書かれていた。</p>`,'big');
+   const i=await ask('あなたはどうする？',[{label:'責任を背負い、全力で戦う',sub:'前線から走り続ける'},{label:'監督に戦術変更を直訴する',sub:'守備固めか、一点勝負か'},{label:'チームメイトを鼓舞する',sub:'円陣の中心に立つ'}]);
+   const hit=chance(clamp(.5+(ctx.o-ctx.L)*.012+[.03,.0,.05][i],.3,.85));
+   if(hit){ctx.rank=Math.min(ctx.rank,n-4);ctx.fame+=4;ctx.joy+=8;say(`<p>最終節、劇的な勝利で残留を決めた。ピッチ全体にサポーターがなだれ込み、街の夜は朝まで続いた。</p>`,'good')}
+   else{ctx.rank=Math.max(ctx.rank,n-2);ctx.joy-=8;say(`<p>力及ばず、降格が決まった。ロッカールームに響いたのは、誰かのすすり泣きだけだった。</p>`,'bad')}
+  }
+  // 3) 昇格争い
+  else if((lgk==='B'||lgk==='C')&&ctx.rank<=5&&ctx.rank>=3){
+   say(`<h3>昇格プレーオフ</h3><p>自動昇格には届かなかったが、プレーオフで一発勝負のチャンスがある。勝てば、クラブは新たな舞台へ。</p>`,'big');
+   const i=await ask('この勝負、どう挑む？',[{label:'攻撃の先頭に立つ',sub:'自分で決める'},{label:'堅実にチームを支える',sub:'ミスをしない'}]);
+   const hit=chance(clamp(.42+(ctx.o-ctx.L)*.01+(i===0?.02:.04),.25,.8));
+   if(hit){ctx.rank=2;ctx.fame+=4;ctx.joy+=8;honor('昇格プレーオフ勝利',2);say(`<p>歓喜の昇格。クラブの歴史に残る夜になった。</p>`,'good')}else{ctx.joy-=4;say(`<p>わずかに及ばず、昇格を逃した。来季への悔しさが、胸に残った。</p>`,'bad')}
+  }
+  // 4) 劇的大逆転
+  if(chance(.22)&&ctx.ap>=15){
+   const sc=pick(['0-2から後半だけで4得点。','0-3の劣勢から延長で5-4。','後半アディショナルタイムの2ゴールで3-2。']);
+   const me=S.pos==='FW'||S.pos==='MF';if(me&&chance(.6)){ctx.g+=1}else ctx.as+=S.pos==='GK'?0:1;
+   ctx.fame+=2;ctx.joy+=3;
+   say(`<h3>劇的な大逆転</h3><p>ホームでの一戦。${sc}スタンドは総立ちとなり、解説者は「このクラブの歴史に残る試合」と叫んだ。${me?'あなたも決定的な仕事をした。':''}</p>`,'big');
+  }
+  // 5) 大勝・大敗
+  if(chance(.3)){
+   const win=chance(.65);
+   if(win){const ht=S.pos==='FW'&&ctx.o>=ctx.L&&chance(.35);if(ht){ctx.g+=3;honor('ハットトリック',0)}
+    ctx.fame+=ht?3:1;say(`<h3>記録的な大勝</h3><p>${pick(['6-0','7-1','5-0'])}の大勝。${ht?'<b>あなたはハットトリックを達成した。</b>試合球は、記念にロッカーに飾られた。':'チームは自信を深めた。'}</p>`,ht?'big':'')}
+   else if(chance(.7)){ctx.joy-=3;ctx.fame-=1;say(`<h3>屈辱の大敗</h3><p>${pick(['0-5','1-6','0-4'])}の大敗。試合後、ロッカールームは重い沈黙に包まれた。監督は何も言わず、ただ全員の目を見回した。</p>`,'bad')}
+  }
+  // 6) 若さの記録
+  if(S.age<=19&&ctx.g>=5&&chance(.5)){ctx.fame+=3;say(`<h3>クラブ史上最年少記録</h3><p>${S.age}歳でのシーズン${ctx.g}得点は、クラブ史上最年少の記録として新聞に載った。</p>`,'big')}
+ }finally{AUTO=was}
+}
+function milestones(pa,pg,pc){
+ for(const m of [100,250,500,750,1000])if(pa<m&&S.tot.apps>=m){chg({fame:2,joy:3});honor(`クラブ通算${m}試合`,0);say(`<h3>記念の${m}試合出場</h3><p>通算${m}試合出場。ロッカーには花束が届き、スタンドではあなたの名前が書かれたバナーが広がった。</p>`,'big')}
+ for(const m of [50,100,200,300,400,500])if(pg<m&&S.tot.goals>=m&&S.pos!=='GK'){chg({fame:3,joy:4});honor(`クラブ通算${m}ゴール`,0);say(`<h3>通算${m}ゴール</h3><p>通算${m}ゴールの大台に到達。記念のゴールボールを手に、あなたはサポーターに深く一礼した。</p>`,'big')}
+}
+async function playSeason(miss){
+ const c=C[S.club],lgk=c.lg,lg=LG[lgk],o=ovr(),L=c.lv,youth=S.lv==='youth';
+ const refL=youth?L-22:L;
+ S.role=roleOf(o-refL);
+ const share=ROLE[S.role][1];
+ const gm=youth?ri(24,30):lg.g+3+(lg.eu?8:0);
+ const ap0=Math.round(gm*share*(1-miss)*rnd(.9,1.05));
+ const k=clamp(Math.pow(o/70,3),.25,2.4)*(youth?.8:1);
+ const r=rate[S.pos];
+ let g=Math.round(ap0*r.g*k*(1+gauss()*.22)),as=Math.round(ap0*r.a*k*(1+gauss()*.25)),cs=0;
+ if(S.pos==='GK'){const p=youth?0:gkGoalP(lgk);g=0;as=0;for(let i=0;i<ap0;i++){if(Math.random()<p)g++;if(Math.random()<.003)as++}cs=Math.round(ap0*clamp(.22+(o-L)/90,.08,.5)*(1+gauss()*.12))}
+ const adj=clamp((o-refL)*.06,-1.5,2.2)*(S.role==='bench'||S.role==='out'?.3:1);
+ const rank0=youth?clamp(Math.round(6+gauss()*3.5-(o-refL)/9),1,12):leagueRank(S.club,adj);
+ const ctx={rank:rank0,g:Math.max(0,g),as:Math.max(0,as),cs,ap:ap0,lgk,lg,o,L,youth,fame:0,joy:0,ts:L+(11-rank0)*.7+Math.max(0,o-L)*.1};
+ if(!youth&&ap0>=8)await seasonMoments(ctx);
+ const ap=ctx.ap;g=ctx.g;as=ctx.as;cs=Math.min(cs,ap);
+ let rank=ctx.rank;const ts=ctx.ts;
+ let rating=6.15+(o-refL)/20+gauss()*.22+(S.flags.adapt?-.35:0);
+ rating+=S.pos==='GK'?Math.min(.4,cs/Math.max(1,ap)):Math.min(.5,g/Math.max(1,ap)*.7);
+ rating=clamp(Math.round(rating*10)/10,5.5,8.7);
+ const pa=S.tot.apps,pg=S.tot.goals;
+ S.rows.push({a:S.age,y:S.year,c:cname(S.club)+(youth?'U':''),k:S.club,u:youth,ap,g,as,cs,r:ap?rating.toFixed(1):'-',lg:lgk});
+ if(!youth){S.tot.apps+=ap;S.tot.goals+=g;S.tot.assists+=as;S.tot.cs=(S.tot.cs||0)+cs}
+ if(!youth&&S.tot.apps===ap&&ap>0&&!S.flags.debut){S.flags.debut=1;
+  say(`<h3>プロデビュー</h3><p>${cname(S.club)}のユニフォームを着て、初めて公式戦のピッチに立った。${pick(['スタンドから聞こえたのは、見知らぬ数千人が自分の名前を呼ぶ声だった。','ロッカーで祈っていた祖母の顔が浮かんだ。','最初のボールタッチは、ひどく震えていた。それでも、確かに足がボールを覚えていた。'])}</p>`,'big');honor('プロデビュー',0)}
+ const rl=ROLE[S.role][0];
+ let txt=youth?(`ユースチームの${rl}として${ap}試合に出場。`+(rank<=2?'チームも上位で、リーグ戦を戦い抜いた。':'チームは苦しいシーズンだった。')):
+  S.role==='ace'?`${rl}としてチームを引っ張り、${ap}試合に出場。`:
+  S.role==='starter'?`${rl}として定位置を確保し、${ap}試合に出場。`:
+  S.role==='rotation'?`出場機会は限られたが、${ap}試合でチームに貢献した。`:
+  S.role==='bench'?`ベンチを温める日が続いた。出場はわずか${ap}試合。`:`戦力外の扱いを受け、${ap}試合にしか出られなかった。`;
+ if(miss>=.25)txt+='故障で長く離脱したシーズンだった。';
+ const out=[],n=LGN[lgk];
+ if(!youth){
+  txt+=lg.n+'で'+(rank===1?'優勝！':rank<=4?rank+'位の好成績。':rank>=n-2?rank+'位と低迷し、降格が決まった。':rank+'位でシーズンを終えた。');
+  if(rank===1){honor(lg.title,3)}
+  if((lgk==='B'||lgk==='C')&&rank<=2)out.push('昇格');
+  if(rank>=n-2&&lgk!=='D'){out.push('降格');S.cy=0}
+  if(lg.cup){let w=cupRun(ts,lgk);if(w>=4&&lgk!=='D'&&ap>=10){const win=await finalEvent(lg.cup,ctx);w=win?5:4;g=ctx.g}
+   if(w===5){honor(lg.cup,2);out.push(`${lg.cup}優勝`)}else if(w>=3)out.push(`${lg.cup}${cupName[w]}`)}
+  if(lg.eu&&rank<=lg.eu){let e=euRun(ts);
+   if(e>=4&&ap>=10){const win=await finalEvent(UCLN(),ctx);e=win?5:4;g=ctx.g}
+   out.push(`${UCLN()}：${wasStage[e]}`);
+   if(e===5){honor(UCLN()+'優勝',6);S.flags.ucl=S.year}}
+  if(S.pos==='FW'&&g>=lg.g*.55&&S.role==='ace'){honor(lg.n+'得点王',2);out.push(lg.n+'得点王')}
+  if(o>=84&&rank<=3&&S.role==='ace'&&chance(.45)){honor('リーグ年間最優秀選手',3);out.push('リーグ年間最優秀選手')}
+ }else{ if(rank===1){honor('ユースリーグ優勝',1);out.push('ユースリーグ優勝')} if(o-refL>=8&&chance(.4)){honor('ユース年間最優秀選手',1);out.push('ユース年間最優秀選手')}}
+ {const row=S.rows[S.rows.length-1];const extra=ctx.g-row.g;if(extra>0){row.g=ctx.g;if(!youth)S.tot.goals+=extra}g=ctx.g}
+ let dFame=youth?(o-refL>6?1:0):Math.round(((o-50)/12)*(S.role==='ace'?1.4:S.role==='starter'?1:.4)+out.filter(x=>/優勝/.test(x)).length*3+(rank===1?3:0))-(S.age>34?2:1);
+ const fh=chg({fame:dFame+ctx.fame,joy:(S.role==='bench'||S.role==='out'?-5:rank<=3?4:rank>=n-2?-4:0)+ctx.joy});
+ const I=infl(S.year);let inc=0;if(!youth){const end=S.fame>30?(S.fame-30)*S.fame*350*I:0;inc=S.sal*.55+end*.6}else inc=S.fam.m*1500*I;
+ const exp=30000*I+Math.max(0,S.money)*.015+S.kids.length*15000*I;
+ const mh=chg({money:Math.round(inc-exp)});
+ const gl=S.pos==='GK'?'無失点':'得点';
+ const cells=S.pos==='GK'?`<div><b>${cs}</b><span>無失点</span></div><div><b>${g}</b><span>得点</span></div>`:`<div><b>${g}</b><span>得点</span></div><div><b>${as}</b><span>アシスト</span></div>`;
+ say(`<h3>${S.year}-${String(S.year+1).slice(2)}シーズン　${esc(cname(S.club))}${youth?' ユース':''}</h3><p>${txt}${out.length?'<br><b>'+out.join(' ／ ')+'</b>':''}</p>
+ <div class="season"><div><b>${ap}</b><span>出場</span></div>${cells}<div><b>${ap?rating.toFixed(1):'-'}</b><span>評価</span></div><div><b>${rank}位</b><span>${youth?'ユース順位':'リーグ順位'}</span></div></div><p style="margin-top:8px">${fh}${mh}</p>`,out.some(x=>/優勝|昇格/.test(x))||rank===1?'big':rank>=n-2?'bad':'');
+ if(!youth)milestones(pa,pg);
+ delete S.flags.adapt;
+ return {rank,ap,g,out};
+}
+
+/* ===== national team ===== */
+async function nationalStep(miss){
+ const o=ovr(),y=S.year;
+ const wc=y%4===2,eu=y%4===0;
+ let called=false;
+ if(S.age>=19&&S.lv==='pro'&&o>=70){
+  const p=clamp((o-72)/20+S.fame/300,.05,.95)*(S.role==='bench'||S.role==='out'?.4:1)*(S.caps>0?1.2:1)*(1-miss*.8);
+  called=chance(p);
+ }
+ let n=0,ng=0;
+ if(called){
+  n=ri(3,9);ng=S.pos==='GK'?0:Math.round(n*rate[S.pos].g*Math.pow(o/75,3)*.9*(1+gauss()*.3));ng=Math.max(0,ng);
+  if(S.caps===0){say(`<h3>アッズーリ初招集</h3><p>コヴェルチャーノの合宿所に届いた、青いジャージ。袖を通した瞬間、${pick(['祖父の顔が浮かんだ。','国歌を歌う自分が想像できなかった。','胸のエンブレムの重さに、足がすくんだ。'])}初キャップを刻んだ夜、あなたは確かにイタリアの一員だった。</p>`,'big');honor('イタリア代表デビュー',2)}
+  S.caps+=n;S.capGoals+=ng;
+ }
+ if(!(wc||eu)||!called||S.caps<1)return;
+ if(miss>=.4){say(`<h3>${wc?'ワールドカップ':'欧州選手権'}${y}</h3><p>故障のため、代表メンバー入りは叶わなかった。テレビの前で、あなたはただ祈った。</p>`,'bad');return}
+ if(!chance(.9)){say(`<h3>${wc?'ワールドカップ':'欧州選手権'}${y}</h3><p>最終メンバー発表の電話は、鳴らなかった。</p>`,'bad');chg({joy:-10});return}
+ const need=wc?.72:.88;
+ if(!chance(need)){say(`<h3>${wc?'ワールドカップ':'欧州選手権'}${y}</h3><p>アッズーリは予選で敗退した。本大会のピッチに、イタリアの青はなかった。</p>`,'bad');chg({joy:-8,fame:-1});return}
+ const IS=77+(o-80)*.35+ri(-5,5);
+ const p=clamp(.6+(IS-80)*.012,.3,.88);
+ let w=0;
+ if(chance(clamp(p+.18,.4,.95))){w=1;for(let i=0;i<4;i++){if(chance(p))w++;else break}}
+ // w:0 group out,1 R16 out,2 QF out,3 SF out,4 final lost,5 champion
+ const games=3+Math.min(w,5)+(w>=3?0:0);
+ const share=o>=75?.9:.5;
+ let tg=S.pos==='GK'?0:Math.round(games*share*rate[S.pos].g*Math.pow(o/75,3)*(1+gauss()*.3));tg=Math.max(0,tg);
+ S.capGoals+=tg;S.caps+=games;
+ const nm=wc?'ワールドカップ':'欧州選手権';
+ S.wcs.push(y);
+ let msg=`${wasStage[w]}${w>=1&&w<=3?'敗退':''}。${games}試合で${S.pos==='GK'?'':tg+'得点。'}`;
+ let cls='';
+ if(w===5){honor(wc?'ワールドカップ優勝':'EURO優勝',wc?12:6);msg+=wc?'<br><b>イタリアは世界の頂点に立った。街という街で、緑・白・赤が夜明けまで揺れた。</b>':'<br><b>イタリアが欧州の頂点に立った。トロフィーを掲げたのは、あなたたちだった。</b>';cls='big';S.flags.natWin=y}
+ else if(w===4)msg+='<br>あと一歩届かなかった。銀メダルの重さは、金のそれより重かった。';
+ else if(w===0)msg+='<br>屈辱的な早期敗退。帰国した空港で、サポーターの沈黙が耳に刺さった。';
+ else msg+='<br>敗退が決まった夜、ロッカールームには誰の声もなかった。';
+ if(tg>=6){honor(nm+'得点王',3);msg+='<br>大会得点王に輝いた。'}
+ const h=chg({fame:w===5?14:w>=3?7:w>=1?3:-2,joy:w===5?25:w>=3?6:w===0?-8:-2});
+ say(`<h3>${nm} ${y}</h3><p>${msg}</p><p>${h}</p>`,cls||(w===0?'bad':''));
+ S.flags.tour={y,w};
+}
+/* ===== transfers ===== */
+function yrs(){return ri(2,4)}
+async function transferWindow(){
+ if(S.lv!=='pro')return;
+ S.cy--;
+ const o=ovr(),L=clubLv();
+ const fresh=S.cy<=0;
+ const p=clamp(.06+(o-L)/60+(S.role==='bench'?.25:0)+(S.role==='out'?.5:0)+(S.fame>60?.08:0),.04,.9);
+ if(!fresh&&!chance(p))return;
+ const pool=Object.values(C).filter(c=>c.k!==S.club&&!/^D\d/.test(c.k)&&avail(c));
+ let cand=pool.filter(c=>c.lv<=o+5&&c.lv>=o-14&&!(c.lg==='SAU'&&S.age<28)&&!(c.lg==='MLS'&&S.age<28));
+ if(S.age>=31)cand=cand.concat(pool.filter(c=>(c.lg==='SAU'||c.lg==='MLS')&&c.lv<=o+6));
+ cand.sort(()=>Math.random()-.5);
+ const picked=[];for(const c of cand){if(picked.length>=3)break;if(!picked.some(x=>x.k===c.k))picked.push(c)}
+ let loanOffers=[];
+ if(S.age<=22&&(S.role==='bench'||S.role==='out'||S.role==='rotation')){
+  loanOffers=Object.values(C).filter(c=>c.lv>=o-22&&c.lv<=o-4&&c.lg!=='SAU'&&c.lg!=='MLS'&&c.ct!=='x'&&LG[c.lg].ct==='IT'&&c.k!==S.club).sort(()=>Math.random()-.5).slice(0,1);
+ }
+ const opts=[],acts=[];
+ const stayYrs=yrs();
+ opts.push({label:fresh?`${cname(S.club)}と契約を延長する`:`${cname(S.club)}に残留する`,sub:fresh?`年俸 ${eur(salaryAt(S.club))}・${stayYrs}年`:'今の居場所で結果を出す'});
+ acts.push({t:'stay',y:stayYrs});
+ for(const c of picked){const sal=Math.round(salaryAt(c.k)*rnd(.95,1.15)/5000)*5000,y=yrs();const ab=LG[c.lg].ct!=='IT';
+  opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）へ移籍`,sub:`年俸 ${eur(sal)}・${y}年・${c.lv>L+3?'格上のクラブ':c.lv<L-3?'格下のクラブ':'同格のクラブ'}${ab?'・海外挑戦':''}`});acts.push({t:'move',c,sal,y})}
+ for(const c of loanOffers){opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）へレンタル移籍`,sub:'試合経験を積んで成長を狙う（1年）'});acts.push({t:'loan',c})}
+ if(S.parent&&S.parent!==S.club){opts.push({label:`${cname(S.parent)}に復帰する`,sub:'レンタル元に戻る'});acts.push({t:'ret'})}
+ say(`<h3>移籍マーケット</h3><p>${fresh?'契約が満了を迎えた。エージェントの電話が鳴り止まない。':'夏の移籍市場。あなたに関心を持つクラブがある。'}</p>`);
+ const was=AUTO;if(opts.length===1)AUTO=true;
+ const i=await ask('次のシーズン、どこでプレーする？',opts);AUTO=was;
+ const a=acts[i];
+ if(a.t==='stay'){if(fresh){S.sal=salaryAt(S.club);S.cy=a.y;say(`<p>${cname(S.club)}との契約を延長した。年俸${eur(S.sal)}。</p>`,'res')}else say('<p>あなたは残留を選んだ。</p>','res');return}
+ let k=a.t==='ret'?S.parent:a.c.k;
+ const abroadNew=LG[C[k].lg].ct!=='IT'&&LG[C[S.club].lg].ct==='IT';
+ const from=S.club;
+ if(a.t==='loan')S.parent=S.parent||S.club;else if(a.t==='ret')S.parent=null;else S.parent=null;
+ S.club=k;S.sal=a.t==='loan'?Math.round(salaryAt(k)*.8/5000)*5000:a.t==='ret'?salaryAt(k):a.sal;S.cy=a.t==='loan'?1:(a.y||yrs());
+ const fee=Math.round((marketValue()||100000)*rnd(.9,1.4)/100000)*100000;
+ let extra='';
+ if(abroadNew){S.abroad++;S.flags.adapt=1;extra=chg({joy:-6});}
+ say(`<h3>${cname(from)} → ${cname(k)}</h3><p>${a.t==='loan'?'レンタル移籍が決まった。':a.t==='ret'?'古巣に戻った。':`移籍金は推定${eur(fee)}。`}${abroadNew?`慣れない言葉、慣れない食事。それでも${LG[C[k].lg].n}の舞台に立つ日が来た。`:`新しいクラブハウスの扉を開けた。`}</p>${extra}`,'res');
+}
+/* ===== time ===== */
+function deathCheck(){
+ const a=S.age;
+ let p=3e-5*Math.exp(.1*a)*(1.5-S.health*.0075);
+ if(a<50)p+=.0004;
+ if(!chance(p))return false;
+ S.cause=a<35?pick(['ヴェスパで走っていた帰り道、交差点で事故に遭った。','山道の運転中に突然の事故に見舞われた。']):a<55?pick(['突然の心臓発作に襲われた。','急な病に倒れ、そのまま帰らぬ人となった。']):a<75?pick(['長く患っていた病気で、静かに息を引き取った。','心臓の病で亡くなった。']):pick(['自宅のベッドで、家族に見守られて眠るように息を引き取った。','孫たちの笑い声が聞こえる午後、静かに目を閉じた。','海の見える家で、穏やかに最期を迎えた。']);
+ return true;
+}
+function ageStep(){const a=S.age;if(a<15)return 3;if(S.lv==='retired')return 3;return 1}
+/* ===== events ===== */
+const EVENTS=[];
+const EV=(id,w,ok,run,rep)=>EVENTS.push({id,w,ok,run,rep});
+async function scene(title,body,q,opts,cls){
+ say(`<h3>${title}</h3><p>${body}</p>`,cls||'');
+ const i=await ask(q,opts.map(o=>({label:o.l,sub:o.s})));
+ if(opts[i].r)S.risk=clamp(S.risk+opts[i].r,0,100);
+ const r=await opts[i].f();
+ if(r.c&&r.c.money)r.c={...r.c,money:Math.round(r.c.money*infl(S.year))};
+ const h=r.c?chg(r.c):'';
+ say(`<p>${r.t}</p>${h}`,r.k||'res');
+ if(r._ban){S.flags.forceRetire='ban'}
+ if(r._ret){S.flags.forceRetire='heart'}
+ if(r._ab){S.flags.noItaly=1;forceAbroad()}
+ if(r._div&&S.spouse){S.flags.divorced=1;S.spouse=null}
+ return i;
+}
+const done=id=>S.flags['d_'+id];
+const kid=()=>S.lv==='kid', youth=()=>S.lv==='youth', pro=()=>S.lv==='pro', ret=()=>S.lv==='retired';
+/* --- kid --- */
+EV('piazza',3,kid,()=>scene('広場のカルチェット','夕方の広場。年上の少年たちが「入れよ、チビ」と笑った。足元の古いボールが、やけに重い。','どうする？',[
+ {r:1,l:'堂々と混ざる',s:'ぶつかっても退かない',f:()=>chance(.6)?{t:'何度も転ばされたが、一度だけ股を抜いてやった。それ以来、広場で一番に名前を呼ばれるようになった。',c:{tec:2,men:2}}:{t:'ボールを一度も触れないまま日が暮れた。悔しくて、膝の擦り傷がいつまでも痛んだ。それでも翌日も広場に立った。',c:{men:3,joy:-3}}},
+ {r:-2,l:'端で見て真似する',s:'うまい子の動きを観察',f:()=>({t:'一番うまい少年の足の運びを、夜、台所の床で何度も真似した。',c:{iq:2,tec:1}})},
+ {r:-1,l:'断って家に帰る',s:'今日は無理をしない',f:()=>({t:'母のミネストローネが待っていた。広場の歓声は、窓越しに聞こえるだけだった。',c:{joy:3}})}]));
+EV('pk',2,()=>kid()&&S.age>=8,()=>scene('少年大会の決勝','決勝はPK戦にもつれ込んだ。最後のキッカーはあなた。スタンドで父が拳を握りしめている。','どう蹴る？',[
+ {r:1,l:'力いっぱい蹴り込む',f:()=>chance(.5)?{t:'ボールはネットを揺らした。優勝だ！',c:{men:3,joy:8,fame:1},k:'good'}:{t:'ボールはバーの上を越えていった。涙は、母の腕の中で止まった。',c:{men:2,joy:-6}}},
+ {r:-1,l:'コースを冷静に狙う',f:()=>chance(.45+st('dri')/200)?{t:'キーパーの逆を突いて決めた。落ち着いた一発が、周囲に強い印象を残した。',c:{iq:2,men:2,joy:8,fame:1},k:'good'}:{t:'キーパーに読まれた。悔しさが、なぜか次の練習への燃料になった。',c:{men:2,joy:-4}}},
+ {r:2,l:'パネンカで決める',s:'度胸一発',f:()=>chance(.4)?{t:'ふわりと浮かせたボールが、真ん中でゴールに吸い込まれた。会場が爆笑し、そして拍手した。',c:{men:4,fame:2,joy:10},k:'good'}:{t:'キーパーがそのまま掴んだ。コーチは頭を抱えていたが、あなたは少しだけ笑っていた。',c:{men:3,joy:-7}}}]));
+EV('school',3,kid,()=>scene('成績表の夜','通知表に並んだ赤いチェック。母は黙ってエスプレッソを飲み干した。「ボールの前に、まず勉強でしょう」','どうする？',[
+ {r:-4,l:'約束して、勉強する',f:()=>({t:'しばらくは宿題を先に片付けた。サッカー以外の世界も、悪くない。',c:{iq:2,men:1,joy:-2}})},
+ {r:4,l:'こっそり練習を続ける',f:()=>chance(.4)?{t:'見つかって一週間ボール禁止。それでもまた、窓から抜け出した。',c:{tec:1,joy:-3,men:1}}:{t:'秘密の練習で少しうまくなった。父は見て見ぬふりをしてくれた。',c:{tec:2}}}]));
+EV('friend',3,kid,()=>scene('親友',`隣に引っ越してきた${esc(S.friend)}は、同じ年で、同じくらいボールに夢中だった。`,'どう付き合う？',[
+ {r:-2,l:'毎日一緒に練習する',f:()=>{S.flags.friendTight=1;return{t:'二人で壁にボールを蹴り続けた。この日々が、のちの人生にも続いていく。',c:{tec:2,joy:6}}}},
+ {l:'ライバルとして競い合う',f:()=>({t:'一対一では、どちらも一歩も引かなかった。互いを一番うまくしたのは、互いだった。',c:{men:2,tec:1,phy:1}})}]));
+EV('coach',2,kid,()=>scene('厳しいコーチ','「お前は考えが足りん」。老コーチの怒声が、雨のグラウンドに響いた。','どう受け止める？',[
+ {r:-3,l:'言葉を飲み込み、従う',f:()=>({t:'意味がわかったのは数年後だった。あの人は、ボールの置き場所だけを教えていたのだ。',c:{iq:3,men:1}})},
+ {r:5,l:'反発して睨み返す',f:()=>({t:'半年ほど干された。それでも悔しさがあなたを走らせた。',c:{men:3,iq:-1,joy:-3}})}]));
+EV('tv',3,kid,()=>{
+ const t=S.year%4===2?'ワールドカップ':S.year%4===0?'欧州選手権':null;
+ return scene(t?'バールのテレビ':'日曜の夜',t?`${t}。町中のバールにアッズーリの青が溢れ、決勝点の瞬間、見知らぬ大人たちに抱き上げられた。`:'日曜の夜、家族でセリエAのハイライトを観る。実況の声と、祖父のため息。',
+ '画面の中の選手を見て、思ったことは？',[
+ {l:'「いつか、あそこに立つ」',f:()=>({t:'その夜、ベッドの中で何度もその景色を思い描いた。',c:{men:3,joy:5}})},
+ {l:'ただ夢中で楽しむ',f:()=>({t:'夢というより、ただ純粋に嬉しかった。それが長く続く力になった。',c:{joy:8}})}])});
+EV('nonna',2,kid,()=>scene('祖母のラグー','祖母が日曜に煮込んだラグーは、鍋いっぱいに山盛り。「たくさん食べて大きくなりなさい」','どうする？',[
+ {l:'おかわりを3回する',f:()=>({t:'幸せな重さ。祖母は誇らしげに笑った。',c:{joy:6,phy:1,health:-1}})},
+ {l:'ほどほどにして走りに行く',f:()=>({t:'祖母は少し寂しそうだったが、翌日、特製のおやつを持たせてくれた。',c:{phy:1,health:2}})}]));
+EV('shoes',3,()=>kid()&&S.fam.m<=1,()=>scene('小さすぎるスパイク','足が大きくなって、スパイクが痛い。でも新しいものを買う余裕は、家にはなかった。','どうする？',[
+ {r:0,l:'我慢して履き続ける',f:()=>({t:'爪が剥がれても、誰にも言わなかった。母は後でそれに気づいて、泣いた。',c:{men:4,health:-2,joy:-2}})},
+ {r:-2,l:'事情を話してコーチに相談する',f:()=>({t:'翌週、バールの常連たちがカンパしてくれた。「その代わり、うちの店のためにゴールを決めてこい」。',c:{joy:8,fame:1,men:1}})}]));
+/* --- youth --- */
+EV('homesick',4,()=>youth()&&S.age<=15&&S.flags.academy,()=>scene('寮の夜','アカデミーの寮は、静かすぎた。夜中に聞こえるのは、同室の少年の寝息だけ。母のミネストローネが、無性に恋しい。','どうする？',[
+ {r:-2,l:'電話で母に弱音を吐く',f:()=>({t:'母は黙って聞き、最後に言った。「帰ってきたくなったら、いつでも」。その言葉だけで、また一晩頑張れた。',c:{joy:4,men:1}})},
+ {r:1,l:'誰にも言わず、朝練に出る',f:()=>({t:'暗いグラウンドで一人、ボールを蹴った。涙は汗に紛れた。',c:{men:4,tec:1,joy:-4}})}]));
+EV('maturita',3,()=>youth()&&S.age>=15,()=>scene('学業と練習','学校の補習と練習が重なった。クラブは「サッカーに集中していい」と言う。両親は「卒業資格は取りなさい」と言う。','どちらを優先する？',[
+ {r:-4,l:'学業もきちんと続ける',f:()=>({t:'夜の自習室は長かった。だが、この積み重ねが引退後の選択肢を増やすことになる。',c:{iq:3,men:1,tec:-1}})},
+ {r:2,l:'サッカーに全振りする',f:()=>({t:'練習量は圧倒的に増えた。ただ、教室の机はどんどん遠くなっていく。',c:{tec:3,phy:1,iq:-1}})}]));
+EV('love1',3,()=>youth()&&S.age>=15&&S.age<=18,()=>scene('初恋','同じ町の少女、'+pick(GIRLS)+'。練習帰りのジェラート屋で、何度か目が合った。','どうする？',[
+ {l:'勇気を出して声をかける',f:()=>chance(.65)?{t:'ぎこちない会話は日が暮れるまで続いた。サッカー以外のことで胸が高鳴るのは、初めてだった。',c:{joy:10,men:1}}:{t:'「ごめんなさい」。笑って去る後ろ姿に、世界が終わったような気がした。でも翌朝には練習に出た。',c:{joy:-5,men:2}}},
+ {l:'今はサッカーに集中する',f:()=>({t:'ジェラートの味がしない一日だった。それでも、練習中の足は軽かった。',c:{tec:1,joy:-1}})}]));
+EV('viral',2,()=>youth()&&S.age>=14&&ovr()>=45&&S.year>=2008,()=>scene('拡散された動画','練習試合で決めたゴラッソの動画が、誰かの手でSNSに上がった。数日で再生は数十万を超え、クラスの全員が知っている。','どう扱う？',[
+ {r:3,l:'すこし嬉しい。次も狙う',f:()=>({t:'知らない人から声をかけられ始めた。悪い気はしない。',c:{fame:5,joy:4,men:-1}})},
+ {r:-2,l:'浮かれず、淡々と練習する',f:()=>({t:'コーチは「それでいい」と頷いた。注目より先に、実力を磨く。',c:{fame:2,men:3}})}]));
+EV('rival',3,()=>youth()&&S.age>=14,()=>scene('ライバル出現',`同じポジションに${esc(S.rival)}が入ってきた。評判は上々で、すでに上の学年の練習にも呼ばれている。`,'どうする？',[
+ {l:'負けないように、猛練習する',f:()=>({t:'練習後も居残り。結局、ポジションを争う二人は互いを磨き合った。',c:{tec:2,phy:2,health:-2}})},
+ {l:'彼とも仲良くなる',f:()=>({t:'一緒にジェラートを食べるうちに、親友のようになった。いつか敵として対峙する日が来るのだろう。',c:{joy:5,iq:1}})}]));
+EV('growth',2,()=>youth()&&S.age>=13&&S.age<=16,()=>{
+ const good=chance(.5);return say(`<h3>身体の変化</h3><p>${good?'この一年で身長が一気に10センチ伸びた。体がついてこないほどのスピードだったが、確かに視界は広がった。':'同級生が次々に背を伸ばす中、あなたの成長はなかなか訪れなかった。'}</p>${chg(good?{phy:3,joy:3}:{phy:-2,men:3,joy:-3})}`,'res')});
+EV('u17',3,()=>youth()&&S.age>=15&&S.age<=17&&ovr()>=46,async()=>{
+ say(`<h3>U-17イタリア代表に初招集</h3><p>初めて袖を通した青いユニフォーム。胸の「FIGC」のエンブレムが、驚くほど誇らしかった。</p>`,'good');honor('U-17イタリア代表',1);S.ycaps+=ri(3,10);
+ say(`<p>${chg({fame:3,joy:6,men:2})}</p>`,'res')});
+EV('nightout',2,()=>youth()&&S.age>=16,()=>scene('夜の誘い','仲間に誘われた夜のパーティー。明日は朝から練習試合がある。「一晩くらい平気だって」','どうする？',[
+ {r:6,l:'行く',f:()=>chance(.5)?{t:'ほんの少しの羽目外しのつもりが、翌日の試合でまるで足が動かなかった。コーチの視線が痛い。',c:{tec:-1,men:-1,joy:3,health:-3},k:'bad'}:{t:'ばれなかったが、後ろめたさは残った。楽しい夜ではあった。',c:{joy:6}}},
+ {r:-5,l:'断って早く寝る',f:()=>({t:'翌日の試合は、体が軽かった。ストイックさが少し身についた。',c:{men:2,health:2}})}]));
+EV('mentor',2,()=>youth()&&S.age>=14,()=>scene('ベテランの助言','引退間際の元代表選手が、練習を見に来ていた。帰り際、あなたに言った。「お前の最大の武器は何だ？」','何と答える？',[
+ {l:'足元の技術',f:()=>({t:'男は笑った。「技術は盗まれる。判断は盗まれない。覚えておけ」。',c:{tec:1,iq:3}})},
+ {l:'走力と体の強さ',f:()=>({t:'「疲れた時にこそ、頭を使え」。その一言が頭に残り続けた。',c:{phy:1,iq:2,men:1}})},
+ {l:'まだ分かりません',f:()=>({t:'男は頷いた。「正直でよろしい。探し続けろ」。',c:{men:2,iq:1}})}]));
+EV('agent',4,()=>(youth()&&S.age>=16||pro()&&S.age<=20)&&!S.agent,()=>scene('エージェントの登場','クラブハウスの駐車場に停まった黒い車。降りてきた男は、名刺を差し出した。','誰に代理人を任せる？',[
+ {r:-1,l:'叔父の友人（地元の小さな事務所）',s:'手数料は安いが、人脈は乏しい',f:()=>{S.agent='local';return{t:'誠実だが交渉は不器用。それでも、信頼できる人だった。',c:{joy:2}}}},
+ {r:1,l:'大手エージェント事務所',s:'人脈は抜群。手数料が高い',f:()=>{S.agent='big';return{t:'事務所のロゴ入りの名刺と契約書。夢が一気に具体的になった。',c:{fame:3}}}},
+ {r:0,l:'今は誰とも契約しない',f:()=>({t:'父が代わりに交渉に立つことにした。',c:{men:1}})}]));
+/* --- pro --- */
+EV('derby',3,()=>pro()&&clubLv()>=60&&S.role!=='out',()=>scene('ダービーの夜','街が二つに割れる夜。試合前のトンネルで、相手の主将が肩をぶつけてきた。スタジアムの空気は、すでに沸騰している。','どう戦う？',[
+ {l:'熱くなって、ぶつかり合う',f:()=>chance(.5)?{t:'激しい肉弾戦を制し、ファンの称賛を浴びた。赤紙一歩手前だったが。',c:{fame:4,joy:5,health:-2}}:{t:'カッとなって一発レッドを受けた。ロッカーで一人、頭を抱えた。',c:{fame:-2,joy:-6,men:-2},k:'bad'}},
+ {l:'冷静に、ゲームを組み立てる',f:()=>({t:'静かに、しかし確実に試合を支配した。サポーターは「この男は信頼できる」と呟いた。',c:{iq:2,fame:3,men:2}})}]));
+EV('curva',2,()=>pro()&&S.fame>=20&&clubLv()>=50,()=>scene('クルヴァの要求','敗戦続きの週。練習場に、ウルトラスのリーダーたちが現れた。「お前らは何のためにそのシャツを着ている？」','どう対応する？',[
+ {l:'正面から向き合って話を聞く',f:()=>({t:'長い対話の末、握手を交わした。その週末、スタンドはあなたの名前を叫んだ。',c:{fame:4,men:3}})},
+ {l:'クラブ広報に任せる',f:()=>({t:'広報は上手くとりなしたが、サポーターの目はどこか冷たいままだ。',c:{fame:-2,joy:-2}})},
+ {l:'毅然とした態度で追い返す',f:()=>({t:'ネットで叩かれ、次の試合ではブーイングを浴びた。',c:{fame:-5,men:-1,joy:-5},k:'bad'})}]));
+EV('bet',.5,()=>pro()&&S.age>=20&&S.age<=34,()=>scene('賭博スキャンダルの噂','友人が違法ベッティングに関わっていたことが判明し、あなたの名前もその周辺に挙がった。検察が事情を聴きたいと言っている。','どう対応する？',[
+ {r:-3,l:'全面的に協力し、潔白を証明する',f:()=>chance(.8)?{t:'聴取の末、疑いは晴れた。友情は少し壊れたが、名誉は守られた。',c:{fame:-2,men:3,joy:-4}}:{t:'潔白は証明されたが、報道の傷は残った。',c:{fame:-8,joy:-8,men:2},k:'bad'}},
+ {r:2,l:'弁護士に任せて沈黙する',f:()=>chance(.45)?{t:'沈黙が功を奏し、事態は静かに収まった。',c:{fame:-3}}:{t:'沈黙は世論に黙認と受け取られ、出場停止3ヶ月の処分を受けた。',c:{fame:-12,joy:-12,money:-80000},k:'bad'}}]));
+EV('club',.8,()=>pro()&&S.age>=19&&S.fame>=25,()=>scene('ナイトクラブの写真','オフの夜、友人と羽目を外した姿が週刊誌に撮られた。見出しは「怠慢なエースの夜遊び」。','どう釈明する？',[
+ {r:-2,l:'素直に謝罪する',f:()=>({t:'謝罪は評価され、意外と火は小さく済んだ。',c:{fame:-1,men:2}})},
+ {r:3,l:'SNSで「プライベートだ」と反論する',f:()=>chance(.4)?{t:'共感の声が集まり、味方が増えた。',c:{fame:3,joy:3}}:{t:'火に油を注ぎ、炎上した。クラブからは罰金を科された。',c:{fame:-6,money:-60000,joy:-5},k:'bad'}}]));
+EV('charity',2,()=>pro()&&S.fame>=25&&S.money>=200000,()=>scene('故郷への恩返し',`${esc(S.city)}の少年クラブが、資金難で解散の危機に陥っている。コーチだった老人が頭を下げに来た。`,'どうする？',[
+ {l:'€100Kを寄付し、毎年スポンサーになる',f:()=>({t:'クラブは救われ、町の少年たちがあなたのユニフォームのレプリカを着て走り回っている。',c:{money:-100000,fame:5,joy:10}})},
+ {l:'少額の寄付にとどめる',f:()=>({t:'ささやかな支援だったが、感謝の手紙が届いた。',c:{money:-10000,joy:3,fame:1}})},
+ {l:'断る',f:()=>({t:'少年クラブは翌年、静かに解散した。その知らせが、胸のどこかに刺さり続ける。',c:{joy:-5}})}]));
+EV('penalty',3,()=>pro()&&S.pos!=='GK'&&S.pos!=='DF'&&S.role!=='out',()=>scene('PKキッカー','後半ロスタイム、PKを得た。ボールをつかんだ瞬間、スタジアム中が静まった。','どう蹴る？',[
+ {l:'いつも通りのコースに蹴る',f:()=>chance(.75)?{t:'ゴールネットが揺れた。勝利の雄叫びが夜空に響いた。',c:{fame:3,joy:6,men:2},k:'good'}:{t:'キーパーに読まれ、止められた。試合は引き分けに終わった。翌朝の新聞を、あなたは開けなかった。',c:{fame:-3,joy:-8,men:-1},k:'bad'}},
+ {l:'真ん中に思い切って蹴る',f:()=>chance(.6)?{t:'キーパーが先に動いた。真ん中に突き刺さったボールに、大歓声。',c:{fame:5,men:3,joy:8},k:'good'}:{t:'ボールはキーパーの足に当たった。観客のため息が、重い。',c:{fame:-4,joy:-8},k:'bad'}}]));
+EV('captain',2,()=>pro()&&S.age>=24&&ovr()>=70&&(S.role==='ace'||S.role==='starter'),()=>scene('キャプテンマーク','監督があなたを呼んだ。「来季からキャプテンを任せたい」。ロッカールームの空気は、あなたの一言で変わる。','どうする？',[
+ {l:'引き受ける',f:()=>({t:'左腕に巻かれた腕章は、思ったより重かった。しかしチームは、あなたを中心にまとまっていった。',c:{men:4,iq:1,fame:4,joy:3}})},
+ {l:'辞退してプレーに専念する',f:()=>({t:'監督は少し残念そうだったが、頷いてくれた。',c:{tec:1,iq:1}})}]));
+EV('lang',4,()=>pro()&&S.abroad>0&&S.age>=18,()=>scene('異国での暮らし','言葉が通じない。食事が合わない。母の電話が、毎日の唯一の楽しみになった。','どう乗り越える？',[
+ {l:'現地の言語学習に没頭する',f:()=>({t:'半年後、ロッカーでの冗談に笑えるようになった。チームメイトとの距離が一気に縮まった。',c:{iq:2,men:2,joy:4}})},
+ {l:'イタリア人仲間と固まって過ごす',f:()=>({t:'居心地は良いが、現地に溶け込んだとは言えなかった。',c:{joy:2,iq:-1}})}]));
+EV('interview',2,()=>pro()&&S.fame>=30,()=>scene('試合後のインタビュー','敗戦直後、ミックスゾーンで記者が尋ねた。「今日の監督の采配についてどう思いますか？」','どう答える？',[
+ {l:'「全て自分たちの責任です」',f:()=>({t:'監督は静かに礼を言ってくれた。ロッカーの空気が少し軽くなった。',c:{men:2,fame:1}})},
+ {l:'本音を少しだけ漏らす',f:()=>chance(.5)?{t:'翌朝の一面は「エース、監督批判」。監督との間に冷たい溝が生まれた。',c:{fame:-3,joy:-4},k:'bad'}:{t:'記者は正直さを好意的に報じた。',c:{fame:3}}}]));
+EV('sponsor',2,()=>pro()&&S.fame>=35,()=>scene('広告契約のオファー','スポーツブランドとエナジードリンクの会社、両方から巨額のオファーが届いた。','どちらを選ぶ？',[
+ {l:'スポーツブランド',s:'ブランドイメージ重視',f:()=>({t:'撮影のたびに、スパイクがまた一つ軽くなった気がした。',c:{money:Math.round(S.fame*9000),fame:3}})},
+ {l:'エナジードリンク',s:'契約金が高い',f:()=>({t:'短期間で多額の契約金を得たが、クラブ上層部は少し眉をひそめた。',c:{money:Math.round(S.fame*15000),fame:1}})}]));
+EV('fix',.5,()=>pro()&&S.age>=21&&S.age<=33&&clubLv()<=66,()=>scene('八百長の囁き','降格争いの終盤。見知らぬ男が、代理人を通じて近づいてきた。「次の試合、少しだけ“手を抜く”だけで、年俸の3倍を払う」。','どうする？',[
+ {r:-6,l:'即座に断り、クラブに報告する',f:()=>({t:'連盟の調査に協力し、犯人たちは摘発された。あなたは表彰されることはなかったが、鏡の中の自分に胸を張れた。',c:{men:4,fame:3,joy:3}})},
+ {r:-1,l:'黙って断る',f:()=>({t:'何も起きなかった。ただ、ロッカーの空気は少しだけ疑心暗鬼になった。',c:{men:1}})},
+ {r:15,l:'誘いに乗る',s:'金は欲しい',f:()=>chance(.6)?{t:'捜査が及び、永久追放処分。法廷で見たサポーターの冷たい目を、あなたは生涯忘れなかった。',c:{fame:-60,joy:-40,money:-300000},k:'bad',_ban:1}:{t:'発覚はしなかった。が、金は一銭も心を満たさなかった。',c:{money:300000,joy:-15,men:-5},k:'bad'}}]));
+EV('parents',2,()=>pro()&&S.age>=25&&S.age<=45,()=>scene('母の入院',`故郷から電話があった。母が倒れて入院したという。明日は大事な試合だが、${esc(S.city)}までは車で数時間。`,'どうする？',[
+ {l:'すぐに故郷へ向かう',f:()=>({t:'病床の母は「来なくていいのに」と笑った。数日の看病が、親子の時間を取り戻させた。',c:{joy:10,men:2,fame:-1}})},
+ {l:'試合に出て、翌日向かう',f:()=>({t:'試合ではゴールを母に捧げた。後で「それは分かっていたよ」と、母は微笑んだ。',c:{men:4,fame:2,joy:3}})}]));
+EV('marriage',5,()=>pro()&&S.age>=23&&S.age<=36&&!S.spouse,()=>{
+ const nm=pick(GIRLS);
+ return scene('結婚',`プロの暮らしの中で出会った${nm}。いつしか、帰る場所が彼女の隣になっていた。`,'どうする？',[
+ {l:`プロポーズして結婚する`,f:()=>{S.spouse={name:nm,y:S.year};return{t:`${nm}はリングを見て泣いた。祖母は教会の最前列で、涙を拭っていた。ささやかな、でも最高の結婚式だった。`,c:{joy:15,fame:1,money:-20000},k:'good'}}},
+ {l:'まだサッカーを優先する',f:()=>({t:'彼女は静かに頷いた。待つのか、去るのかは、まだ分からない。',c:{tec:1,joy:-3}})}])},true);
+EV('child',5,()=>(pro()||ret())&&S.spouse&&S.kids.length<3&&S.age<=44&&S.age>=24,async()=>{
+ const g=chance(.5);const nm=g?pick(KID_F):pick(KID_M);S.kids.push({n:nm,g:g?'f':'m',y:S.year});
+ say(`<h3>${nm}の誕生</h3><p>${esc(S.spouse.name)}の腕の中で、小さな命が泣いていた。試合の何倍もの緊張の中で、あなたは初めて父親になった。祖母は「名前はこの子の運命だよ」と言って、小さな靴下を編み始めた。</p>${chg({joy:15,men:3,fame:1})}`,'good')},true);
+EV('invest',2,()=>pro()&&S.money>=500000,()=>scene('投資話','古い友人が、新しいレストランチェーンへの出資話を持ってきた。「イタリア飯の新しい形だ」。','どうする？',[
+ {l:'大胆に€300K出資する',f:()=>chance(.5)?{t:'数年後、店は大繁盛。出資額の何倍にもなって戻ってきた。',c:{money:900000}}:{t:'半年で店は潰れた。友人は逃げた。',c:{money:-300000,joy:-8},k:'bad'}},
+ {l:'断って堅実に貯蓄',f:()=>({t:'地味だが確実な資産運用を続けた。',c:{money:Math.round(S.money*.04)}})}]));
+EV('heart',.6,()=>pro()&&S.age>=21&&S.age<=34,()=>scene('心臓の精密検査','年に一度の競技適性検査（idoneità agonistica）で、医師が眉をひそめた。「心臓に異常があります。詳しい検査が必要です」。','どうする？',[
+ {l:'慎重に治療し、イタリア国内でのプレーを諦める',f:()=>({t:'長い検査と手術の末、競技継続は可能に。しかし、イタリア国内での出場許可は下りなかった。あなたは海外クラブへの移籍を決意した。',c:{health:5,joy:-5,men:3},_ab:1})},
+ {l:'リスクを承知で現役を続ける',f:()=>chance(.2)?{t:'試合中に倒れ、救急搬送。奇跡的に一命を取り留めたが、ここで現役を終える決断をした。',c:{health:-30,joy:-20},k:'bad',_ret:1}:{t:'定期的な検査を受けながら、何事もなくプレーを続けられた。',c:{men:4,health:-5}}},
+ {l:'診断に従って引退する',f:()=>({t:'あなたは自らスパイクを脱ぐ決断をした。命は、ボールより重い。',c:{health:6,joy:-12},_ret:1})}],'bad'));
+EV('doping',.35,()=>pro()&&S.age>=22,()=>scene('ドーピング検査陽性','抜き打ち検査の結果が届いた。禁止物質が検出されたという。心当たりはない。','どう対応する？',[
+ {l:'専門弁護士を雇って徹底的に戦う',f:()=>chance(.7)?{t:'調査の結果、風邪薬に含まれていた成分が原因と判明。処分はなく、無実が証明された。',c:{money:-60000,men:4,fame:2}}:{t:'潔白を証明できず、4ヶ月の出場停止に。誰もいない練習場で、ボールだけが友達だった。',c:{money:-60000,fame:-10,joy:-12},k:'bad'}},
+ {r:-2,l:'処分を受け入れる',f:()=>({t:'3ヶ月の出場停止。サポーターの目は冷たかった。',c:{fame:-8,joy:-10},k:'bad'})}],'bad'));
+EV('taxes',.7,()=>pro()&&S.money>=1500000,()=>scene('税務調査','ガルディア・ディ・フィナンツァ（財務警察）がクラブハウスにやってきた。過去の税務申告に不備があったという。','どうする？',[
+ {r:-3,l:'素直に認めて追徴課税を払う',f:()=>({t:'€'+Math.round(S.money*.05/1000)+'Kの追徴課税。痛かったが、新聞の見出しは小さく済んだ。',c:{money:-Math.round(S.money*.05),men:1}})},
+ {l:'弁護士に任せて徹底抗戦',f:()=>chance(.5)?{t:'法廷闘争の末、追徴は半額で決着。',c:{money:-Math.round(S.money*.03),fame:-2}}:{t:'大きく報道され、敗訴。クラブの対応は冷ややかだった。',c:{money:-Math.round(S.money*.08),fame:-8,joy:-6},k:'bad'}}]));
+EV('mamma',3,()=>pro()&&S.age>=19&&S.age<=34,()=>scene('日曜の食卓','オフに故郷へ帰った。母は朝から台所に立ち、祖母は「痩せたんじゃない？」と腕をつかんだ。','どう過ごす？',[
+ {l:'家族とゆっくり過ごす',f:()=>({t:'ラザニア、ティラミス、そして古い写真。胸の中のなにかが解けていった。',c:{joy:10,health:3}})},
+ {l:'地元のクラブで少年たちとボールを蹴る',f:()=>({t:'子どもたちの目の輝きが、昔の自分と重なった。',c:{joy:8,fame:3,men:1}})}]));
+EV('friend2',2,()=>pro()&&S.flags.friendTight&&S.money>=300000,()=>scene('旧友の頼み',`${esc(S.friend)}が久しぶりに連絡をくれた。「商売を始めたいんだ。€50K貸してくれないか」。`,'どうする？',[
+ {l:'貸す',f:()=>chance(.55)?{t:'一年後、利子を付けて返してくれた。「お前は永遠の親友だ」。',c:{joy:8,money:5000}}:{t:'連絡は取れなくなった。金より、友情を失ったことが痛かった。',c:{money:-50000,joy:-8},k:'bad'}},
+ {l:'断るが、別の形で助ける',f:()=>({t:'知り合いの会社を紹介した。彼は感謝していたが、少し寂しそうだった。',c:{joy:2}})}]));
+EV('coachclash',2,()=>pro()&&S.role!=='ace',()=>scene('監督との確執','新しい監督はあなたをベンチに置き続けた。理由を尋ねても、答えは曖昧だった。','どうする？',[
+ {l:'黙々と練習し、チャンスを待つ',f:()=>({t:'1ヶ月後、先発の選手が負傷。千載一遇のチャンスを、あなたは逃さなかった。',c:{men:3,fame:2,joy:3}})},
+ {l:'監督に直談判する',f:()=>chance(.5)?{t:'真剣に話し合った結果、起用の道筋が示された。',c:{men:2,joy:3}}:{t:'「態度が悪い」と一蹴された。ベンチの時間は、さらに増えた。',c:{joy:-8,men:1},k:'bad'}}]));
+EV('u21',3,()=>pro()&&S.age>=19&&S.age<=21&&ovr()>=60&&!done('u21'),async()=>{
+ const w=chance(.45+ovr()/300);
+ say(`<h3>U-21欧州選手権</h3><p>イタリアU-21代表として臨んだ大会。${w?'決勝で宿敵を破り、若き青のジャージが欧州の頂に立った！':'準決勝で惜しくも敗れた。悔しさは、次のステップへの糧になった。'}</p>${chg({fame:w?6:2,joy:w?12:-2,men:2})}`,w?'big':'res');if(w)honor('U-21欧州選手権優勝',3);honor('U-21イタリア代表',0)});
+EV('license',2,()=>pro()&&S.age>=31&&!S.flags.license,()=>scene('コーチングライセンス','コヴェルチャーノで、指導者ライセンスの講座が始まる。引退後を見据えるなら、今から始めるのが良い。','どうする？',[
+ {l:'受講する',f:()=>{S.flags.license=1;return{t:'現役を続けながら、ホワイトボードの前でノートを取る日々。戦術の見方が、少し変わった。',c:{iq:3,joy:-2}}}},
+ {l:'今は現役に集中する',f:()=>({t:'まだ引退を考えたくない。ピッチの上の方がずっと居心地がいい。',c:{men:1}})}]));
+EV('docu',1.5,()=>pro()&&S.fame>=60&&S.year>=2015,()=>scene('ドキュメンタリー','配信大手が、あなたの半生を描くドキュメンタリーの制作を打診してきた。','どうする？',[
+ {l:'受ける',f:()=>({t:'幼い頃の広場、母の台所、数々のゴール。映像を観て、自分でも泣いた。',c:{fame:6,joy:5,money:80000}})},
+ {l:'今は断る',f:()=>({t:'「物語が終わったら考えます」。そう答えた。',c:{men:1}})}]));
+EV('hotel',1,()=>pro()&&S.age>=24&&S.age<=36&&S.spouse&&S.fame>=40,()=>scene('結婚生活の危機',`遠征続きで、${esc(S.spouse.name)}との会話が減った。ある夜、彼女が静かに言った。「私たちは、どこに向かっているのかしら」。`,'どうする？',[
+ {l:'オフを丸ごと彼女と過ごす',f:()=>({t:'二人でトスカーナの田舎道を歩いた。「あなたが好きなのは、まだ私だったのね」と彼女は笑った。',c:{joy:12,tec:-1}})},
+ {l:'「シーズンが終われば落ち着く」と答える',f:()=>chance(.45)?{t:'彼女は静かに頷いたが、翌年、荷物をまとめて去っていった。',c:{joy:-25,fame:-2},k:'bad',_div:1}:{t:'何とか持ちこたえたが、距離は縮まらなかった。',c:{joy:-6}}}]));
+/* --- retired --- */
+EV('grand',3,()=>ret()&&S.kids.length&&S.age>=55,()=>say(`<h3>孫の誕生</h3><p>${esc(S.kids[0].n)}に子どもが生まれた。まだ目も開かない孫は、あなたの指をぎゅっと握った。「おじいちゃんは昔、ボールを蹴っていたんだよ」と、いつか話そう。</p>${chg({joy:12})}`,'good'));
+EV('reunion',3,()=>ret()&&S.age>=45,()=>scene('同窓会','かつてのチームメイトたちが、現役時代の話をしにやってきた。バールの奥の大きなテーブルが、すぐに満席になった。','どんな話をする？',[
+ {l:'あの日の決勝点を語る',f:()=>({t:'笑い声と、少し潤んだ目。あの日のスタジアムの音が、記憶の中でまだ鳴っていた。',c:{joy:10}})},
+ {l:'みんなの「今」を聞く',f:()=>({t:'社長になった者、監督になった者、病気と闘う者。年月は誰にも等しく流れていた。',c:{joy:6,iq:1}})}]));
+EV('hall',2,()=>ret()&&S.fame>=55&&S.age>=45,()=>say(`<h3>殿堂入り</h3><p>イタリア・サッカー殿堂から、あなたの名前が呼ばれた。壇上で、${S.spouse?esc(S.spouse.name)+'と':''}母が拍手してくれていた。「僕はただ、ボールが好きだっただけです」とスピーチで言うと、会場は暖かい笑いに包まれた。</p>${chg({fame:6,joy:12})}`,'big'));
+EV('healthchk',3,()=>ret()&&S.age>=50,()=>scene('健康診断','医師は言った。「現役時代の膝が、そろそろ悲鳴を上げていますね」。','どうする？',[
+ {l:'毎日散歩とストレッチを続ける',f:()=>({t:'地元の公園で、顔なじみのおじいさんたちと散歩する朝。悪くない。',c:{health:8,joy:3}})},
+ {l:'今まで通り暮らす',f:()=>({t:'好きなものを食べて、好きなだけ飲んだ。ただ体は、素直だった。',c:{health:-5,joy:3}})}]));
+EV('kidball',3,()=>ret()&&S.kids.length&&S.age>=40&&S.age<=60,()=>scene('子どもがボールを蹴り始めた',`${esc(S.kids[0].n)}が、あなたの古いボールを抱えて庭に出てきた。「パパ、教えて」。`,'どうする？',[
+ {l:'ボールを蹴って、一緒に遊ぶ',f:()=>({t:'下手くそな子のシュートが、不意に枠を捉えた。「ほら、できた！」二人で大笑いした。',c:{joy:12}})},
+ {l:'サッカー以外の道もあることを話す',f:()=>({t:'「パパみたいになりたいんだけどな」。子の言葉に、胸の奥が熱くなった。',c:{joy:6,iq:1}})}]));
+EV('plaza',2,()=>ret()&&S.fame>=50&&S.age>=50,()=>say(`<h3>広場の名前</h3><p>${esc(S.city)}のあの広場に、あなたの名前が付けられることになった。除幕式で、見知らぬ少年がボールを抱えて叫んだ。「僕もいつかここから出ていくよ！」</p>${chg({fame:4,joy:10})}`,'good'));
+EV('lastvisit',3,()=>ret()&&S.age>=75,()=>say(`<h3>最後の帰郷</h3><p>${esc(S.city)}に戻った。あの広場も、バールも、少し小さく見えた。小さな少年たちがボールを蹴っている。あなたは、ベンチに腰掛けて、ずっとその様子を眺めていた。</p>${chg({joy:12})}`,'good'));
+EV('oldfriend',3,()=>ret()&&S.age>=65&&S.flags.friendTight,()=>say(`<h3>旧友の訃報</h3><p>${esc(S.friend)}が亡くなったと知らされた。葬儀の日、棺の上には、あの日二人で蹴ったボールが置かれていた。</p>${chg({joy:-10,health:-2})}`,'bad'));
+EV('spouseloss',2,()=>ret()&&S.spouse&&S.age>=72&&!S.flags.widow,()=>{S.flags.widow=1;return say(`<h3>別れ</h3><p>長年連れ添った${esc(S.spouse.name)}が、静かに旅立った。手を握ったまま、あなたは長いあいだ、その場から動けなかった。</p>${chg({joy:-25,health:-6})}`,'bad')});
+EV('monument',1.5,()=>ret()&&S.fame>=65&&S.age>=60,()=>say(`<h3>銅像</h3><p>${cname(S.club)||'故郷'}のスタジアム前に、あなたの銅像が建てられた。除幕の日、ファンの老若男女が列をなした。「ここに立つ自分を、あの子供の頃の自分に見せたい」と、あなたは思った。</p>${chg({fame:3,joy:12})}`,'big'));
+/* ===== 引退後の人生（3年に1回の選択） ===== */
+const SECT={
+ food:{n:'イタリア料理店',sub:'バール・トラットリア',tiers:['町の小さなバール','評判のトラットリア','地域チェーン','全国展開のレストラングループ','世界に店を持つ外食企業'],risk:.35},
+ academy:{n:'サッカーアカデミー',sub:'次世代を育てる',tiers:['地元の小さなサッカー教室','評判の育成クラブ','提携クラブを持つ育成組織','国際的なアカデミー網','世界的な育成ブランド'],risk:.25},
+ brand:{n:'スポーツアパレル',sub:'自分のブランドを興す',tiers:['小さなオリジナルブランド','人気のレプリカブランド','全国ブランド','世界展開のスポーツブランド','上場する世界的ブランド'],risk:.5},
+ estate:{n:'不動産・ホテル',sub:'地元に根ざした事業',tiers:['小さな不動産会社','地方のホテル経営','複数ホテルを持つ会社','全国のリゾートグループ','国際的な不動産・ホテル企業'],risk:.4},
+ wine:{n:'ワイナリー・オリーブ農園',sub:'故郷の土で作る',tiers:['家族経営の小さな農園','評判のワイナリー','輸出もするワイン会社','国際コンクールの常連','世界のレストランが仕入れる名門'],risk:.3},
+ media:{n:'スポーツメディア企業',sub:'配信・メディア事業',tiers:['小さな動画チャンネル','人気のスポーツ配信','専門メディア','全国の配信プラットフォーム','国際配信企業'],risk:.55}};
+const MSTYLE={tac:['戦術分析派','ホワイトボードで試合の意図を読み解く'],hot:['熱血・エンタメ派','実況のように熱く語り、茶の間を沸かせる'],honest:['元選手の本音派','ロッカールームの空気を、本音で伝える'],data:['データ・配信派','数字と映像で、配信で語る']};
+const PH_C={atk:['攻撃的サッカー','ゴールの量産で観客を魅了する'],def:['堅守速攻','失点を抑え、勝ち点を積み上げる'],youth:['若手育成重視','結果より、選手の成長を最優先']};
+const PH_S={youth:['育成と自前主義','下部組織から主力を育てる'],vet:['経験豊富な補強','実績ある選手でまとめる'],big:['大型投資','大金を投じてスターを集める'],data:['データ分析型の補強','数字で掘り出し物を探す']};
+const ctitle=(isC,lv,cr)=>isC?(cr<28?'コーチ':lv<26?'少年チームの指導者':lv<36?'アマチュアクラブの監督':lv<48?'セリエC/Dクラスの監督':lv<62?'二部クラスの監督':lv<78?'一部クラブの指揮官':'名門クラブの監督'):(lv<36?'スカウト・育成担当':lv<48?'クラブの強化担当':lv<62?'スポーツディレクター':lv<78?'ゼネラルマネージャー':'CEO・会長');
+const initCr=()=>clamp((S.peak-40)*.7+S.fame*.18+(S.flags.license?10:0)+ri(-4,4),8,70);
+async function initPost(t){
+ const P=S.post;
+ if(t==='biz'){
+  const ks=Object.keys(SECT);
+  const i=await ask('どんな事業を起こす？',ks.map(k=>({label:SECT[k].n,sub:SECT[k].sub})));
+  P.sect=ks[i];P.size=1;
+  const j=await ask('創業の資金計画は？',[{label:'貯金の半分を投じて本格的に始める',sub:'中程度のリスク'},{label:'小さく始めて、育てる',sub:'堅実'},{label:'融資を受けて大きく勝負する',sub:'成功すれば大きいが、失敗すれば重い'}]);
+  const V=Math.round(Math.max(S.money*.5,60000*infl(S.year)));
+  let t2;
+  if(j===0){P.size=2;t2='資金の半分を事業に注ぎ込んだ。';chg({money:-V})}
+  else if(j===1){t2='小さな店構えから始めた。';chg({money:-Math.round(V*.2)})}
+  else{const ok=chance(.55-SECT[P.sect].risk*.2);P.size=ok?3:1;t2=ok?'融資を受けて大きく出た。立ち上げは大成功だった。':'融資を受けて大きく出たが、立ち上げに苦戦した。';chg({money:ok?0:-Math.round(V*.6)})}
+  P.title='実業家（'+SECT[P.sect].n+'）';
+  say(`<h3>起業</h3><p>${t2}<b>${SECT[P.sect].tiers[P.size-1]}</b>としての船出だった。</p>`,'big');
+ }else if(t==='media'){
+  const ks=Object.keys(MSTYLE);
+  const i=await ask('どんな解説者を目指す？',ks.map(k=>({label:MSTYLE[k][0],sub:MSTYLE[k][1]})));
+  P.style=ks[i];P.rep=clamp(15+S.fame*.4,10,60);P.title='解説者（'+MSTYLE[P.style][0]+'）';
+  say(`<h3>解説者として</h3><p>スタジオの照明の下で、あなたは<b>${MSTYLE[P.style][0]}</b>の道を選んだ。</p>`,'big');
+ }else if(t==='coach'||t==='sd'){
+  const isC=t==='coach';P.cr=initCr();
+  const opts=isC?[{label:'少年チームの指導者から下積みを始める',sub:'ライセンス取得と現場経験を積む'},{label:'古巣のコーチ（アシスタント）になる',sub:'監督の下で学ぶ'},{label:'いきなり下部リーグの監督に挑む',sub:'知名度を頼りに、経験不足を覚悟で'}]:[{label:'スカウトとして現場を回る',sub:'才能の見極め方を学ぶ'},{label:'育成ディレクターとしてクラブに入る',sub:'下部組織を預かる'},{label:'名声を活かして経営陣に直接入る',sub:'実務経験は乏しい'}];
+  const i=await ask(isC?'指導者としての第一歩は？':'クラブ経営の第一歩は？',opts);
+  if(i===0){P.cr=Math.max(8,P.cr-6);S.flags.license=1}else if(i===1){P.cr+=2;S.flags.license=1}else{P.cr+=(isC?7:9)}
+  P.cr=clamp(P.cr,8,80);
+  const ref=S.club&&C[S.club]&&C[S.club].lv<=P.cr+8?S.club:null;
+  P.club=null;P.title=ctitle(isC,i===0?20:i===1?(ref?C[ref].lv:30):(isC?36:40),P.cr);
+  say(`<h3>${isC?'指導者の道':'フロントの道'}</h3><p>${['現場の泥にまみれて、一から学び直す日々が始まった。','かつての監督の隣で、ベンチからの景色を学んだ。',isC?'経験より看板が先行した船出だった。':'肩書きは立派だが、実務はこれから学ぶことになる。'][i]}<br><b>${P.title}</b>として、新しいキャリアの階段を登り始める。</p>`,'big');
+ }else{
+  P.title='故郷で暮らす元選手';
+  say(`<h3>故郷へ</h3><p>${esc(S.city)}の広場に戻った。子どもたちはすぐにあなたを囲んで、ボールを蹴ろうとせがんだ。</p>`,'big');
+ }
+}
+async function postStep(){
+ const P=S.post;if(!P)return;
+ if((P.t==='coach'||P.t==='sd')&&S.age>=68&&!P.done){P.done=1;P.title+='（勇退）';say(`<p>長い現場生活に区切りをつける時が来た。最後の日、${P.t==='coach'?'ベンチに別れを告げ、選手たちに胴上げされた。':'デスクを片づけ、同僚たちに花束を渡された。'}</p>`,'big')}
+ if(P.t==='biz'&&S.age>=70&&!P.done){P.done=1;P.title+='（引退）'}
+ if(P.t==='media'&&S.age>=72&&!P.done){P.done=1;P.title+='（勇退）'}
+ if(S.age>=72||P.t==='quiet'||P.done)await elderStep();
+ else if(P.t==='coach'||P.t==='sd')await managerStep();
+ else if(P.t==='biz')await bizStep();
+ else await mediaStep();
+}
+/* --- 実業家 --- */
+function bizOutcome(p,mode){
+ const P=S.post,Sx=SECT[P.sect],V=Math.round(120000*Math.pow(2.6,P.size)*infl(S.year));
+ if(chance(clamp(p,.15,.9))){P.size=Math.min(5,P.size+1);return{t:`事業は軌道に乗り、<b>${Sx.tiers[P.size-1]}</b>へと成長した。`,c:{money:Math.round(V*(mode==='grow'?.9:.45)),fame:2,joy:6},k:'good'}}
+ if(mode==='grow'&&chance(.5))P.size=Math.max(1,P.size-1);
+ return{t:'業績は伸びず、損失を出した。「ピッチのようにはいかない」と苦笑した。',c:{money:-Math.round(V*(mode==='grow'?.5:.15)),joy:-6},k:'bad'};
+}
+const SPECIAL={
+ food:['テレビ番組のオファー','人気料理番組から「元スターが店で振る舞う」企画の出演依頼が来た。'],
+ academy:['有望な少年','アカデミーに、全国が注目する天才少年が入団してきた。'],
+ brand:['代表戦のユニフォーム契約','大手と、代表チームの公式パートナー契約の話が持ち上がった。'],
+ estate:['海辺の競売物件','海辺の古い邸宅が競売にかけられた。ホテルにすれば大化けする。'],
+ wine:['不作の年','異常気象で収穫量が激減した。出荷をどうするか決断を迫られた。'],
+ media:['大手からの買収提案','大手配信企業から、事業を買いたいという話が届いた。']};
+async function bizStep(){
+ const P=S.post,Sx=SECT[P.sect];
+ const cards=['grow','people','crisis','special','sponsor'];if(P.size>=3)cards.push('sell');if(S.age>=62)cards.push('heir');
+ const c=pick(cards);
+ if(c==='grow')await scene(`${Sx.n}の次の一手`,`${S.age}歳。${Sx.tiers[P.size-1]}となった事業に、取引先から「もっと大きくしませんか」と声がかかった。`,'どう動く？',[
+  {l:'銀行から借り入れて一気に拡大する',s:'成功すれば大きいが、失敗すれば重い',f:()=>bizOutcome(.5-Sx.risk*.2+S.fame/400,'grow')},
+  {l:'自己資金で着実に広げる',s:'堅実',f:()=>bizOutcome(.66,'steady')},
+  {l:'品質に集中し、現状を維持する',f:()=>({t:'派手さはないが、常連客に愛される事業になった。',c:{joy:4,money:Math.round(40000*infl(S.year)*P.size)}})}]);
+ else if(c==='people')await scene('右腕の人事','事業が大きくなるにつれ、信頼できる右腕が必要になった。','誰を迎える？',[
+  {l:'元チームメイトを呼ぶ',s:'信頼は厚いが、経営は素人',f:()=>chance(.5)?{t:'息の合ったチームで、事業は勢いを増した。',c:{joy:6,money:Math.round(50000*infl(S.year)*P.size)},k:'good'}:{t:'友情と経営は別物だった。意見がぶつかり、袂を分かった。',c:{joy:-6}}},
+  {l:'外部の経営のプロを雇う',s:'実績重視',f:()=>bizOutcome(.7,'steady')}]);
+ else if(c==='crisis')await scene('経営危機','景気の悪化で、売上が急落した。取引先からは支払いの猶予を求められている。','どうする？',[
+  {l:'私財を投じて持ちこたえる',s:'資産は減るが、事業は守る',f:()=>({t:'資産を取り崩して持ちこたえた。数年後、景気は戻った。',c:{money:-Math.round(80000*infl(S.year)*P.size),joy:-2,fame:2}})},
+  {l:'規模を縮小して耐える',f:()=>{P.size=Math.max(1,P.size-1);return{t:'事業を一回り小さくして、嵐が過ぎるのを待った。',c:{joy:-5}}}}]);
+ else if(c==='special')await scene(SPECIAL[P.sect][0],SPECIAL[P.sect][1],'どう決断する？',[
+  {l:'思い切って勝負する',s:'ハイリスク・ハイリターン',f:()=>bizOutcome(.55-Sx.risk*.15+S.fame/500,'grow')},
+  {l:'慎重に見送る',f:()=>({t:'機会を逃したのかもしれない。それでも、静かな日々が続いた。',c:{joy:2}})}]);
+ else if(c==='sponsor')await scene('元スターという看板','元スターの名を使った広告の話が舞い込んだ。事業のブランド力は上がるが、イメージには責任が伴う。','引き受ける？',[
+  {l:'自ら広告塔になる',f:()=>({t:'知名度が事業を押し上げた。',c:{fame:3,money:Math.round(60000*infl(S.year)*P.size)},k:'good'})},
+  {l:'断って、事業の質で勝負する',f:()=>({t:'派手ではないが、確かな評判が広がっていった。',c:{joy:3,fame:1}})}]);
+ else if(c==='sell')await scene('買収提案',`大手から、${Sx.n}事業を買い取りたいという提案が届いた。`,'どうする？',[
+  {l:'売却して、悠々自適の暮らしへ',s:'大きな現金が入る',f:()=>{const m=Math.round(120000*Math.pow(2.6,P.size)*infl(S.year)*2);P.t='quiet';P.title='元実業家';return{t:'事業を売却し、会社を後進に託した。その金で、家族との時間を取り戻した。',c:{money:m,joy:10},k:'good'}}},
+  {l:'断って、独立経営を続ける',f:()=>bizOutcome(.62,'steady')}]);
+ else await scene('事業承継','年齢を重ね、事業の後継者を考える時期が来た。','どうする？',[
+  {l:S.kids.length?`${esc(S.kids[0].n)}に託す`:'信頼する従業員に託す',f:()=>({t:'託された者は、あなたの背中を見て育った。事業は新しい代へ引き継がれた。',c:{joy:8,fame:1}})},
+  {l:'会社を売却する',f:()=>({t:'まとまった資金を手にした。',c:{money:Math.round(120000*Math.pow(2.6,P.size)*infl(S.year)),joy:2}})},
+  {l:'自分で続ける',f:()=>({t:'まだまだ、現場が楽しい。',c:{health:-2,joy:3}})}]);
+}
+/* --- 解説者 --- */
+async function mediaStep(){
+ const P=S.post,st=P.style;
+ const bonus=(m)=>st===m?4:0;
+ const cards=['debut','nat','flame','show','book','offer'];
+ const pool=cards.filter(c=>!P['c_'+c]&&(c!=='nat'||P.rep>=30)&&(c!=='show'||P.rep>=38)&&(c!=='offer'||P.rep>=45));
+ const c=pool.length?pool[0===0?Math.floor(Math.random()*pool.length):0]:'rep';
+ P['c_'+c]=1;
+ const inc=Math.round(S.fame*3500*3*infl(S.year));
+ chg({money:inc});
+ if(c==='debut')await scene('スタジオ初出演','局のスタジオ。ディレクターが言った。「元スターとして、ひと言どうぞ」。','どう話す？',[
+  {l:'緊張せず、自分の言葉で話す',f:()=>({t:'素朴な語り口が好評で、すぐに次の出演依頼が来た。',c:{fame:3,joy:4}})},
+  {l:'用意した原稿通りに話す',f:()=>({t:'無難にこなしたが、印象には残らなかった。',c:{}})},
+  {l:'先輩解説者を真似る',f:()=>({t:'借りものの言葉は、すぐに見抜かれた。',c:{fame:-1}})}]);
+ else if(c==='nat')await scene('代表戦の解説に抜擢','アッズーリの大一番。解説席にあなたが座ることになった。','どう解説する？',[
+  {l:'忖度なく、厳しい分析を伝える',f:()=>{P.rep+=5+bonus('honest');return{t:'歯に衣着せぬ言葉に賛否は分かれたが、「本物の解説者」という評価が定着した。',c:{fame:4,joy:3},k:'good'}}},
+  {l:'温かく励まし、選手を後押しする',f:()=>{P.rep+=3+bonus('hot');return{t:'視聴者の共感を呼び、あなたの人気は一層高まった。',c:{fame:3,joy:5}}}},
+  {l:'戦術の面白さを丁寧に語る',f:()=>{P.rep+=5+bonus('tac');return{t:'戦術ファンに絶大な支持を得た。',c:{fame:2,joy:4}}}}]);
+ else if(c==='flame')await scene('失言と炎上','生放送で、あなたの何気ない一言が切り取られ、ネットで炎上した。','どう対応する？',[
+  {l:'すぐに謝罪する',f:()=>({t:'素直な謝罪で、騒ぎは数日で収まった。',c:{fame:-2,joy:-3}})},
+  {l:'持論を貫く',s:'本音派なら支持も集まる',f:()=>chance(.35+(st==='honest'?.25:0))?{t:'「よくぞ言った」と支持が広がった。',c:{fame:4,joy:4},k:'good'}:{t:'批判が批判を呼び、番組を一時降板することになった。',c:{fame:-7,joy:-8},k:'bad'}},
+  {l:'しばらくメディアから距離を置く',f:()=>({t:'一年ほど表舞台を離れ、家族と過ごした。',c:{joy:5,fame:-3}})}]);
+ else if(c==='show')await scene('自分の番組を持つ','局から、あなたの名前を冠した番組の企画が持ち込まれた。','どんな番組にする？',[
+  {l:'ゲストを呼ぶトーク番組',f:()=>{P.rep+=4+bonus('hot');return{t:'名選手たちの裏話が評判を呼び、人気番組になった。',c:{fame:5,money:Math.round(150000*infl(S.year))},k:'good'}}},
+  {l:'試合を徹底的に分析する番組',f:()=>{P.rep+=4+bonus('tac')+bonus('data');return{t:'コアなファンに支持される、質の高い番組になった。',c:{fame:3,money:Math.round(80000*infl(S.year))}}}},
+  {l:'少年向けのサッカー教育番組',f:()=>({t:'子どもたちに愛され、保護者からの感謝の手紙が届いた。',c:{fame:3,joy:8}})}]);
+ else if(c==='book')await scene('出版のオファー','出版社から、本を出さないかと声がかかった。','どんな本にする？',[
+  {l:'自伝を書く',f:()=>({t:'ベストセラーになった。ページをめくるたび、あの頃の景色が蘇った。',c:{fame:4,money:Math.round(90000*infl(S.year)),joy:5}})},
+  {l:'戦術論をまとめる',f:()=>({t:'指導者たちの間で教科書として読まれた。',c:{fame:2,money:Math.round(30000*infl(S.year))}})},
+  {l:'断る',f:()=>({t:'書くのは、まだ先でいい。',c:{}})}]);
+ else if(c==='offer')await scene('現場からの誘い','古巣から、「現場に戻ってこないか」と声がかかった。','どうする？',[
+  {l:'指導者として現場に戻る',s:'解説者を辞め、指導者の道へ',f:()=>{S.post={t:'coach',lv:1,cr:clamp(initCr()+4+P.rep*.1,15,80),club:null};S.flags.license=1;S.post.title=ctitle(true,30,S.post.cr);return{t:'マイクを置き、ホイッスルを握った。現場の空気が、また体に染み込んでいった。',c:{joy:6,fame:1},k:'good'}}},
+  {l:'クラブの強化担当として入閣する',f:()=>{S.post={t:'sd',lv:1,cr:clamp(initCr()+3+P.rep*.1,15,80),club:null};S.post.title=ctitle(false,38,S.post.cr);return{t:'マイクを置き、フロントの席に座った。ピッチの外から、クラブを動かす仕事が始まる。',c:{joy:4}}}},
+  {l:'断って、解説を続ける',f:()=>({t:'「僕の戦いはここだ」。マイクの前で、また笑った。',c:{joy:2}})}]);
+ else await scene('視聴者との距離','長年の解説を続け、あなたの言葉は視聴者の日常の一部になった。','これからどうする？',[
+  {l:'若い世代にも伝わる言葉を探す',f:()=>{P.rep+=3;return{t:'若いファンの共感を得て、世代を超えた人気者になった。',c:{fame:3,joy:4}}}},
+  {l:'今まで通りのスタイルを貫く',f:()=>({t:'変わらないあなたの語りが、安心感を与えた。',c:{joy:3}})}]);
+ P.rep=clamp((P.rep||20)+(S.fame>60?2:0),1,99);
+}
+/* --- 監督・強化担当 --- */
+async function managerStep(){
+ const P=S.post,isC=P.t==='coach',cr=P.cr,suffix=isC?'（監督）':'（強化担当）';
+ let pool=Object.values(C).filter(c=>c.k!=='KID'&&avail(c)&&c.lv<=cr+3&&c.lv>=cr-16&&(LG[c.lg].ct==='IT'||cr>=70));
+ if(!pool.length)pool=['D1','D2','D3','D4'].map(k=>C[k]);
+ pool.sort(()=>Math.random()-.5);
+ const picks=pool.filter(c=>c.k!==P.club).slice(0,3),opts=[],acts=[];
+ if(P.club){opts.push({label:`${cname(P.club)}で続ける`,sub:`現在の役職：${P.title}`});acts.push({k:P.club})}
+ for(const c of picks){opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）の${isC?'監督':'強化担当'}に就く`,sub:c.lv>cr+1?'格上のクラブ。挑戦になる':c.lv<cr-6?'格下のクラブ。確実に成績を残せる':'実力相応のクラブ'});acts.push({k:c.k})}
+ if(isC&&cr>=85&&S.caps>=10&&!P.nat){opts.push({label:'イタリア代表の監督に就く',sub:'ワールドカップ・欧州選手権を戦う'});acts.push({nat:1})}
+ say(`<h3>${S.age}歳　次のポスト</h3><p>${P.title}${P.club?'（'+esc(cname(P.club))+'）':''}。${isC?'ベンチの経験を重ねるたび、選手時代に見えなかった景色が見えてきた。':'クラブの運営を学ぶたび、ピッチの外にも勝負があると知った。'}</p>`);
+ const a=acts[await ask(isC?'次の指揮官のポストは？':'次のポストは？',opts)];
+ const phs=isC?PH_C:PH_S,pk=Object.keys(phs);
+ const pi=await ask(isC?'どんなサッカーを目指す？':'クラブ運営の方針は？',pk.map(k=>({label:phs[k][0],sub:phs[k][1]})));
+ const ph=pk[pi];
+ const lines=[];let titles=0,sacked=false;
+ if(a.nat){
+  P.nat=1;P.club=null;
+  const IS=55+cr*.35+(ph==='atk'?1:0);const pp=clamp(.6+(IS-80)*.012,.3,.85);
+  for(let y=S.year;y<S.year+3;y++){
+   const t=y%4===2?'ワールドカップ':y%4===0?'欧州選手権':null;if(!t)continue;
+   let w=0;if(chance(clamp(pp+.18,.4,.95))){w=1;for(let i=0;i<4;i++){if(chance(pp))w++;else break}}
+   const gms=3+Math.min(w,5);S.coach.g+=gms+8;S.coach.w+=Math.round((gms+8)*clamp(.45+w*.05,.3,.75));S.coach.l+=Math.round(w===0?2:1);S.coach.d+=Math.max(0,gms+8-Math.round((gms+8)*clamp(.45+w*.05,.3,.75))-Math.round(w===0?2:1));
+   const key='ITA';S.coach.by[key]=S.coach.by[key]||{name:'イタリア代表',lg:'NT',g:0,w:0,d:0,l:0};S.coach.by[key].g+=gms+8;
+   lines.push(`${y}年 ${t}：${wasStage[w]}`);
+   if(w===5){honor((t==='ワールドカップ'?'ワールドカップ優勝':'EURO優勝')+suffix,t==='ワールドカップ'?12:6);titles++}
+  }
+  P.cr=clamp(cr+(titles?8:2),8,99);P.title='イタリア代表監督';
+ }else{
+  P.club=a.k;const c=C[a.k],lg=LG[c.lg],n=LGN[c.lg],L=c.lv;
+  for(let k=0;k<3;k++){
+   const y=S.year+k;
+   const ex={atk:.3,def:.5,youth:-.2,vet:.4,big:1,data:.6}[ph]||0;
+   const adj=clamp((P.cr-L)*(isC?.05:.03),-2,3)+ex;
+   const rank=leagueRank(a.k,adj);
+   const gm=lg.g+3;
+   const wp=clamp(.62-(rank-1)*.026,.14,.72)*(1+gauss()*.05),w=Math.round(gm*wp),d=Math.round(gm*.24),l=Math.max(0,gm-w-d);
+   if(isC){S.coach.g+=gm;S.coach.w+=w;S.coach.d+=d;S.coach.l+=l;const b=S.coach.by[a.k]=S.coach.by[a.k]||{name:cname(a.k),lg:c.lg,g:0,w:0,d:0,l:0};b.g+=gm;b.w+=w;b.d+=d;b.l+=l}
+   let tx=`${y}年 ${cname(a.k)} ${lg.n}${rank}位`+(isC?`（${w}勝${d}分${l}敗）`:'');
+   let dc=rank===1?6:rank<=3?3:rank>=n-2?-4:1;
+   if(rank===1){honor(lg.title+suffix,4);titles++;tx+=' 優勝'}
+   if(lg.cup&&chance(clamp(.06+(L-lg.m)*.002+(3-Math.min(rank,3))*.02,.02,.2))){honor(lg.cup+'優勝'+suffix,2);titles++;tx+=` ${lg.cup}優勝`}
+   if(lg.eu&&rank<=lg.eu&&chance(clamp(((L+P.cr*.1-75)/20),0,.9)*.2)){honor(UCLN()+'優勝'+suffix,6);titles++;tx+=` ${UCLN()}優勝`}
+   if(ph==='youth')dc+=2;
+   P.cr=clamp(P.cr+dc,5,99);
+   lines.push(tx);
+   if(rank>=Math.round(AVG[a.k]||10)+7&&rank>=n-4){sacked=true;lines.push('成績不振で解任された。');P.cr=clamp(P.cr-3,5,99);P.club=null;break}
+  }
+  P.title=ctitle(isC,L,P.cr)+(P.club?'（'+cname(P.club)+'）':'');
+ }
+ const I=infl(S.year),Lv=a.nat?85:C[a.k].lv,inc=Math.round(20000*I*Math.exp((Lv-30)*.09)*3*.55*(isC?1:.8));
+ const ch=chg({money:inc,fame:titles?3:0,joy:sacked?-8:titles?10:2});
+ say(`<h3>${isC?'指揮官として':'フロントとして'}の3年</h3><p>方針：<b>${phs[ph][0]}</b><br>${lines.join('<br>')}</p><p>現在の評価：<b>${P.title}</b>　${ch}</p>`,titles?'big':sacked?'bad':'res');
+}
+/* --- 老後・静かな暮らし --- */
+const ELDER=[
+ {id:'grandball',ok:()=>S.kids.length>0,t:'孫とボール',b:()=>`${esc(S.kids[0].n)}の子どもが、あなたの古いボールを抱えて庭に出てきた。`,q:'どうする？',o:[{l:'一緒にボールを蹴る',f:()=>({t:'下手くそなシュートに、思わず拍手した。孫は誇らしげに笑った。',c:{joy:12,health:2}})},{l:'縁側から見守る',f:()=>({t:'小さな背中に、かつての自分が重なった。',c:{joy:8}})}]},
+ {id:'bio',ok:()=>S.fame>=20,t:'自伝のオファー',b:()=>'出版社が、あなたの人生を一冊にまとめたいと言ってきた。',q:'どうする？',o:[{l:'書く',f:()=>({t:'一行ごとに、あの日の景色が蘇った。本は静かに版を重ねた。',c:{fame:3,joy:6,money:Math.round(60000*infl(S.year))}})},{l:'断る',f:()=>({t:'「物語は自分の中にしまっておく」。そう答えた。',c:{joy:2}})}]},
+ {id:'legend',ok:()=>S.fame>=30,t:'レジェンドマッチ',b:()=>'引退した往年のスターたちが集まる、チャリティーのレジェンドマッチに招待された。',q:'どうする？',o:[{l:'ユニフォームを着て出る',f:()=>({t:'足は動かなかったが、一本のパスで会場が沸いた。仲間たちと笑い合った。',c:{joy:10,fame:2,health:-2}})},{l:'観客席から応援する',f:()=>({t:'昔の仲間が肩を叩いてくれた。それだけで十分だった。',c:{joy:6}})}]},
+ {id:'health2',ok:()=>S.age>=60,t:'膝の手術',b:()=>'現役時代の古傷の膝が、とうとう悲鳴を上げた。医師は手術を勧めている。',q:'どうする？',o:[{l:'手術を受ける',f:()=>chance(.8)?{t:'手術は成功。リハビリの末、再び散歩できるようになった。',c:{health:8,joy:3}}:{t:'経過は思わしくなく、杖が手放せなくなった。',c:{health:-5,joy:-4}}},{l:'自然に任せる',f:()=>({t:'痛みと付き合いながらの生活が続いた。',c:{health:-4,joy:1}})}]},
+ {id:'will',ok:()=>S.money>=300000*infl(S.year),t:'資産の使い道',b:()=>'財産の整理を考える時期が来た。',q:'どうする？',o:[{l:'若手育成の財団を設立する',f:()=>({t:'財団からは、のちに多くの選手が巣立っていった。',c:{money:-Math.round(S.money*.3),fame:5,joy:10},k:'good'})},{l:'家族に残す',f:()=>({t:'家族は、あなたの愛情を静かに受け取った。',c:{joy:6}})},{l:'故郷に寄付する',f:()=>({t:'故郷の広場には、あなたの名前が刻まれたベンチが置かれた。',c:{money:-Math.round(S.money*.15),fame:3,joy:8}})}]},
+ {id:'friendtrip',ok:()=>true,t:'旧友との旅',b:()=>`${esc(S.friend)}から、「昔話をしに旅へ出よう」と電話があった。`,q:'どうする？',o:[{l:'行く',f:()=>({t:'かつての広場を訪ね、バールでエスプレッソを飲んだ。何も変わらず、すべてが変わっていた。',c:{joy:10}})},{l:'電話で話すだけにする',f:()=>({t:'長電話の最後に、二人で笑った。',c:{joy:4}})}]},
+ {id:'school',ok:()=>true,t:'少年たちのサッカー教室',b:()=>`${esc(S.city)}の少年たちが、あなたに教えてほしいと集まってきた。`,q:'どうする？',o:[{l:'毎週教える',f:()=>({t:'少年たちの中から、のちにプロになる子が生まれた。',c:{joy:10,fame:2,health:2}})},{l:'年に一度だけ顔を出す',f:()=>({t:'その日は、少年たちの特別な一日になった。',c:{joy:5}})}]},
+ {id:'stadium',ok:()=>S.fame>=45,t:'スタジアムの名前',b:()=>'クラブが、スタジアムのスタンドの一角にあなたの名を冠したいと申し出た。',q:'どうする？',o:[{l:'受ける',f:()=>({t:'除幕の日、あなたの名前を呼ぶ声がスタジアムに響いた。',c:{fame:4,joy:12},k:'good'})},{l:'辞退する',f:()=>({t:'「名前より、ボールを蹴る子どもたちを」。そう伝えた。',c:{joy:5}})}]},
+ {id:'memory',ok:()=>true,t:'古いアルバム',b:()=>'押し入れの奥から、古い写真とスパイクが出てきた。',q:'どうする？',o:[{l:'一枚ずつ眺める',f:()=>({t:'あの頃の自分が、ボールを抱えて笑っていた。',c:{joy:8}})},{l:'孫に見せて語る',f:()=>({t:'孫は目を輝かせて聞き入った。「おじいちゃんすごい！」',c:{joy:12}})}]}];
+async function elderStep(){
+ const P=S.post;P.eld=P.eld||{};
+ let pool=ELDER.filter(e=>!P.eld[e.id]&&e.ok());
+ if(!pool.length){P.eld={};pool=ELDER.filter(e=>e.ok())}
+ const e=pick(pool);P.eld[e.id]=1;
+ if(P.t==='quiet'&&!P.done)chg({money:Math.round(30000*infl(S.year)*3)});
+ await scene(e.t,e.b(),e.q,e.o);
+}
+/* ===== flow ===== */
+function ensureKid(){C.KID={k:'KID',jp:'ASD '+S.city,lv:20,lg:'D'}}
+function forceAbroad(){
+ if(!S.club||LG[C[S.club].lg].ct!=='IT')return;
+ const o=ovr();
+ const c=pick(Object.values(C).filter(c=>LG[c.lg].ct!=='IT'&&c.lv<=o+3&&c.lv>=o-14&&avail(c))||[])||C.AJX;
+ const k=c.k;S.parent=null;const from=S.club;S.club=k;S.sal=salaryAt(k);S.cy=ri(2,4);S.abroad++;S.flags.adapt=1;
+ say(`<p>${cname(from)}を離れ、${cname(k)}（${LG[c.lg].n}）へ。新しい挑戦が始まった。</p>`,'res');
+}
+async function stylePrompt(){
+ const kidTx=S.age<13;
+ const lab={pac:kidTx?'とにかく速く走る':'ペースを磨く',sho:kidTx?'思い切りシュートを打つ':'シュートを磨く',pas:kidTx?'仲間にパスを通す':'パスを磨く',dri:kidTx?'ドリブルとリフティング':'ドリブルを磨く',def:kidTx?'相手からボールを奪う':'ディフェンスを磨く',phy:kidTx?'走り回って体を作る':'フィジカルを鍛える'};
+ const i=await ask(kidTx?'いま、いちばん夢中になっていることは？':'これからの育成方針は？',[...KEYS.map(k=>({label:lab[k],sub:SN[k]+'（'+SA[k]+'）が伸びやすくなる'})),{label:'バランスよく伸ばす',sub:'弱点を優先して補う'}]);
+ S.style=i<6?KEYS[i]:'bal';
+ say(`<p>方針：<b>${i<6?SN[S.style]+'重視':'バランス型'}</b>　${i<6?applyFocus(S.style):''}</p>`,'res');
+}
+function autoFocus(){
+ const keys=KEYS;let f;
+ if(S.health<45&&S.age>=15)f='rest';
+ else if(S.style&&S.style!=='bal'&&chance(.65))f=S.style;
+ else{const so=keys.slice().sort((a,b)=>st(a)-st(b));f=chance(.6)?so[0]:pick(keys)}
+ S.focus=f;return applyFocus(f);
+}
+async function pickPosition(){
+ say(`<h3>自分の居場所</h3><p>コーチが言った。「そろそろ、自分のポジションを決めなさい」。広場のゴールポストを見つめながら、あなたは考えた。</p>`);
+ const i=await ask('どこで戦う？',[{label:'フォワード',sub:'ゴールを奪う。主役の席'},{label:'ミッドフィルダー',sub:'チームの心臓。ゲームを創る'},{label:'ディフェンダー',sub:'イタリアの伝統。最後の砦'},{label:'ゴールキーパー',sub:'孤独だが、試合を決める'}]);
+ S.pos=['FW','MF','DF','GK'][i];const o=POS[S.pos].off;for(const k in o)S.pot[k]=clamp(S.pot[k]+o[k],20,98);
+ say(`<p>${POS[S.pos].n}。${['背番号9を夢見た。','タクトを振るう自分を想像した。','「守備のイタリア」の血が騒いだ。','手袋をはめた瞬間、もう後戻りはできないと思った。'][i]}</p>`,'res');renderCard();
+}
+async function birth(){
+ const m=ri(1,12);
+ say(`<h3>誕生</h3><p>${S.by}年${m}月。${esc(S.region.n)}州、${esc(S.city)}。<br>${esc(S.fam.n)}の家に、あなたは生まれた。名前は<b>${esc(S.name)}</b>。</p><p>${S.region.fl}${S.fam.tx}<br>${HOODTX[S.hood]}</p><p>${ERAFL[Math.floor(S.by/5)*5]||''}</p><p>才能があるのか、ないのか。それはまだ、誰にも分からない。</p>`,'big');
+ await tick(600);
+}
+async function infancy(){
+ const fav=chance(.7)?pick(S.region.clubs):pick(YOUTH_FAV_FALLBACK);S.fav=fav;
+ say(`<p>洗礼の日、祖母は小さな教会であなたの額に触れた。父はこっそり、ゆりかごに${cname(fav)}のミニチュア・マフラーを掛けた。母は気づいていたが、何も言わなかった。応援するクラブを決めるのは、イタリアでは生まれる前のことなのだ。</p>`);
+ await tick();
+}
+async function toddlerWindow(){
+ const tx=S.t>1.2?'ボールに触れた瞬間から、驚くほど器用だった。大人たちが顔を見合わせた。':S.t<.85?'ボールを蹴ろうとして盛大に転んだ。みんなが笑い、あなたも笑った。':'よちよち歩きで追いかけたボールが、居間の端まで転がっていった。';
+ say(`<h3>はじめてのボール</h3><p>${S.fam.foot?'父が足元に転がしたのは、使い込んだボール。':'祖父が誰かの庭で見つけた、空気の抜けかけたボール。'}${tx}</p><p>3歳の夏。広場から思い切り蹴ったボールが、隣の祖母の家の窓を割った。</p>`);
+ const i=await ask('窓の向こうでは、祖母が青ざめていた。どうする？',[{label:'正直に謝る',sub:'走って祖母の元へ'},{label:'そっと逃げる',sub:'ボールだけ持って'}]);
+ S.risk=clamp(S.risk+(i===0?-3:3),0,100);
+ say(`<p>${i===0?'震える声で謝ると、祖母は黙って抱きしめてくれた。「壊れた窓より、嘘のほうがずっと重いんだよ」。':'翌日、祖母は何も言わず、窓をそっと修理した。あなたはそれからしばらく、祖母の目を見られなかった。'}</p>${chg(i===0?{men:2,joy:4}:{men:-1,joy:-3})}`,'res');
+}
+/* --- stages --- */
+async function enrollKid(){
+ ensureKid();S.lv='kid';S.club='KID';
+ say(`<h3>はじめてのチーム</h3><p>6歳。${esc(S.city)}のオラトリオ（教会の運動場）にある少年団に入団。白髪のコーチが、一人ずつ背番号を配った。ボールは、人数分もなかった。</p>`,'res');
+}
+async function scouting(){
+ const sc=ovr()+S.fame*.3+ri(-4,4);
+ const A=['INT','JUV','MIL','NAP','ATA','ROM','LAZ','FIO','BOL'],M=['TOR','GEN','UDI','SAS','PAR','COM','VER','CAG','LEC','EMP','PAL','SAM'],L=['BAR','CRE','SPE','MOD','PIS','SAL','BRE','VEN','CES','CAT','TRI','ARE','PES'];
+ const reg=S.region.clubs;
+ const mk=(arr,n)=>{const r=arr.filter(k=>reg.includes(k)),o=arr.filter(k=>!reg.includes(k)).sort(()=>Math.random()-.5);return [...r,...o].slice(0,n)};
+ let ks=sc>=45?mk(A,2).concat(mk(M,1)):sc>=36?mk(M,2).concat(mk(L,1)):sc>=28?mk(L,2):[];
+ if(!ks.length){say(`<h3>12歳の春</h3><p>スカウトの目に留まることはなかった。それでも、地元の仲間たちと、広場でボールを蹴る日々は変わらない。</p>`);S.lv='youth';return}
+ say(`<h3>スカウトの目</h3><p>${sc>=45?'大会の観客席に、名門クラブのスカウトが座っていた。試合後、あなたの両親に声をかけた。':'地元の大会後、クラブの育成担当が名刺を差し出した。'}「少年を、我々のアカデミーに」。</p>`,'big');
+ const opts=ks.map(k=>({label:`${cname(k)}のアカデミーに入る`,sub:`${LG[C[k].lg].n}・${(C[k].lv>=75?'名門':'中堅')}・親元を離れて寮生活`}));
+ opts.push({label:'地元に残って、普通の学校生活を送る',sub:'慣れた仲間と、のびのびと'});
+ const i=await ask('どうする？',opts);
+ S.lv='youth';
+ if(i<ks.length){S.club=ks[i];S.flags.academy=1;say(`<p>荷物をまとめ、母は車の中でずっと黙っていた。到着した${cname(S.club)}のアカデミーは、想像より遥かに広かった。</p>${chg({joy:-4,fame:2,men:2})}`,'res')}
+ else say(`<p>地元に残る道を選んだ。母はほっとして、夕食を二人前作った。</p>${chg({joy:6})}`,'res');
+}
+async function proContract(){
+ const o=ovr();let opts=[],acts=[];
+ const own=S.club&&S.club!=='KID'&&o>=clubLv()-16;
+ if(own){const sal=salaryAt(S.club);opts.push({label:`${cname(S.club)}とプロ契約を結ぶ`,sub:`年俸 ${eur(sal)}・${3}年・ユース出身の誇り`});acts.push({k:S.club,sal,y:3})}
+ const cand=Object.values(C).filter(c=>LG[c.lg].ct==='IT'&&c.k!==S.club&&c.lv>=o-12&&c.lv<=o+4).sort(()=>Math.random()-.5).slice(0,own?2:3);
+ for(const c of cand){const sal=salaryAt(c.k);opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）と契約`,sub:`年俸 ${eur(sal)}・${ri(2,3)}年`});acts.push({k:c.k,sal,y:ri(2,3)})}
+ if(!opts.length){const k=pick(['D1','D2','D3','D4']);opts.push({label:`${cname(k)}と契約`,sub:'セリエD。ここからはい上がる'});acts.push({k,sal:salaryAt(k),y:2})}
+ say(`<h3>プロ契約</h3><p>17歳の終わり。エージェントがテーブルに書類を並べた。「ここにサインすれば、あなたはプロの選手だ」。</p>`,'big');
+ const i=await ask('どこでプロとして始める？',opts);
+ const a=acts[i];S.club=a.k;S.sal=a.sal;S.cy=a.y;S.lv='pro';S.parent=null;
+ say(`<p>震える手でサイン。父は泣き、母は笑い、祖母はロザリオを握った。<b>${cname(a.k)}</b>の一員として、あなたのプロ生活が始まる。</p>${chg({joy:12,fame:3})}`,'good');
+ honor('プロ契約',0);
+}
+const IMP=new Set(['agent','marriage','bet','fix','heart','doping','coachclash','license','hotel','maturita']);
+async function runEvents(mode,count){
+ // mode: 'all' = every event asks the player, 'imp' = only life/career-defining ones ask, 'auto' = none ask
+ const n=count!=null?count:(pro()||youth())?(chance(.55)?(chance(.15)?2:1):0):ret()?(chance(.5)?1:0):1;
+ for(let j=0;j<n;j++){
+  const cand=EVENTS.filter(e=>(e.rep||!done(e.id))&&e.ok());
+  if(!cand.length)break;
+  const SC=new Set(['bet','club','doping','fix','taxes']),rm=clamp(S.risk/40,.25,2.5);
+  const W=e=>e.w*(mode==='imp'&&IMP.has(e.id)?2:1)*(SC.has(e.id)?rm:1);
+  let t=cand.reduce((a,e)=>a+W(e),0)*Math.random(),ev=cand[0];
+  for(const e of cand){t-=W(e);if(t<=0){ev=e;break}}
+  if(!ev.rep)S.flags['d_'+ev.id]=1;
+  AUTO=!(mode==='all'||(mode==='imp'&&IMP.has(ev.id)));
+  try{await ev.run()}finally{AUTO=false}
+  if(S.flags.forceRetire)break;
+ }
+}
+async function awardsStep(res){
+ if(S.lv!=='pro'||S.age<21||S.age>34||ovr()<86)return;
+ const win=S.flags.ucl===S.year||S.flags.natWin===S.year;
+ if(chance(win?.55:res.rank===1?.2:.05)){
+  honor('バロンドール',8);
+  say(`<h3>バロンドール</h3><p>パリの夜。名前が呼ばれ、あなたは母の手を握ったまま、ゆっくりと壇上に上がった。金色のトロフィーは、思ったよりずっと重かった。<br>${chg({fame:12,joy:15,money:300000})}</p>`,'big');
+ }
+}
+async function retire(why){
+ const o=ovr();
+ const farewell=S.fame>=40?'サン・シーロにも負けない大観衆が、涙を浮かべて立ち上がった。':S.fame>=15?'小さなスタジアムが、温かな拍手に包まれた。':'誰もいないロッカーで、そっとスパイクの紐を解いた。';
+ const msg=why==='ban'?'永久追放処分。スタジアムに足を踏み入れることすら、許されなかった。':why==='heart'?'心臓に不安を抱えたまま、あなたは自らユニフォームを脱ぐ決断をした。':`${S.age}歳。最後の笛が鳴った瞬間、あなたは天を仰いだ。${farewell}`;
+ say(`<h3>引退</h3><p>${msg}</p><p>通算${S.tot.apps}試合${S.tot.goals}得点。サッカーに捧げた半生が、幕を閉じた。</p>`,'big');
+ S.lv='retired';S.sal=0;S.flags.retYear=S.year;
+ const opts=[{label:'指導者の道へ',sub:S.flags.license?'ライセンス取得済み。下部組織から':'ライセンス取得から'},{label:'解説者・メディアの道',sub:S.fame>=30?'知名度が活きる':'まず地方局から'},{label:'実業家になる',sub:S.money>=500000?'資金は十分':'資金は心もとない'},{label:'クラブの強化担当（ディレクター）',sub:'ピッチの外で、クラブを動かす'},{label:'故郷に戻り、静かに暮らす',sub:'少年サッカーを教えながら'}];
+ if(why==='ban'){opts.splice(0,4,{label:'故郷でひっそり暮らす',sub:'表舞台からは姿を消す'});}
+ const i=await ask('これからの人生は？',opts);
+ const t=why==='ban'?'quiet':['coach','media','biz','sd','quiet'][i];
+ S.post={t,lv:1};
+ await initPost(t);
+}
+async function retireCheck(){
+ if(S.lv!=='pro')return;
+ const o=ovr(),L=clubLv();
+ if(S.flags.forceRetire){const w=S.flags.forceRetire;delete S.flags.forceRetire;await retire(w);return}
+ const must=S.age>=41||(S.age>=32&&o<=42);
+ if(must){await retire();return}
+ if((S.age>=35&&S.age%2===1)||(S.age>=30&&S.health<35&&S.age%2===1)){
+  const i=await ask('現役を続ける？',[{label:'もう一年、続ける',sub:`現在の総合力 ${o}・${S.age}歳`},{label:'ここで引退する',sub:'納得のいく形で幕を引く'}]);
+  if(i===1)await retire();
+ }
+}
+function aging(){
+ if(S.age>=28&&chance(.5))S.health=clamp(S.health-1,0,100);
+ if(S.age>=50)S.health=clamp(S.health-ri(0,1),0,100);
+ if(S.lv==='retired'&&S.health<60&&chance(.3))S.health++;
+ S.joy=clamp(Math.round(S.joy+(60-S.joy)*.12),0,100);
+ if(S.health<=0&&S.age>=40)S.health=1;
+}
+const TL={6:['幼稚園の帰り道、ボールを蹴りながら歩く癖がついた。'],9:['毎日泥だらけで帰り、母は洗濯に追われた。','雨の日も雪の日も、広場のゴールが空くことはなかった。'],12:['背が伸び、ユニフォームのサイズが何度も変わった。','試合のたびに、客席に知らない大人が増えていった。'],15:['声変わりが来て、ロッカーでの冗談も少し大人びた。','あっという間の三年だった。']};
+async function childStep(){
+ const a=S.age;
+ if(a===3){await toddlerWindow();await tick();return}
+ const keep=S.age;S.age=a-3;const o0=ovr();S.age=keep;
+ for(let k=0;k<3;k++)autoFocus();
+ say(`<p>${a-3}歳から${a}歳へ。${pick(TL[a]||[''])}${a>=9?`<br><span class="delta up">総合力 ${o0} → ${ovr()}</span>`:''}</p>`,'res');
+ if(a>=9)await runEvents('auto',1);
+ if(a===6){await enrollKid();await runEvents('all',1)}
+ else if(a===9){await pickPosition()}
+ else if(a===12){await scouting()}
+ await tick();
+}
+async function yearFlow(){
+ const a=S.age;
+ if(S.lv==='youth'||S.lv==='pro'){if(a===15){await stylePrompt()}else autoFocus()}
+ if(S.lv==='youth'){
+  await runEvents(a===15?'auto':'imp',a===15?1:undefined);
+  const miss=await injuryEvent();await playSeason(miss);
+ }else if(S.lv==='pro'){
+  await runEvents('imp');
+  if(S.lv==='pro'&&!S.flags.forceRetire){
+   const miss=await injuryEvent();const res=await playSeason(miss);
+   await nationalStep(miss);await awardsStep(res);
+   await transferWindow();
+  }
+ }else{
+  await postStep();if(chance(.5))await runEvents('auto',1);
+ }
+ renderCard();
+ if(S.lv==='youth'&&a===17)await proContract();
+ await retireCheck();
+ aging();renderCard();
+ await tick();
+}
+async function lifeLoop(){
+ const my=RUN,mine=S;
+ while(!S.dead){
+  if(my!==RUN||mine!==S)return;
+  save();yrHead();
+  if(S.age===0){await birth();await infancy()}
+  else if(S.age<15)await childStep();
+  else await yearFlow();
+  if(my!==RUN||mine!==S)return;
+  const step=ageStep();
+  for(let i=0;i<step;i++){
+   S.age++;S.year++;
+   if(deathCheck()){S.dead=true;break}
+   if(S.lv==='retired'&&i<step-1)aging();
+  }
+  renderCard();
+ }
+ await ending();
+}
+/* ===== ending & boot ===== */
+const TITLES=[[0,'名もなきボール好き','記録には残らなくても、あなたの足跡は、広場の石畳に刻まれている。'],[120,'一生をボールと生きた人','派手さはなくとも、愛するもののために生き抜いた。それが何より尊い。'],[200,'町の誇りの元プロ選手','バールの壁には、今も色あせたあなたの写真が飾られている。'],[300,'国民的スター','世代を超えて語り継がれる名前。祖父は孫に、あなたの試合を語る。'],[420,'アッズーリの伝説','青いジャージの歴史に、あなたの名は永遠に刻まれた。'],[560,'永遠のカンピオーネ','サッカーの歴史は、あなたの前と後に分けて語られる。']];
+function lifeScore(){
+ const pts=S.honors.reduce((a,h)=>a+h.p,0);
+ return Math.round(S.peak*1.5+pts*4+S.caps*.4+Math.min(S.tot.goals,600)*.15+S.fame+Math.log10(Math.max(10,S.money))*8+S.joy*.5+(S.spouse||S.flags.divorced?10:0)+S.kids.length*5+Math.max(0,S.age-60)*.5);
+}
+function summaryText(){
+ const clubs=[...new Set(S.rows.filter(r=>!/U$/.test(r.c)).map(r=>r.c))];
+ const g={};S.honors.filter(h=>h.p>0||/代表/.test(h.n)).forEach(h=>g[h.n]=(g[h.n]||0)+1);
+ const lines=[`${S.name}（${S.by}–${S.year}）${S.age}歳没`,`出身: ${S.region.n}・${S.city}　ポジション: ${S.pos?POS[S.pos].n:'—'}　最高総合力: ${S.peak}`,`所属: ${clubs.join(' → ')||'—'}`,`通算: 総出場${S.tot.apps+S.caps}試合 総ゴール${S.tot.goals+S.capGoals}（クラブ${S.tot.apps}試合${S.tot.goals}点／代表${S.caps}試合${S.capGoals}点）${S.coach.g?'／監督'+S.coach.g+'試合':''}／最高市場価値 ${eur(S.peakMV||0)}`,`栄誉: ${Object.keys(g).map(k=>k+(g[k]>1?'×'+g[k]:'')).join('、')||'—'}`,`資産: ${eur(S.money)}　家族: ${S.spouse?S.spouse.name+'と':''}子ども${S.kids.length}人`];
+ return lines.join('\n');
+}
+function aggregate(){
+ const rows=S.rows.filter(r=>!r.u),by={},lgs={};
+ for(const r of rows){const k=r.k||r.c;const b=by[k]=by[k]||{name:r.c,lg:r.lg,ap:0,g:0,as:0,cs:0,a0:r.a,a1:r.a};b.ap+=r.ap;b.g+=r.g;b.as+=r.as;b.cs+=r.cs||0;b.a1=r.a;
+  const l=lgs[r.lg]=lgs[r.lg]||{ap:0,g:0,as:0,cs:0};l.ap+=r.ap;l.g+=r.g;l.as+=r.as;l.cs+=r.cs||0}
+ return{by:Object.values(by),lgs:Object.entries(lgs)};
+}
+const tbl=(head,rows)=>`<div class="tbscroll"><table class="tbl"><thead><tr>${head.map((h,i)=>`<th${i?'':' class="l"'}>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td${i?'':' class="l"'}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+function reviewHTML(){
+ const ag=aggregate(),gk=S.pos==='GK';
+ const ca=S.tot.apps,cg=S.tot.goals,na=S.caps,ng=S.capGoals;
+ let h=`<h3 class="rv">通算成績</h3><div class="kv" style="margin-bottom:10px"><div><span>総合計出場</span><b>${ca+na}試合</b></div><div><span>総合計ゴール</span><b>${cg+ng}</b></div><div><span>クラブ（公式戦）</span><b>${ca}試合 ${cg}点</b></div><div><span>イタリア代表</span><b>${na}試合 ${ng}点</b></div>${gk?`<div><span>無失点試合</span><b>${S.tot.cs||0}</b></div>`:`<div><span>アシスト</span><b>${S.tot.assists}</b></div>`}<div><span>最高市場価値</span><b>${eur(S.peakMV||0)}</b></div></div>`;
+ if(S.coach.g>0)h+=`<h3 class="rv">監督としての通算</h3><div class="kv" style="margin-bottom:10px"><div><span>指揮試合数</span><b>${S.coach.g}試合</b></div><div><span>成績</span><b>${S.coach.w}勝${S.coach.d}分${S.coach.l}敗</b></div></div>`;
+ if(ag.by.length)h+=`<h3 class="rv">クラブ別の出場・ゴール</h3>`+tbl(['クラブ','年齢','出場','得点',gk?'無失点':'A'],ag.by.map(b=>[esc(b.name),b.a0+(b.a1>b.a0?'–'+b.a1:''),b.ap,b.g,gk?b.cs:b.as]));
+ if(ag.lgs.length)h+=`<h3 class="rv">リーグ別の出場・ゴール</h3>`+tbl(['リーグ','出場','得点'],ag.lgs.map(([k,l])=>[LG[k]?LG[k].n:k,l.ap,l.g]));
+ const cb=Object.values(S.coach.by);
+ if(cb.length)h+=`<h3 class="rv">監督としてのクラブ別成績</h3>`+tbl(['チーム','試合','勝','分','敗'],cb.map(b=>[esc(b.name),b.g,b.w,b.d,b.l]));
+ return h;
+}
+async function ending(){
+ clearSave();
+ const crowd=S.fame>=70?'街中が喪に服し、スタジアムの前には夜通し花とマフラーが積まれた。':S.fame>=40?'大勢のファンが弔問に訪れ、旧友たちが棺の前でクラブの歌を歌った。':S.fame>=15?'地元の人々と、かつてのチームメイトたちが見送った。':'家族と、古くからの友人たちが静かに見送った。';
+ say(`<h3>${esc(S.name)}、永眠</h3><p>${S.year}年、${S.age}歳。${S.cause}</p><p>${crowd}${S.kids.length?`${esc(S.kids[0].n)}は棺の上に、あなたの古いボールをそっと置いた。`:''}</p>`,'big');
+ const sc=lifeScore();let T=TITLES[0];for(const t of TITLES)if(sc>=t[0])T=t;
+ const hs=S.honors.filter(h=>h.p>=2).sort((a,b)=>b.p-a.p).slice(0,14);
+ const bg=`${esc(S.region.n)}州${esc(S.city)}（${HOODTX[S.hood]}）／${esc(S.fam.n)}`;
+ const html=`<div class="end"><div class="psub">人生の評価</div><div class="score">${sc}</div><h2>${T[1]}</h2><p>${T[2]}</p>
+ <div class="psub" style="margin:6px 0 12px">${S.by}年生まれ・享年${S.age}歳／${bg}</div>
+ ${reviewHTML()}
+ ${S.post&&S.post.title?`<h3 class="rv">引退後</h3><p>${esc(S.post.title)}</p>`:''}
+ ${hs.length?`<h3 class="rv">主な栄誉</h3><div class="tabbody" style="max-height:none">${hs.map(h=>`<div class="trophy"><span>${esc(h.n)}</span><b>${h.a}歳</b></div>`).join('')}</div>`:''}</div>`;
+ addEntry(html,'');
+ const i=await ask(null,[{label:'もう一度、別の人生を生きる'},{label:'この人生の記録をコピーする'}]);
+ if(i===1){const t=summaryText();try{await navigator.clipboard.writeText(t);say('<p>記録をコピーしました。</p>','res')}catch(err){say(`<p>コピーできませんでした。以下を選択して使ってください。</p><p style="white-space:pre-wrap;user-select:all">${esc(t)}</p>`,'res')}
+  await ask(null,[{label:'もう一度、別の人生を生きる'}]);}
+ title();
+}
+async function title(){
+ RUN++;AUTO=false;setSheet(false);S=null;feed.innerHTML='';act.innerHTML='';renderCard();
+ const sv=loadSave();
+ const wrap=document.createElement('div');wrap.className='title-screen';
+ wrap.innerHTML=`<div class="psub" style="letter-spacing:.14em">ITALIA ・ CALCIO ・ VITA</div><h2>イタリアに生まれ、<br>ボールとともに生きて、死ぬ。</h2><p>0歳から最期の日まで。名前も、生まれた町も、才能も、選べるのはほんの一部だけ。<br>ポジション、移籍、恋、スキャンダル、そして引退後の人生まで。サッカー選手の一生を、追体験しよう。</p><label for="nm">あなたの名前（空欄ならイタリア風の名前がランダムで付きます）</label><input id="nm" maxlength="24" autocomplete="off" placeholder="例：Luca Ferrari"><label for="rg">生まれる場所</label><select id="rg"><option value="-1">おまかせ（ランダム）</option>${REGIONS.map((r,i)=>`<option value="${i}">${r.n}州</option>`).join('')}</select><label for="era">生まれる年（1970年から5年刻み。選んだ年から人生が始まります）</label><select id="era"><option value="-1">おまかせ（ランダム）</option>${BYEARS.map(y=>`<option value="${y}">${y}年${y===2026?'（現在）':''}</option>`).join('')}</select>`;
+ feed.appendChild(wrap);
+ const opts=[{label:'新しい人生を始める',sub:'出身と年代は上で選べます。家庭と才能はランダム'}];
+ if(sv&&!sv.dead&&sv.age>=3)opts.push({label:`続きから（${sv.name}・${sv.age}歳）`,sub:'前回の自動保存から再開'});
+ const i=await ask(null,opts);
+ const nm=($('#nm')?$('#nm').value.trim():'').slice(0,24);
+ const rgv=$('#rg')?$('#rg').value:'-1',erv=$('#era')?$('#era').value:'-1';
+ feed.innerHTML='';
+ if(i===1){S=sv;ensureKid();renderLog();renderCard();lifeLoop()}
+ else{S=newState(nm,+rgv,+erv);renderCard();lifeLoop()}
+}
+$('#btn-pause').onclick=()=>setPaused(!PAUSED);
+$('#btn-speed').onclick=function(){SPEED=(SPEED+1)%3;this.textContent='速度：'+['ゆっくり','ふつう','はやい'][SPEED]};
+let rsTimer=0;
+$('#btn-restart').onclick=function(){
+ if(!rsTimer){this.textContent='もう一度押すとリセット';rsTimer=setTimeout(()=>{rsTimer=0;this.textContent='最初からやり直す'},3000);return}
+ clearTimeout(rsTimer);rsTimer=0;this.textContent='最初からやり直す';clearSave();title();
+};
+title();
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body></html>
