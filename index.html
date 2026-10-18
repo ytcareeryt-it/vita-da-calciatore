@@ -89,6 +89,10 @@ main{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:300px min
 .yr b{font-family:var(--f-num);font-size:1.9rem;line-height:1}
 .yr span{color:var(--muted);font-size:.85rem}
 .yr .ph{margin-left:auto;font-size:.72rem;letter-spacing:.1em;background:var(--azzurri-soft);color:var(--azzurri);padding:2px 8px;border-radius:4px;font-weight:700}
+.spd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.spd button{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 6px;text-align:center;line-height:1.35;min-height:44px}
+.spd button[aria-pressed=true]{border-color:var(--azzurri);box-shadow:inset 0 0 0 1px var(--azzurri)}
+.spd b{display:block;font-size:.95rem}.spd span{display:block;font-size:.68rem;color:var(--muted)}.spd em{display:block;font-style:normal;font-weight:700;color:var(--azzurri);font-size:1.05rem}
 .venue{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin:2px 0 6px;font-size:.78rem;color:var(--muted)}
 .venue b{font:600 .72rem/1 var(--f-body);padding:3px 7px;border-radius:999px;background:var(--azzurri);color:#fff}
 .venue b.sA{background:#6b3fa0}.venue b.sN{background:#2e7d32}
@@ -96,7 +100,10 @@ main{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:300px min
 ul.mt{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px;font-size:.88rem}
 ul.mt li{padding:5px 8px;border-radius:6px;background:rgba(127,127,127,.09)}
 ul.mt small{display:block;color:var(--muted);font-size:.74rem}
-.phead{display:flex;gap:10px;align-items:center}.c-crest svg{display:block}
+.phead{display:flex;gap:10px;align-items:center}
+.kvbig{grid-column:1/-1}.kvbig b{font-size:1.6rem;color:var(--azzurri)}
+.mvn{font-size:.8rem;margin:-4px 0 0;padding:4px 10px;border-radius:6px;background:rgba(127,127,127,.09);max-width:68ch}.mvn.up b{color:var(--verde)}.mvn.dn b{color:var(--rosso)}
+.entry.mv{background:none;border:none;padding:0}
 .entry{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;max-width:68ch;overflow-wrap:anywhere}
 .entry h3{font-family:var(--f-display);font-size:1.02rem;margin:0 0 4px}
 .entry p{margin:0}
@@ -139,12 +146,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
  header.top h1 small{font-size:.68rem}
  .ctl{width:100%}.ctl .btn{flex:1;min-height:40px;padding:6px 8px;font-size:.8rem}
  #mini{display:block;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:6px max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));background:var(--bg);border-bottom:1px solid var(--line)}
- #mini button{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;min-height:56px}
- .m-left{display:flex;align-items:center;gap:8px}.m-crest svg{display:block}
+ #mini button{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;min-height:64px}
  .m-ovr{font-family:var(--f-num);font-size:1.9rem;line-height:1;color:var(--azzurri);min-width:1.6em;text-align:center}
  .m-main b{display:block;font-family:var(--f-display);font-size:1rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
  .m-main small,.m-r small{display:block;color:var(--muted);font-size:.74rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
- .m-r{text-align:right}.m-r b{font-family:var(--f-num);font-weight:500}
+ .m-r{text-align:right}.m-r b{font-family:var(--f-num);font-weight:600;font-size:1.5rem;line-height:1.1;display:block;color:var(--azzurri)}
+ .m-sub{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;font-size:.72rem;color:var(--muted);border-top:1px solid var(--line);padding-top:3px;margin-top:-2px}.m-sub i{font-style:normal}
  main{gap:12px}
  #card{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:30;max-height:82vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px max(16px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));transform:translateY(110%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
  #card.open{transform:none;visibility:visible;transition:transform .25s}
@@ -249,6 +256,16 @@ const LG={
  SAU:{n:'サウジ・プロリーグ',m:62,cup:'キング・カップ',title:'サウジ優勝',eu:0,g:34,ct:'SA',pay:3.2},
  MLS:{n:'MLS',m:58,cup:'USオープンカップ',title:'MLSカップ優勝',eu:0,g:34,ct:'US',pay:1.2},
 };
+LG.EFL={n:'EFLチャンピオンシップ',m:60,cup:'FAカップ',title:'EFLチャンピオンシップ優勝',eu:0,g:46,ct:'UK',pay:.5};
+LG.LIGA2={n:'セグンダ・ディビシオン',m:58,cup:'コパ・デル・レイ',title:'セグンダ優勝',eu:0,g:42,ct:'ES',pay:.4};
+LG.BUN2={n:'2.ブンデスリーガ',m:56,cup:'DFBポカール',title:'2.ブンデスリーガ優勝',eu:0,g:34,ct:'DE',pay:.45};
+LG.L2={n:'リーグ・ドゥ',m:52,cup:'クープ・ド・フランス',title:'リーグ・ドゥ優勝',eu:0,g:38,ct:'FR',pay:.4};
+LG.POR2={n:'リーガ・ポルトガル2',m:50,cup:'タッサ・デ・ポルトガル',title:'ポルトガル2部優勝',eu:0,g:34,ct:'PT',pay:.35};
+LG.NED2={n:'エールステ・ディヴィシ',m:50,cup:'KNVBカップ',title:'オランダ2部優勝',eu:0,g:38,ct:'NL',pay:.35};
+LG.TUR2={n:'TFF1.リグ',m:50,cup:'トルコ杯',title:'トルコ2部優勝',eu:0,g:36,ct:'TR',pay:.4};
+LG.SAU2={n:'サウジ・ファースト・ディビジョン',m:48,cup:'キング・カップ',title:'サウジ2部優勝',eu:0,g:30,ct:'SA',pay:.6};
+const DN={A:'B',B:'C',C:'D',EPL:'EFL',LIGA:'LIGA2',BUN:'BUN2',L1:'L2',POR:'POR2',NED:'NED2',TUR:'TUR2',SAU:'SAU2'};
+const UP={};for(const k in DN)UP[DN[k]]=k;
 const C={}; const addC=(lg,arr)=>arr.forEach(([k,jp,lv])=>C[k]={k,jp,lv,lg});
 addC('A',[['INT','インテル',84],['JUV','ユヴェントス',83],['MIL','ミラン',82],['NAP','ナポリ',82],['ATA','アタランタ',80],['ROM','ローマ',79],['LAZ','ラツィオ',77],['FIO','フィオレンティーナ',75],['BOL','ボローニャ',74],['TOR','トリノ',70],['GEN','ジェノア',67],['UDI','ウディネーゼ',66],['SAS','サッスオーロ',64],['PAR','パルマ',62],['COM','コモ',63],['VER','ヴェローナ',63],['CAG','カリアリ',62],['LEC','レッチェ',60],['EMP','エンポリ',60]]);
 addC('B',[['PAL','パレルモ',58],['SAM','サンプドリア',56],['BAR','バーリ',54],['CRE','クレモネーゼ',55],['SPE','スペツィア',53],['MOD','モデナ',51],['PIS','ピサ',54],['SAL','サレルニターナ',52],['BRE','ブレシア',52],['VEN','ヴェネツィア',55],['CES','チェゼーナ',50]]);
@@ -268,7 +285,8 @@ const cname=k=>C[k]?C[k].jp:'';
 const AVG={JUV:2.9,INT:3.8,MIL:5.1,NAP:3.9,ATA:6.6,ROM:5.0,LAZ:6.3,FIO:8.5,BOL:11.5,TOR:11.8,GEN:12.5,UDI:10.5,SAS:11.5,PAR:14.5,COM:16,VER:14,CAG:14,LEC:16,EMP:14.5,
  PAL:8,SAM:7,BAR:9,CRE:11,SPE:9,MOD:13,PIS:11,SAL:10,BRE:10,VEN:7,CES:12,CAT:8,TRI:10,ARE:9,PES:8,LUC:10,TRN:11,ALE:9,D1:8,D2:9,D3:10,D4:7,
  MCI:2.2,ARS:4.5,LIV:3.8,CHE:4.5,TOT:5.5,NEW:9.5,BHA:11,WHU:10.5,RMA:1.9,FCB:2.2,ATM:3.0,BAY:1.3,BVB:2.8,LEV:4.5,PSG:1.6,MON:4.7,BEN:2.4,PTO:2.2,SCP:2.9,AJX:2.6,GAL:2.2,HIL:1.8,NAS:2.3,MIA:9,LAF:7};
-const LGN={A:20,B:20,C:20,D:18,EPL:20,LIGA:20,BUN:18,L1:18,POR:18,NED:18,TUR:20,SAU:18,MLS:30};
+const LGN={A:20,B:20,C:20,D:18,EPL:20,LIGA:20,BUN:18,L1:18,POR:18,NED:18,TUR:20,SAU:18,MLS:30,EFL:24,LIGA2:22,BUN2:18,L2:18,POR2:18,NED2:18,TUR2:20,SAU2:18};
+const C0=JSON.parse(JSON.stringify(C)),AVG0={...AVG};
 const FROM={HIL:2023,NAS:2023,MIA:2020,LAF:2018};
 const avail=c=>(S?S.year:2026)>=(FROM[c.k]||0);
 const infl=y=>clamp(Math.pow(1.065,(y||2026)-2026),.03,1.8);
@@ -283,7 +301,7 @@ function leagueRank(key,adj){
  for(const t of teams)t.v=t.p+gauss()*(1.3+t.p*.2)-(t.k===key?(adj||0):0);
  teams.sort((a,b)=>a.v-b.v);return teams.findIndex(t=>t.k===key)+1;
 }
-const BYEARS=[];for(let y=1970;y<=2025;y+=5)BYEARS.push(y);BYEARS.push(2026);
+const BYEARS=[];for(let y=1970;y<=2026;y++)BYEARS.push(y);
 const ERAFL={1970:'ラジオとテレビの時代。広場で蹴るボールは、擦り切れたゴム製だった。',1975:'カルチョの黄金期へ向かう時代。日曜の午後は、家族でラジオの実況を聞いた。',1980:'スタジアムの熱気は高まり、少年たちはみんな自分の英雄のユニフォームを欲しがった。',1985:'衛星放送が始まり、世界のサッカーが居間に届くようになった。',1990:'イタリアでW杯が開かれた世代。大人たちはいつもサッカーの話をしていた。',1995:'セリエAが世界最高峰と呼ばれた時代。あらゆる名手が町にやってきた。',2000:'携帯電話が普及し始めた頃。ゲーム機のサッカーにも夢中になった。',2005:'インターネットで世界中の試合を見られるようになった世代。',2010:'スマートフォンとSNSの時代。プレーの動画は、世界中に一瞬で届く。',2015:'データと映像分析の時代。少年たちはタブレットで試合を研究した。',2020:'パンデミックを経た世代。新しい時代のサッカーが始まっている。',2025:'AIとデータが当たり前になった時代。新しい世代のサッカーが始まっている。'};
 const hoodRoll=inc=>{const pr=clamp(.5-inc*.085,.04,.42),ps=clamp(.12+inc*.07,.1,.5),r=Math.random();return r<pr?'rough':r<pr+ps?'safe':'normal'};
 const HOODTX={rough:'シャッターの下りた商店と落書きの壁が続く、治安のよくない地区。',safe:'整った並木道と見守る大人たちが多い、穏やかな地区。',normal:'どこにでもある、普通の住宅街。'};
@@ -302,8 +320,14 @@ const growF=a=>{if(a>=25)return 1;for(let i=1;i<GROW.length;i++)if(a<=GROW[i][0]
 /* ===== state ===== */
 let S=null, tabSel='st', AUTO=false, RUN=0, PAUSED=false, SPEED=1, HOLD=0, sheetOpen=false;
 const PACES=[2400,1300,450], waiters=[];
-const SAVE='vita-da-calciatore-v3';
-function newState(name,regIdx,byYear){
+/* 読み上げ時間：100文字あたりの秒数（ゆっくり／ふつう／はやい）。判断1回は5秒 */
+const T100=[18,12,6],DECIDE_SEC=5;
+const EST={dec:90,chars:26000}; // ランダム人生の実測平均（tools/measure）
+const estMin=i=>{const m=Math.round((EST.dec*DECIDE_SEC+EST.chars/100*T100[i])/60);return m>=60?Math.floor(m/60)+'時間'+(m%60?m%60+'分':''):m+'分'};
+const SAVE='vita-da-calciatore-v4';
+function resetWorld(){for(const k in C0)C[k]={...C0[k]};for(const k in AVG0)AVG[k]=AVG0[k]}
+function applyWorld(s){resetWorld();if(s&&s.lgMap)for(const k in s.lgMap){const m=s.lgMap[k];if(C[k]){C[k].lg=m.lg;C[k].lv=m.lv;AVG[k]=m.avg}}}
+function newState(name,regIdx,byYear){resetWorld();
  const reg=regIdx>=0?REGIONS[regIdx]:pick(REGIONS), fam=(()=>{let t=FAMS.reduce((a,f)=>a+f.w,0)*Math.random();for(const f of FAMS){t-=f.w;if(t<=0)return f}return FAMS[0]})();
  const by=byYear>0?byYear:pick(BYEARS);
  const hood=hoodRoll(reg.inc);
@@ -315,7 +339,7 @@ function newState(name,regIdx,byYear){
   health:90,fame:0,joy:70,money:Math.round(fam.m*2000*infl(by+18)),hood,risk:clamp(40+(3-reg.inc)*5+({rough:14,safe:-8,normal:0}[hood])+(2-fam.m)*5+(75-fam.sup)*.15-(fam.foot?3:0),5,95),coach:{g:0,w:0,d:0,l:0,by:{}},club:null,lv:'child',parent:null,role:'',sal:0,cy:0,
   fav:null,friend:pick(MEN),rival:pick(FIRST)+' '+pick(LAST),agent:null,spouse:null,kids:[],
   caps:0,capGoals:0,ycaps:0,honors:[],rows:[],tot:{apps:0,goals:0,assists:0},post:null,dead:false,
-  log:[],flags:{},focus:null,peak:0,abroad:0,injuries:0,wcs:[],cause:'',lastPos:null};
+  lgMap:{},clubPrev:{},chars:0,mvLast:null,mvYear:null,log:[],flags:{},focus:null,peak:0,abroad:0,injuries:0,wcs:[],cause:'',lastPos:null};
 }
 const decl=(k,a)=>k==='pac'?Math.max(0,a-27)*1.9:k==='phy'?Math.max(0,a-29)*1.6:k==='dri'?Math.max(0,a-31)*1.2:Math.max(0,a-32)*.9;
 const st=k=>clamp(Math.round(S.pot[k]*growF(S.age)+S.bonus[k]-decl(k,S.age)+((k==='pas'||k==='def')?Math.min(5,Math.max(0,S.age-23)*.5):0)),1,99);
@@ -347,6 +371,11 @@ function chg(o0){ // apply changes, return chips html
  }
  renderCard();return h;
 }
+function mvNote(){
+ if(!S)return;const v=marketValue();if(v==null)return;const p=S.mvLast==null?v:S.mvLast;S.mvLast=v;
+ const d=v-p;if(Math.abs(d)<Math.max(5000,p*.01))return;
+ addEntry(`<div class="mvn ${d>0?'up':'dn'}">市場価値　${eur(p)} → <b>${eur(v)}</b>（${d>0?'+':'−'}${eur(Math.abs(d))}）</div>`,'mv');
+}
 function honor(n,pts=1,extra=''){S.honors.push({y:S.year,a:S.age,n,p:pts,x:extra});}
 const countH=n=>S.honors.filter(h=>h.n===n).length;
 const clubLv=()=>S.club&&C[S.club]?C[S.club].lv:30;
@@ -357,21 +386,21 @@ const phase=()=>({child:'幼少期',kid:'少年期',youth:'ユース',pro:'プ�
 const feed=$('#feed'),act=$('#actions');
 const calmMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const toEnd=force=>requestAnimationFrame(()=>{const de=document.documentElement;const dist=de.scrollHeight-(window.scrollY+innerHeight);if(force||dist<800)window.scrollTo({top:de.scrollHeight,behavior:calmMotion?'auto':'smooth'})});
-function addEntry(h,c,store=true){const e=document.createElement('div');e.className='entry '+(c||'');e.innerHTML=h;feed.appendChild(e);if(store&&S)S.log.push({t:'e',h,c});if(/big/.test(c||''))HOLD=1500;toEnd();return e}
+function addEntry(h,c,store=true){if(store&&S){const L=h.replace(/<[^>]+>/g,'').length;S.chars=(S.chars||0)+L;S.charsTot=(S.charsTot||0)+L}const e=document.createElement('div');e.className='entry '+(c||'');e.innerHTML=h;feed.appendChild(e);if(store&&S)S.log.push({t:'e',h,c});if(/big/.test(c||''))HOLD=1500;toEnd();return e}
 const say=(h,c)=>addEntry(h,c);
 function yrHead(){
  const af=affil(),h=`<b>${S.year}</b><span>${S.age}歳${af?'　'+esc(af.txt):''}</span><span class="ph">${phase()}</span>`;
  const e=document.createElement('div');e.className='yr';e.innerHTML=h;feed.appendChild(e);S.log.push({t:'y',h});toEnd();
 }
 function renderLog(){feed.innerHTML='';for(const l of S.log){if(l.t==='y'){const e=document.createElement('div');e.className='yr';e.innerHTML=l.h;feed.appendChild(e)}else addEntry(l.h,l.c,false)}toEnd()}
-function ask(q,opts){if(AUTO)return Promise.resolve(Math.floor(Math.random()*opts.length));return new Promise(r=>{act.innerHTML='';
+function ask(q,opts){if(AUTO)return Promise.resolve(Math.floor(Math.random()*opts.length));if(S)S.decs=(S.decs||0)+1;return new Promise(r=>{act.innerHTML='';
  if(q){const d=document.createElement('div');d.className='ask';d.textContent=q;act.appendChild(d)}
  opts.forEach((o,i)=>{const b=document.createElement('button');b.type='button';b.className='choice';
   b.innerHTML=esc(o.label)+(o.sub?`<small>${esc(o.sub)}</small>`:'');
   b.onclick=()=>{act.innerHTML='';r(i)};act.appendChild(b)});toEnd(true)})}
 function tick(extra){const tk=RUN;return new Promise(res=>{
  const show=()=>{if(!act.querySelector('.choice,.btn'))act.innerHTML=`<div class="auto" role="status">${PAUSED?'一時停止中':'人生が進んでいます…'}</div>`};
- show();const t=PACES[SPEED]+(extra||0)+HOLD;HOLD=0;
+ show();const t=(S&&S.chars!=null?Math.max(PACES[SPEED]/4,S.chars/100*T100[SPEED]*1000):PACES[SPEED])+(extra||0)+HOLD;HOLD=0;if(S)S.chars=0;
  setTimeout(()=>{if(tk!==RUN)return;if(PAUSED){show();waiters.push(()=>{if(tk===RUN)res()})}else res()},t)})}
 function setPaused(p){PAUSED=p;const b=$('#btn-pause');b.textContent=p?'再開':'一時停止';b.setAttribute('aria-pressed',p);const a=act.querySelector('.auto');if(a)a.textContent=p?'一時停止中':'人生が進んでいます…';if(!p)waiters.splice(0).forEach(f=>f())}
 function more(label){return new Promise(r=>{act.innerHTML='';const b=document.createElement('button');b.type='button';b.className='btn primary';b.textContent=label||'次へ';b.onclick=()=>{act.innerHTML='';r()};act.appendChild(b);toEnd();b.focus({preventScroll:true})})}
@@ -380,12 +409,13 @@ function renderCard(){
  const c=$('#card'),mini=$('#mini');c.hidden=!S;mini.hidden=!S;if(!S){c.innerHTML='';return}
  const o=ovr();if(S.lv!=='child'&&S.lv!=='retired')S.peak=Math.max(S.peak,o);
  const mv=marketValue();if(mv)S.peakMV=Math.max(S.peakMV||0,mv);
- const af=affil(),clubTxt=af?af.txt:S.lv==='retired'?'引退':'—',cr=af&&af.k?crest(af.k,34,af.lb):'';
- mini.innerHTML=`<button type="button" id="mini-btn" aria-expanded="${sheetOpen}" aria-controls="card"><span class="m-left">${cr?`<span class="m-crest">${cr}</span>`:''}<span class="m-ovr">${S.lv==='retired'?'—':S.pos?o:'--'}</span></span><span class="m-main"><b>${esc(S.name)}</b><small>${S.age}歳・${esc(clubTxt)}</small></span><span class="m-r"><b>${eur(S.money)}</b><small>詳細 ▴</small></span></button>`;
+  const af=affil(),clubTxt=af?af.txt:S.lv==='retired'?'引退':'—';
+ const sal=S.sal?eur(S.sal):'—';
+ mini.innerHTML=`<button type="button" id="mini-btn" aria-expanded="${sheetOpen}" aria-controls="card"><span class="m-ovr">${S.lv==='retired'?'—':S.pos?o:'--'}</span><span class="m-main"><b>${esc(S.name)}</b><small>${S.age}歳・${esc(clubTxt)}</small></span><span class="m-r"><small>${mv?'市場価値':'資産'}</small><b class="mv">${mv?eur(mv):eur(S.money)}</b></span><span class="m-sub">${mv?`資産 ${eur(S.money)}　／　`:''}年俸 ${sal}<i>詳細 ▴</i></span></button>`;
  $('#mini-btn').onclick=()=>setSheet(!sheetOpen);
- let h=`<button type="button" class="btn small sheet-close" id="sheet-close">閉じる ▾</button><div class="phead">${cr?`<span class="c-crest">${crest(af.k,44,af.lb)}</span>`:''}<div><div class="pname">${esc(S.name)}</div><div class="psub">${S.by}年生まれ・${esc(S.city)}（${esc(S.region.n)}）</div></div></div>
+ let h=`<button type="button" class="btn small sheet-close" id="sheet-close">閉じる ▾</button><div class="phead"><div><div class="pname">${esc(S.name)}</div><div class="psub">${S.by}年生まれ・${esc(S.city)}（${esc(S.region.n)}）</div></div></div>
  <div class="ovr"><b>${S.lv==='retired'?'—':S.pos?o:'--'}</b><span>${S.age}歳 / ${S.pos?POS[S.pos].n:'ポジション未定'}<br>${esc(clubTxt)}</span></div>
- <div class="kv"><div><span>資産</span><b>${eur(S.money)}</b></div><div><span>年俸</span><b>${S.sal?eur(S.sal):'—'}</b></div><div><span>市場価値</span><b>${mv?eur(mv):'—'}</b></div><div><span>通算</span><b>${S.tot.apps}試合 ${S.tot.goals}得点</b></div></div>
+ <div class="kv"><div class="kvbig"><span>市場価値</span><b>${mv?eur(mv):'—'}</b></div><div><span>資産</span><b>${eur(S.money)}</b></div><div><span>年俸</span><b>${S.sal?eur(S.sal):'—'}</b></div><div><span>通算</span><b>${S.tot.apps}試合 ${S.tot.goals}得点</b></div></div>
  <div class="tabs" role="group" aria-label="表示切替">${[['st','能力'],['sn','成績'],['ho','栄誉']].map(([k,l])=>`<button type="button" data-t="${k}" aria-pressed="${tabSel===k}">${l}</button>`).join('')}</div><div class="tabbody">`;
  if(tabSel==='st'){h+=`<div class="bars">${S.lv==='retired'?bar('',postLabel(),postScore()):KEYS.map(k=>bar('',SN[k],st(k))).join('')}${bar('h','健康',S.health)}${bar('f','人気',S.fame)}${bar('j','幸福',S.joy)}</div>`}
  else if(tabSel==='sn'){h+=S.rows.length?`<table><thead><tr><th>年齢</th><th>クラブ</th><th>出</th><th>点</th><th>A</th><th>評</th></tr></thead><tbody>${S.rows.map(r=>`<tr><td>${r.a}</td><td class="l">${esc(r.c)}</td><td>${r.ap}</td><td>${r.g}</td><td>${r.as}</td><td>${r.r}</td></tr>`).join('')}</tbody></table>`:'<p class="psub">まだ記録はありません。</p>'}
@@ -425,7 +455,9 @@ const VEN={
  AJX:['アムステルダム','ヨハン・クライフ・アレーナ'],GAL:['イスタンブール','ラムス・パーク'],HIL:['リヤド','キングダム・アリーナ'],NAS:['リヤド','アル・アウワル・パーク'],
  MIA:['フォートローダーデール','チェイス・スタジアム'],LAF:['ロサンゼルス','BMOスタジアム']
 };
-const EUOPP=[['レアル・マドリード','マドリード','サンティアゴ・ベルナベウ'],['バルセロナ','バルセロナ','カンプ・ノウ'],['バイエルン','ミュンヘン','アリアンツ・アレーナ'],['マンチェスター・C','マンチェスター','エティハド・スタジアム'],['リヴァプール','リヴァプール','アンフィールド'],['アーセナル','ロンドン','エミレーツ・スタジアム'],['パリ・サンジェルマン','パリ','パルク・デ・プランス'],['ドルトムント','ドルトムント','ジグナル・イドゥナ・パルク'],['アトレティコ・マドリード','マドリード','メトロポリターノ'],['ベンフィカ','リスボン','エスタディオ・ダ・ルス'],['ポルト','ポルト','エスタディオ・ド・ドラゴン'],['アヤックス','アムステルダム','ヨハン・クライフ・アレーナ'],['マンチェスター・U','マンチェスター','オールド・トラッフォード'],['チェルシー','ロンドン','スタンフォード・ブリッジ'],['レヴァークーゼン','レヴァークーゼン','バイアレーナ'],['セルティック','グラスゴー','セルティック・パーク'],['ガラタサライ','イスタンブール','ラムス・パーク'],['スポルティング','リスボン','ジョゼ・アルヴァラーデ'],['インテル','ミラノ','サン・シーロ'],['ユヴェントス','トリノ','アリアンツ・スタジアム'],['ミラン','ミラノ','サン・シーロ'],['ナポリ','ナポリ','スタディオ・マラドーナ']];
+const EUOPP=[['レアル・マドリード','マドリード','サンティアゴ・ベルナベウ',90],['バルセロナ','バルセロナ','カンプ・ノウ',88],['バイエルン','ミュンヘン','アリアンツ・アレーナ',89],['マンチェスター・C','マンチェスター','エティハド・スタジアム',90],['リヴァプール','リヴァプール','アンフィールド',87],['アーセナル','ロンドン','エミレーツ・スタジアム',88],['パリ・サンジェルマン','パリ','パルク・デ・プランス',86],['ドルトムント','ドルトムント','ジグナル・イドゥナ・パルク',82],['アトレティコ・マドリード','マドリード','メトロポリターノ',83],['ベンフィカ','リスボン','エスタディオ・ダ・ルス',76],['ポルト','ポルト','エスタディオ・ド・ドラゴン',75],['アヤックス','アムステルダム','ヨハン・クライフ・アレーナ',74],['マンチェスター・U','マンチェスター','オールド・トラッフォード',82],['チェルシー','ロンドン','スタンフォード・ブリッジ',83],['レヴァークーゼン','レヴァークーゼン','バイアレーナ',82],['セルティック','グラスゴー','セルティック・パーク',68],['ガラタサライ','イスタンブール','ラムス・パーク',72],['スポルティング','リスボン','ジョゼ・アルヴァラーデ',75],['インテル','ミラノ','サン・シーロ',84],['ユヴェントス','トリノ','アリアンツ・スタジアム',83],['ミラン','ミラノ','サン・シーロ',82],['ナポリ','ナポリ','スタディオ・マラドーナ',82]];
+const EUMID=[['セビージャ','セビリア','ラモン・サンチェス・ピスフアン',77],['ビジャレアル','ビジャレアル','エスタディオ・デ・ラ・セラミカ',74],['レアル・ソシエダ','サン・セバスティアン','レアレ・アレーナ',74],['アストン・ヴィラ','バーミンガム','ヴィラ・パーク',78],['ニース','ニース','アリアンツ・リヴィエラ',68],['リヨン','リヨン','グルパマ・スタジアム',72],['マルセイユ','マルセイユ','スタッド・ヴェロドローム',72],['フランクフルト','フランクフルト','ドイツ銀行パーク',72],['シュトゥットガルト','シュトゥットガルト','メルセデス・ベンツ・アレーナ',72],['ブラガ','ブラガ','エスタディオ・ムニシパル・デ・ブラガ',66],['PSV','アイントホーフェン','フィリップス・スタディオン',74],['フェイエノールト','ロッテルダム','デ・カイプ',73],['クラブ・ブルッヘ','ブルッヘ','ヤン・ブレイデル・スタディオン',66],['レッドブル・ザルツブルク','ザルツブルク','レッドブル・アレーナ',64],['オリンピアコス','ピレウス','カライスカキス・スタジアム',63],['ディナモ・ザグレブ','ザグレブ','スタディオン・マクシミル',60],['ヤング・ボーイズ','ベルン','ヴァンクドルフ・スタディオン',58],['ヘンク','ヘンク','カデン・スタディオン',58],['ラピド・ウィーン','ウィーン','アリアンツ・スタディオン',56],['フェレンツヴァーロシュ','ブダペスト','グルパマ・アレーナ',56],['ベシクタシュ','イスタンブール','ヴォーダフォン・パーク',66],['フェネルバフチェ','イスタンブール','シュクリュ・サラコール',68],['ルドゴレツ','ラズグラード','ルドゴレツ・アレーナ',54],['レギア・ワルシャワ','ワルシャワ','マルシャウカ',54]];
+
 const UCLV=[['ミュンヘン','アリアンツ・アレーナ'],['ロンドン','ウェンブリー・スタジアム'],['マドリード','メトロポリターノ'],['イスタンブール','アタテュルク・オリンピヤット'],['パリ','スタッド・ド・フランス'],['リスボン','エスタディオ・ダ・ルス'],['ブダペスト','プスカーシュ・アレーナ'],['ミラノ','サン・シーロ'],['ローマ','スタディオ・オリンピコ'],['グラスゴー','ハムデン・パーク'],['カーディフ','プリンシパリティ・スタジアム'],['キエフ','NSCオリンピスキー'],['ウィーン','エルンスト・ハッペル・シュタディオン']];
 const CUPV={IT:[['ローマ','スタディオ・オリンピコ']],UK:[['ロンドン','ウェンブリー・スタジアム']],ES:[['セビリア','エスタディオ・ラ・カルトゥーハ'],['バレンシア','メスタージャ'],['マドリード','メトロポリターノ']],DE:[['ベルリン','オリンピアシュタディオン']],FR:[['サン＝ドニ','スタッド・ド・フランス']],PT:[['オエイラス','エスタディオ・ナシオナル（ジャモール）']],NL:[['ロッテルダム','デ・カイプ']],TR:[['イスタンブール','アタテュルク・オリンピヤット']],SA:[['ジッダ','キング・アブドゥッラー・スポーツシティ']]};
 const DERBY={INT:'MIL',MIL:'INT',ROM:'LAZ',LAZ:'ROM',JUV:'TOR',TOR:'JUV',GEN:'SAM',SAM:'GEN',PAL:'CAT',CAT:'PAL',ARS:'TOT',TOT:'ARS',RMA:'ATM',ATM:'RMA',BEN:'SCP',SCP:'BEN',BAY:'BVB',BVB:'BAY',FCB:'RMA',NAP:'SAL',SAL:'NAP',BAR:'LEC',LEC:'BAR',FIO:'EMP',EMP:'FIO',BOL:'SAS',SAS:'BOL',VER:'VEN',VEN:'VER',CAG:'PAL'};
@@ -473,30 +505,6 @@ const EUH={
 };
 const tourOf=(y,wc)=>(wc?WCH:EUH)[y]||[wc?'開催国':'開催国',[['開催都市','ナショナル・スタジアム'],['第二の都市','市営スタジアム'],['港町','アリーナ']]];
 
-/* ===== original crests (club colours, NOT the real club logos) ===== */
-const CREST={
- INT:['#0b2a6f','#111','v'],JUV:['#111','#f4f4f4','v'],MIL:['#c8102e','#111','v'],NAP:['#12a0d7','#fff','s'],ATA:['#1f4fa3','#111','v'],ROM:['#8e1f2f','#f0a30a','h'],LAZ:['#87ceeb','#fff','s'],FIO:['#5b2a86','#fff','s'],
- BOL:['#a52a3a','#1f3f8f','v'],TOR:['#7a1f2b','#fff','s'],GEN:['#a4202c','#1f3f8f','h'],UDI:['#222','#eee','v'],SAS:['#1a8f4a','#111','v'],PAR:['#f1c40f','#1f3f8f','v'],COM:['#1f4fa3','#fff','s'],VER:['#f1c40f','#1f3f8f','h'],
- CAG:['#a52a3a','#1f3f8f','h'],LEC:['#f1c40f','#c8102e','v'],EMP:['#1f6fd0','#fff','s'],PAL:['#f4a6c0','#222','h'],SAM:['#1f5fb5','#fff','h'],BAR:['#c8102e','#fff','h'],CRE:['#9aa0a6','#c8102e','v'],SPE:['#f4f4f4','#222','h'],
- MOD:['#f1c40f','#1f3f8f','h'],PIS:['#1f3f8f','#111','v'],SAL:['#7a1f2b','#fff','s'],BRE:['#1f5fb5','#fff','h'],VEN:['#e07a1f','#1a8f4a','v'],CES:['#222','#fff','h'],CAT:['#c8102e','#1f5fb5','v'],TRI:['#c8102e','#fff','h'],
- ARE:['#7a1f2b','#fff','s'],PES:['#6fc3f0','#fff','v'],LUC:['#222','#c8102e','v'],TRN:['#1f5fb5','#c8102e','h'],ALE:['#7a1f2b','#fff','v'],D1:['#2e7d32','#fff','v'],D2:['#6a1b9a','#fff','h'],D3:['#00695c','#f1c40f','s'],D4:['#1565c0','#fff','v'],
- KID:['#2e7d32','#fff','s'],MCI:['#6cabdd','#fff','s'],ARS:['#c8102e','#fff','h'],LIV:['#c8102e','#f1c40f','s'],CHE:['#1f4fa3','#fff','s'],TOT:['#f4f4f4','#12285a','s'],NEW:['#222','#fff','v'],BHA:['#1f6fd0','#fff','v'],WHU:['#7a1f2b','#6cabdd','h'],
- RMA:['#f4f4f4','#c9a227','s'],FCB:['#a50044','#004d98','v'],ATM:['#c8102e','#1f4fa3','v'],BAY:['#dc052d','#fff','s'],BVB:['#fde100','#111','s'],LEV:['#e32219','#111','h'],PSG:['#004170','#c8102e','h'],MON:['#c8102e','#fff','h'],
- BEN:['#e32219','#fff','s'],PTO:['#003f87','#fff','v'],SCP:['#0a8f4a','#fff','h'],AJX:['#f4f4f4','#d2122e','h'],GAL:['#e87722','#c8102e','h'],HIL:['#1f4fa3','#fff','s'],NAS:['#f1c40f','#1f4fa3','s'],MIA:['#f7b5cd','#222','s'],LAF:['#222','#c9a227','v'],
- ITA:['#0b5cad','#fff','s'],BIZ:['#4a5568','#c9a227','s'],MED:['#6a1b9a','#fff','s']
-};
-let crestN=0;
-function crest(k,px,label){
- const col=CREST[k]||['#4a5568','#fff','s'],a=col[0],b=col[1],s=col[2],id='cr'+(++crestN);
- const lum=h=>{const n=parseInt(h.slice(1),16);return ((n>>16)*.3+((n>>8)&255)*.59+(n&255)*.11)};
- const ABBR={D1:'BSA',D2:'USM',D3:'PFR',D4:'RIV'};
- const ab=ABBR[k]&&!label?ABBR[k]:k==='KID'?((S&&S.city)||'K').slice(0,1):label||(k.length<=3?k:k.slice(0,3));
- const tc=lum(a)>150?'#111':'#fff',tc2=lum(a)>150?'#fff':'#000';
- const path='M3 3h30v15c0 9-6.500 15-15 19C9.500 33 3 27 3 18z';
- const pat=s==='v'?`<rect x="9" width="6" height="40" fill="${b}"/><rect x="21" width="6" height="40" fill="${b}"/>`:s==='h'?`<rect x="18" width="18" height="40" fill="${b}"/>`:`<rect y="0" width="36" height="10" fill="${b}"/>`;
- const fs=ab.length<=3?11:ab.length===4?9:8;
- return `<svg class="crest" width="${px}" height="${Math.round(px*1.11)}" viewBox="0 0 36 40" role="img" aria-label="${esc(label||'クラブ')}のエンブレム"><defs><clipPath id="${id}"><path d="${path}"/></clipPath></defs><g clip-path="url(#${id})"><rect width="36" height="40" fill="${a}"/>${pat}</g><path d="${path}" fill="none" stroke="#fff" stroke-width="1.600"/><path d="${path}" fill="none" stroke="#0b1a33" stroke-opacity=".5" stroke-width=".6"/><text x="18" y="24" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${tc}" stroke="${tc2}" stroke-width="2" paint-order="stroke" font-family="system-ui,sans-serif">${esc(ab)}</text></svg>`;
-}
 /* current affiliation (for header / logo) — reset at retirement, then reflects the post-career job */
 function affil(){
  if(!S)return null;
@@ -569,11 +577,13 @@ async function playSeason(miss){
  if(S.pos==='GK'){const p=youth?0:gkGoalP(lgk);g=0;as=0;for(let i=0;i<ap0;i++){if(Math.random()<p)g++;if(Math.random()<.003)as++}cs=Math.round(ap0*clamp(.22+(o-L)/90,.08,.5)*(1+gauss()*.12))}
  const adj=clamp((o-refL)*.06,-1.5,2.2)*(S.role==='bench'||S.role==='out'?.3:1);
  const rank0=youth?clamp(Math.round(6+gauss()*3.5-(o-refL)/9),1,12):leagueRank(S.club,adj);
- const ctx={rank:rank0,g:Math.max(0,g),as:Math.max(0,as),cs,ap:ap0,lgk,lg,o,L,youth,fame:0,joy:0,ts:L+(11-rank0)*.7+Math.max(0,o-L)*.1,cupW:-1,euE:-1,mom:0};
- if(!youth){if(lg.cup)ctx.cupW=cupRun(ctx.ts,lgk);if(lg.eu&&rank0<=lg.eu)ctx.euE=euRun(ctx.ts)}
+ const ctx={rank:rank0,g:Math.max(0,g),as:Math.max(0,as),cs,ap:ap0,lgk,lg,o,L,youth,fame:0,joy:0,ts:L+(11-rank0)*.7+Math.max(0,o-L)*.1,cupW:-1,team:0,mom:0,euComp:null};
+ if(!youth&&EUS[lgk]){const cp=S.clubPrev[S.club];const prev=cp?cp.r:rank0;ctx.euComp=euComp(lgk,prev,cp&&cp.cup)}
  // key moments: 1-3 per season depending on playing time
  const nMom=youth?0:ap0>=28?(chance(.8)?3:2):ap0>=16?(chance(.7)?2:3):ap0>=6?1:0;
  if(nMom>0)await seasonMoments(ctx,nMom);
+ else if(!youth){await cupSeason(ctx);await euroSeason(ctx)}
+ if(!youth&&!ctx.decided&&Math.abs(ctx.team||0)>=3&&chance(.6))ctx.rank=clamp(ctx.rank-Math.sign(ctx.team),1,LGN[lgk]);
  const ap=ctx.ap;g=ctx.g;as=ctx.as;cs=Math.min(cs,ap);
  let rank=ctx.rank;const ts=ctx.ts;
  let rating=6.15+(o-refL)/20+gauss()*.22+(S.flags.adapt?-.35:0);
@@ -595,14 +605,15 @@ async function playSeason(miss){
  if(!youth){
   txt+=lg.n+'で'+(rank===1?'優勝！':rank<=4?rank+'位の好成績。':rank>=n-2?rank+'位と低迷し、降格が決まった。':rank+'位でシーズンを終えた。');
   if(rank===1){honor(lg.title,3)}
-  if((lgk==='B'||lgk==='C')&&rank<=2)out.push('昇格');
-  if(rank>=n-2&&lgk!=='D'){out.push('降格');S.cy=0}
-  if(lg.cup&&ctx.cupW>=0){let w=ctx.cupW;if(w>=4&&ctx.cupWin!==undefined)w=ctx.cupWin?5:4;g=ctx.g;
+  const promo=lgk==='D'?rank<=1:(UP[lgk]&&rank<=2),rel=!promo&&DN[lgk]&&lgk!=='D'&&rank>=n-2;
+  if(promo){out.push('昇格');S.flags.promo=1}
+  if(rel){out.push('降格');S.cy=0;S.flags.relegated=S.year}
+  if(lg.cup&&ctx.cupW>=0){const w=ctx.cupW;g=ctx.g;
    if(w===5){honor(lg.cup,2);out.push(`${lg.cup}優勝`)}else if(w===4){honor(lg.cup+'準優勝',1);out.push(`${lg.cup}準優勝`)}else if(w>=3)out.push(`${lg.cup}${cupName[w]}`)}
-  if(ctx.euE>=0){let e=ctx.euE;if(e>=4&&ctx.euWin!==undefined)e=ctx.euWin?5:4;g=ctx.g;
-   out.push(`${UCLN()}：${wasStage[e]}`);
-   if(e===4)honor(UCLN()+'準優勝',2);
-   if(e===5){honor(UCLN()+'優勝',6);S.flags.ucl=S.year}}
+  if(ctx.euRoute){const r=ctx.euRoute;g=ctx.g;
+   out.push(r.code>=4?r.out:`${r.name}：${r.out}`);
+   if(r.code===5){honor(r.name+'優勝',r.comp==='ucl'?6:r.comp==='uel'?3:2);if(r.comp==='ucl')S.flags.ucl=S.year}
+   else if(r.code===4)honor(r.name+'準優勝',r.comp==='ucl'?2:1)}
   if(S.pos==='FW'&&g>=lg.g*.55&&S.role==='ace'){honor(lg.n+'得点王',2);out.push(lg.n+'得点王')}
   if(o>=84&&rank<=3&&S.role==='ace'&&chance(.45)){honor('リーグ年間最優秀選手',3);out.push('リーグ年間最優秀選手')}
  }else{ if(rank===1){honor('ユースリーグ優勝',1);out.push('ユースリーグ優勝')} if(o-refL>=8&&chance(.4)){honor('ユース年間最優秀選手',1);out.push('ユース年間最優秀選手')}}
@@ -616,6 +627,16 @@ async function playSeason(miss){
  const cells=S.pos==='GK'?`<div><b>${cs}</b><span>無失点</span></div><div><b>${g}</b><span>得点</span></div>`:`<div><b>${g}</b><span>得点</span></div><div><b>${as}</b><span>アシスト</span></div>`;
  say(`<h3>${S.year}-${String(S.year+1).slice(2)}シーズン　${esc(cname(S.club))}${youth?' ユース':''}</h3><p>${txt}${out.length?'<br><b>'+out.join(' ／ ')+'</b>':''}</p>
  <div class="season"><div><b>${ap}</b><span>出場</span></div>${cells}<div><b>${ap?rating.toFixed(1):'-'}</b><span>評価</span></div><div><b>${rank}位</b><span>${youth?'ユース順位':'リーグ順位'}</span></div></div><p style="margin-top:8px">${fh}${mh}</p>`,out.some(x=>/優勝|昇格/.test(x))||rank===1?'big':rank>=n-2?'bad':'');
+ if(!youth){
+  if(ctx.euRoute)say(euSummaryHTML(ctx.euRoute),ctx.euRoute.code===5?'big':'');
+  if(ctx.cupRoute&&ctx.cupRoute.length>1)say(cupSummaryHTML(lg,ctx.cupRoute,ctx.cupW),ctx.cupW===5?'big':'');
+  const m1=marketValue(),m0=S.mvYear;
+  if(m0!=null&&m1!=null)addEntry(`<div class="mvn ${m1>=m0?'up':'dn'}">今季の市場価値の変動　${eur(m0)} → <b>${eur(m1)}</b>（${m1>=m0?'+':'−'}${eur(Math.abs(m1-m0))}）</div>`,'mv');
+  S.mvLast=m1;
+  S.clubPrev[S.club]={r:rank,cup:ctx.cupW>=5};
+  if(out.includes('昇格')){moveLeague(S.club,1);say(`<p>来季、${esc(cname(S.club))}は<b>${LG[C[S.club].lg].n}</b>で戦う。</p>`,'res')}
+  else if(out.includes('降格')){moveLeague(S.club,-1);say(`<p>来季、${esc(cname(S.club))}は<b>${LG[C[S.club].lg].n}</b>で戦う。降格したクラブの一員として、新たなシーズンが始まる。</p>`,'bad')}
+ }
  if(!youth)milestones(pa,pg);
  delete S.flags.adapt;
  return {rank,ap,g,out};
@@ -634,7 +655,9 @@ async function transferWindow(){
  let cand=pool.filter(c=>c.lv<=o+5&&c.lv>=o-14&&!(c.lg==='SAU'&&S.age<28)&&!(c.lg==='MLS'&&S.age<28));
  if(S.age>=31)cand=cand.concat(pool.filter(c=>(c.lg==='SAU'||c.lg==='MLS')&&c.lv<=o+6));
  cand.sort(()=>Math.random()-.5);
- const picked=[];for(const c of cand){if(picked.length>=3)break;if(!picked.some(x=>x.k===c.k))picked.push(c)}
+ const tier=mvTier(),maxOff={hi:3,mid:2,lo:1}[tier];
+ const picked=[];for(const c of cand){if(picked.length>=maxOff)break;if(!picked.some(x=>x.k===c.k))picked.push(c)}
+ if(!fresh&&tier==='lo'&&chance(.5)){say(`<p>${pick(AGENT_TX.lo.mid)}</p>`,'res');return}
  let loanOffers=[];
  if(S.age<=22&&(S.role==='bench'||S.role==='out'||S.role==='rotation')){
   loanOffers=Object.values(C).filter(c=>c.lv>=o-22&&c.lv<=o-4&&c.lg!=='SAU'&&c.lg!=='MLS'&&c.ct!=='x'&&LG[c.lg].ct==='IT'&&c.k!==S.club).sort(()=>Math.random()-.5).slice(0,1);
@@ -647,7 +670,7 @@ async function transferWindow(){
   opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）へ移籍`,sub:`年俸 ${eur(sal)}・${y}年・${c.lv>L+3?'格上のクラブ':c.lv<L-3?'格下のクラブ':'同格のクラブ'}${ab?'・海外挑戦':''}`});acts.push({t:'move',c,sal,y})}
  for(const c of loanOffers){opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）へレンタル移籍`,sub:'試合経験を積んで成長を狙う（1年）'});acts.push({t:'loan',c})}
  if(S.parent&&S.parent!==S.club){opts.push({label:`${cname(S.parent)}に復帰する`,sub:'レンタル元に戻る'});acts.push({t:'ret'})}
- say(`<h3>移籍マーケット</h3><p>${fresh?'契約が満了を迎えた。エージェントの電話が鳴り止まない。':'夏の移籍市場。あなたに関心を持つクラブがある。'}</p>`);
+ say(`<h3>移籍マーケット</h3><p>${pick(AGENT_TX[tier][fresh?'fresh':'mid'])}</p>`);
  const was=AUTO;if(opts.length===1)AUTO=true;
  const i=await ask('次のシーズン、どこでプレーする？',opts);AUTO=was;
  const a=acts[i];
@@ -672,6 +695,160 @@ function deathCheck(){
  return true;
 }
 function ageStep(){const a=S.age;if(a<15)return 3;if(S.lv==='retired')return 3;return 1}
+/* ===== decisions, domestic cup, European competitions, promotion / relegation ===== */
+function posOpts(){
+ const p=S.pos;
+ if(p==='GK')return [{l:'前に出て、コースを消す',s:'飛び出し',mod:.04,k:'def'},{l:'ポジションを信じて構える',s:'反応で勝負',mod:.02,k:'pac'},{l:'声でDFを動かす',s:'組織を整える',mod:.03,k:'pas',team:1}];
+ if(p==='DF')return [{l:'体を張ってブロックする',s:'フィジカル勝負',mod:.03,k:'phy'},{l:'読みでボールを奪いにいく',s:'インターセプト',mod:.04,k:'def'},{l:'一気に攻撃参加する',s:'ゴールも狙う',mod:0,k:'sho',g:.2}];
+ if(p==='MF')return [{l:'自分でシュートを打つ',s:'ミドルレンジ',mod:.02,k:'sho',g:.35},{l:'決定的なパスを通す',s:'チャンスを演出',mod:.04,k:'pas',a:.5},{l:'ゲームのテンポを落ち着かせる',s:'チームを安定させる',mod:.03,k:'pas',team:1}];
+ return [{l:'迷わずシュートを打つ',s:'ゴールを狙う',mod:.03,k:'sho',g:.45},{l:'ドリブルで仕掛ける',s:'突破を狙う',mod:.02,k:'dri',g:.3,a:.25},{l:'味方に預けてチャンスを広げる',s:'パス',mod:.04,k:'pas',a:.45}];
+}
+/* 選択 → 勝敗・士気・能力・幸福度・人気に反映。結果は選択のあとに確率で決まる */
+async function decide(ctx,sp){
+ if(sp.title){mom(sp.title,sp.m,sp.body,sp.cls);if(ctx)ctx.mom=(ctx.mom||0)+1}
+ const opts=sp.opts||posOpts();
+ const was=AUTO;if(sp.auto)AUTO=true;
+ const i=await ask(sp.q||'あなたの決断は？',opts.map(o=>({label:o.l,sub:o.s})));AUTO=was;
+ const o=opts[i],stat=o.k?(st(o.k)-60)*.004:0,mood=((ctx&&ctx.team)||0)*.01;
+ const p=clamp((sp.p||.5)+(o.mod||0)+stat+mood,.08,.92),win=chance(p);
+ const fx={};let ex='';
+ if(win){
+  fx.fame=sp.wf!=null?sp.wf:2;fx.joy=sp.wj!=null?sp.wj:5;
+  if(o.k&&chance(.5))fx[o.k]=1;
+  if(o.fame)fx.fame+=o.fame;
+  if(o.g&&S.pos!=='GK'&&chance(o.g)){if(ctx)ctx.g+=1;ex+='<br><b>あなたのゴールが流れを決めた。</b>';fx.fame+=1}
+  else if(o.a&&S.pos!=='GK'&&chance(o.a)){if(ctx)ctx.as+=1;ex+='<br>あなたのアシストが勝利を引き寄せた。'}
+  if(ctx)ctx.team=(ctx.team||0)+(o.team||0)+1;
+ }else{
+  fx.fame=sp.lf!=null?sp.lf:-1;fx.joy=sp.lj!=null?sp.lj:-5;
+  if(ctx)ctx.team=(ctx.team||0)-1;
+ }
+ const h=chg(fx);
+ say(`<p>${win?(o.w||sp.w):(o.f||sp.f)}${ex}</p>${h}`,win?(sp.wcls||'good'):'bad');
+ mvNote();
+ return {win,i,p};
+}
+const teamTs=ctx=>ctx.ts+(ctx.team||0)*.8;
+
+/* ===== promotion / relegation (the club really changes league) ===== */
+function moveLeague(k,dir){
+ const c=C[k];if(!c)return;const from=c.lg,to=dir<0?DN[from]:UP[from];if(!to||!LG[to])return;
+ c.lg=to;c.lv=clamp(c.lv+(dir<0?-7:6),20,92);AVG[k]=dir<0?3.5:Math.max(8,LGN[to]-4);
+ S.lgMap[k]={lg:to,lv:c.lv,avg:AVG[k]};
+}
+
+/* ===== European qualification (previous-season position, latest UEFA league-phase format) ===== */
+const EUS={A:[4,2,1],EPL:[5,2,1],LIGA:[4,2,1],BUN:[4,2,1],L1:[3,2,1],POR:[2,1,1],NED:[2,1,1],TUR:[1,2,1]}; // [CL, EL, ECL] by league position (+cup winners fill EL)
+function euComp(lgk,prev,cupWin){
+ const t=EUS[lgk];if(!t)return null;
+ let [a,b,c]=t;if(lgk==='EPL'&&S.year<2025)a=4;
+ if(S.year<2021){b+=c;c=0}
+ if(prev<=a)return 'ucl';
+ if(prev<=a+b||cupWin)return 'uel';
+ if(c&&prev<=a+b+c)return 'uecl';
+ return null;
+}
+const ECOMP={
+ ucl:{n:()=>UCLN(),games:8,direct:16,play:9,lv:[74,92],big:true},
+ uel:{n:()=>S.year<2009?'UEFAカップ':'ヨーロッパリーグ',games:8,direct:14,play:9,lv:[62,84]},
+ uecl:{n:()=>'カンファレンスリーグ',games:6,direct:11,play:7,lv:[50,72]}};
+const CTRY_NAMES={IT:['インテル','ユヴェントス','ミラン','ナポリ'],UK:['マンチェスター・C','リヴァプール','アーセナル','マンチェスター・U','チェルシー','アストン・ヴィラ'],ES:['レアル・マドリード','バルセロナ','アトレティコ・マドリード','セビージャ','ビジャレアル','レアル・ソシエダ'],DE:['バイエルン','ドルトムント','レヴァークーゼン','フランクフルト','シュトゥットガルト'],FR:['パリ・サンジェルマン','ニース','リヨン','マルセイユ'],PT:['ベンフィカ','ポルト','スポルティング','ブラガ'],NL:['アヤックス','PSV','フェイエノールト'],TR:['ガラタサライ','ベシクタシュ','フェネルバフチェ']};
+function euOppPick(comp,lo,hi,used){
+ const ct=LG[C[S.club].lg].ct,bad=new Set([...(CTRY_NAMES[ct]||[]),cname(S.club),...used]);
+ let L=EUOPP.concat(EUMID).filter(x=>!bad.has(x[0])&&x[3]>=lo&&x[3]<=hi);
+ if(!L.length)L=EUOPP.concat(EUMID).filter(x=>!bad.has(x[0]));
+ return pick(L);
+}
+const tierOf=(M,pts)=>pts>=M.direct?'R16':pts>=M.play?'PO':'OUT';
+function posOf(M,pts){const t=tierOf(M,pts);if(t==='R16')return clamp(Math.round(9-(pts-M.direct+1)*1.4),1,8);if(t==='PO')return 9+Math.floor((M.direct-1-pts)*15/Math.max(1,M.direct-M.play));return clamp(25+(M.play-1-pts)*2,25,36)}
+function oppMatchV(side,o,fixed){const h=venueOf(S.club);if(side==='N')return {side,city:fixed[0],stad:fixed[1],opp:o[0]};return side==='H'?{side,city:h[0],stad:h[1],opp:o[0]}:{side,city:o[1],stad:o[2],opp:o[0]}}
+async function euroSeason(ctx){
+ const comp=ctx.euComp;if(!comp)return;
+ const M=ECOMP[comp],name=M.n(),can=ctx.ap>=10,ts=teamTs(ctx);
+ const lines=[],used=[];let pts=0,W=0,D=0,Lo=0;
+ const sides=Array.from({length:M.games},(_,j)=>j%2?'H':'A');if(chance(.5))sides.reverse();
+ for(let j=0;j<M.games;j++){
+  const o=euOppPick(comp,M.lv[0],M.lv[1],used);used.push(o[0]);const m=oppMatchV(sides[j],o),pW=clamp(.46+(ts-o[3])*.014+(sides[j]==='H'?.05:-.03),.1,.8);
+  let r;
+  const last=j===M.games-1;
+  if(last&&can&&(tierOf(M,pts+3)!==tierOf(M,pts)||tierOf(M,pts)==='OUT')){
+   const d=await decide(ctx,{title:`${name} リーグフェーズ 最終節`,m,body:`${tierOf(M,pts)==='OUT'?'ここで勝たなければ、欧州の旅はリーグフェーズで終わる。':tierOf(M,pts+3)==='R16'&&tierOf(M,pts)!=='R16'?'勝てば、ラウンド16へ直行できる。':'勝てば、ノックアウトフェーズ進出が決まる。'}${crowd(m)}`,q:'この一戦、あなたの決断は？',p:pW,w:'勝利。望んでいた結果を、自分たちの手でつかんだ。',f:'届かなかった。スタンドの空気が、ずしりと重かった。'});
+   r=d.win?'W':chance(.3)?'D':'L';
+  }else{const x=Math.random();r=x<pW?'W':x<pW+.22?'D':'L'}
+  pts+=r==='W'?3:r==='D'?1:0;r==='W'?W++:r==='D'?D++:Lo++;
+  lines.push({lab:`第${j+1}節`,op:o[0],sc:r==='W'?scW():r==='D'?scD():scL(),r,v:[m.city,m.stad],side:sides[j]});
+ }
+ const tier=tierOf(M,pts),pos=posOf(M,pts);
+ const route={comp,name,pts,pos,W,D,L:Lo,lines,ko:[],out:'',stage:-1};
+ let alive=tier!=='OUT',stage=[];
+ if(tier==='PO')stage=['プレーオフ','ラウンド16','準々決勝','準決勝','決勝'];else if(tier==='R16')stage=['ラウンド16','準々決勝','準決勝','決勝'];
+ if(!alive){route.out='リーグフェーズ敗退'}
+ let reached=0,champ=false;
+ for(let s=0;s<stage.length&&alive;s++){
+  const sn=stage[s],fin=sn==='決勝';
+  const lv=clamp(M.lv[0]+(s+(tier==='PO'?0:1))*3+rnd(0,5),M.lv[0],M.lv[1]+3);
+  const o=euOppPick(comp,Math.max(M.lv[0],lv-6),M.lv[1]+4,used);used.push(o[0]);
+  const side=fin?'N':rside(),m=fin?oppMatchV('N',o,pick(UCLV)):oppMatchV(side,o);
+  const pT=clamp(.48+(ts-o[3])*.01,.12,.72),pre=chance(pT);
+  let won=pre;
+  if(can&&!fin&&!pre&&(ctx.mom||0)>=3)won=chance(pT*.8);
+  if(can&&(!pre||fin)&&(fin||(ctx.mom||0)<3)){
+   const d=await decide(ctx,{title:`${name} ${sn}`,m,body:`${fin?'欧州の頂点を懸けた一発勝負。':'負ければ終わりの'+(sn==='決勝'?'':'第2戦。合計スコアは並んでいる。')}${crowd(m)}`,q:fin?'決勝の戦い方は？':'この一戦、あなたの決断は？',p:fin?pT:clamp(pT*.4+.08,.1,.5),wj:fin?12:6,wf:fin?5:3,w:fin?pick(['延長戦の末の勝利。','PK戦を制して、勝利。','1点を守り抜いて、勝利。'])+`${name}優勝。歓喜の輪の中で、あなたは膝から崩れ落ちた。`:pick(['合計スコアで上回り、勝ち上がった。','PK戦を制し、次のラウンドへ駒を進めた。']),f:fin?`あと一歩届かなかった。${name}準優勝。表彰式の間、銀色のメダルがやけに重かった。`:'延長でも決着はつかず、PK戦で力尽きた。欧州の夢は、ここで途絶えた。',wcls:fin?'big':'good'});
+   won=d.win;
+  }
+  const lg=won;
+  route.ko.push({lab:sn,op:o[0],r:won?'W':'L',sc:fin?(won?scW():scL()):(won?pick(['合計 3-2','合計 4-3','合計 2-1','合計 5-3','PK戦 4-3']):pick(['合計 1-2','合計 2-3','PK戦 3-4','合計 0-2'])),v:[m.city,m.stad]});
+  if(won){reached=s+1;if(fin){champ=true;alive=false}}else alive=false;
+ }
+ // outcome label
+ if(tier!=='OUT'){
+  const lastSn=stage[Math.min(stage.length-1,Math.max(0,reached-(champ?1:0)))];
+  if(champ){route.out=`${name}優勝`;route.code=5}
+  else{const si=reached,fail=stage[si];route.out=fail==='決勝'?`${name}準優勝`:fail==='プレーオフ'?'ノックアウト・プレーオフ敗退':fail==='ラウンド16'?'ラウンド16敗退':fail==='準々決勝'?'ベスト8':'ベスト4';route.code=fail==='決勝'?4:fail==='準決勝'?3:fail==='準々決勝'?2:1}
+ }else route.code=0;
+ ctx.euRoute=route;
+ return route;
+}
+function euSummaryHTML(r){
+ const lp=r.lines.map(l=>`<li><b>${l.lab}</b>　vs ${esc(l.op)}　${l.r==='W'?'○':l.r==='D'?'△':'●'} ${l.sc}<small>${l.side==='H'?'ホーム':'アウェイ'}・${esc(l.v[0])}／${esc(l.v[1])}</small></li>`).join('');
+ const ko=r.ko.map(l=>`<li><b>${l.lab}</b>　vs ${esc(l.op)}　${l.r==='W'?'○':'●'} ${l.sc}<small>${esc(l.v[0])}／${esc(l.v[1])}</small></li>`).join('');
+ return `<h3>${r.name} ${S.year}-${String(S.year+1).slice(2)}　欧州の旅路</h3><p>リーグフェーズ：${r.W}勝${r.D}分${r.L}敗・勝点${r.pts}・<b>${r.pos}位</b>${r.pos<=8?'（ラウンド16へ直行）':r.pos<=24?'（ノックアウト・プレーオフへ）':'（敗退）'}</p><ul class="mt">${lp}${ko}</ul><p style="margin-top:6px"><b>${r.out}</b></p>`;
+}
+
+/* ===== domestic cup ===== */
+async function cupSeason(ctx){
+ const lg=ctx.lg;if(!lg.cup||ctx.lgk==='D'){return}
+ const can=ctx.ap>=10,ts=teamTs(ctx),stages=['3回戦','ラウンド16','準々決勝','準決勝','決勝'];
+ const route=[];let w=0;const used=[];
+ for(let s=0;s<5;s++){
+  const fin=s===4,sn=stages[s];
+  const pool=ctryClubs().sort((a,b)=>b.lv-a.lv),top=pool.slice(0,Math.max(4,Math.ceil(pool.length*(.9-s*.15))));
+  let o=null;const cand=top.filter(c=>!used.includes(c.k));o=cand.length?pick(cand):(pool.length?pick(pool):null);
+  if(!o){break}used.push(o.k);
+  const ct=LG[ctx.lgk].ct;let m;
+  if(fin)m=(ct==='US')?mvs(rside(),o.k):mnu(pick(CUPV[ct]||CUPV.IT),cname(o.k));else m=mvs(rside(),o.k);
+  const pT=clamp(.46+(ts-o.lv)*.009,.15,.72),pre=chance(pT);let won=pre;
+  if(can&&(!pre||fin)&&(fin||(ctx.mom||0)<3)){
+   const d=await decide(ctx,{title:`${lg.cup} ${sn}`,m,body:`${fin?'カップの頂点を懸けた一発勝負。':'負ければ終わりの一発勝負。'}${o.lv>ctx.L+6?'相手は格上。':''}${crowd(m)}`,q:fin?'決勝の戦い方は？':'この一戦、あなたの決断は？',p:fin?pT:clamp(pT*.4+.08,.1,.5),wj:fin?12:5,wf:fin?5:2,w:fin?pick(['延長戦の末の勝利。','PK戦を制して、勝利。','後半の勝ち越し点で、勝利。'])+`${lg.cup}優勝。`:(o.lv>ctx.L+6?'格上を相手に番狂わせを演じた。新聞の見出しは「ジャイアントキリング」。':'堅実な戦いで、次のラウンドへ進んだ。'),f:fin?`あと一歩届かなかった。${lg.cup}準優勝。銀色のメダルがやけに重かった。`:'力の差はなかったはずなのに、運がなかった。カップ戦の旅はここで終わった。',wcls:fin?'big':'good'});
+   won=d.win;
+  }
+  route.push({lab:sn,op:cname(o.k),r:won?'W':'L',sc:won?scW():scL(),v:[m.city,m.stad]});
+  if(won)w++;else break;
+ }
+ ctx.cupW=w;ctx.cupRoute=route;
+}
+function cupSummaryHTML(lg,route,w){
+ const li=route.map(l=>`<li><b>${l.lab}</b>　vs ${esc(l.op)}　${l.r==='W'?'○':'●'} ${l.sc}<small>${esc(l.v[0])}／${esc(l.v[1])}</small></li>`).join('');
+ return `<h3>${lg.cup}　今季の道のり</h3><ul class="mt">${li}</ul><p style="margin-top:6px"><b>${w>=5?'優勝':w===4?'準優勝':['初戦敗退','ベスト16','ベスト8','ベスト4'][w]}</b></p>`;
+}
+
+/* 市場価値の水準：5大リーグ所属選手の上位30%（概算€14M以上）／下位30%（概算€3M以下）。インフレ補正あり */
+function mvTier(){const v=marketValue();if(v==null)return 'mid';const I=infl(S.year);return v>=14e6*I?'hi':v<=3e6*I?'lo':'mid'}
+const AGENT_TX={
+ hi:{fresh:['契約が満了を迎えた。エージェントの電話が鳴り止まない。複数のクラブが破格の条件を並べている。','契約満了。各国のクラブから、ひっきりなしに連絡が入る。エージェントは嬉しい悲鳴を上げている。'],mid:['夏の移籍市場。複数のクラブが獲得に関心を寄せている。','移籍市場が開いた。いくつかのクラブから、打診が届いている。']},
+ mid:{fresh:['契約が満了を迎えた。いくつかのクラブから打診が届いているが、条件は一長一短だ。','契約満了。エージェントが慎重に、条件を探っている。'],mid:['夏の移籍市場。あなたに関心を示すクラブがある。','移籍市場。目立った動きはないが、いくつかのクラブが調査していると聞く。']},
+ lo:{fresh:['契約が満了を迎えた。しかし、エージェントからの電話は、ほとんど鳴らなかった。','契約満了。待てど暮らせど、連絡は来ない。提示された条件は、現状維持とほとんど変わらなかった。'],mid:['夏の移籍市場。あなたの名前が挙がることは、ほとんどなかった。','移籍市場が閉まるまで、電話が鳴ることはなかった。']}
+};
 /* ===== key moments (with venue) ===== */
 const SIDE={H:'ホーム',A:'アウェイ',N:'中立地'};
 const venueOf=k=>VEN[k]||[(S&&S.city)||'地元','市営スタジアム'];
@@ -691,25 +868,9 @@ const mom=(title,m,body,cls)=>say(`<h3>${title}</h3>${vtag(m)}<p>${body}</p>`,cl
 const hasFans=()=>!(S.year===2020||S.year===2021);
 const crowd=m=>!hasFans()?'無観客のスタジアムに、選手の声とボールの音だけが響いた。':m.side==='N'?pick(['青と相手の色が半分ずつ客席を埋め、スタジアムが震えた。','中立の地に、両国のサポーターの歌声が響き渡った。','国旗の波が客席を埋め尽くし、試合前から地鳴りのような熱気だった。']):m.side==='H'?pick(['スタジアムは超満員、地鳴りのような声援が降り注いだ。','ホームの観衆が一体となって、背中を押した。']):pick(['敵地の凄まじいブーイングが耳を塞いだ。','アウェイ席の遠征サポーターだけが、最後まで歌い続けていた。']);
 
-async function finalEvent(kind,ctx){
- const lg=ctx.lg,eu=kind==='eu',name=eu?UCLN():lg.cup;
- const was=AUTO;if(S.role==='bench'||S.role==='out'||ctx.ap<10)AUTO=true;
- let m;
- if(eu)m=mnu(pick(UCLV),euOpp()[0]);
- else{const ct=LG[ctx.lgk].ct,o=cupOpp();if(ct==='US'&&o)m=mvs(rside(),o.k);else m=mnu(pick(CUPV[ct]||CUPV.IT),o?cname(o.k):'ライバル')}
- const lead=pick(['大舞台がやってきた。','決勝の朝、街はクラブの色に染まっていた。','ここまで来た全ての努力が、この90分に詰まっている。']);
- mom(`${name}決勝`,m,`${lead}${crowd(m)}国歌のあと、あなたはピッチに立った。`);
- const i=await ask('決勝の戦い方は？',[{label:'ゴールを狙いにいく',sub:'エースの仕事をする'},{label:'チームのためにハードワークする',sub:'守備も運動量も惜しまない'},{label:'PK戦に備えて蹴る順を志願する',sub:'延長・PK戦にもつれたとき'}]);
- AUTO=was;
- const p=clamp(.5+(ctx.ts-80)*.01+[.02,.03,.04][i],.25,.8),win=chance(p);
- let g=0;if(win&&i===0&&S.pos!=='GK'&&chance(.5)){g=1;ctx.g+=1}
- const way=win?pick(['延長戦の末に','PK戦を制して','後半の勝ち越し点で','1点を守り抜いて']):pick(['延長戦の末に','PK戦で力尽き','後半の失点が重くのしかかり','最後まで攻め続けたが']);
- say(`<p>${win?`${way}勝利。${g?'あなたのゴールが勝負を決めた。':''}終了の笛。歓喜の輪の中で、あなたは膝から崩れ落ちた。<b>${name}優勝。</b>`:`${way}敗れた。<b>${name}準優勝。</b>あと一歩届かなかった。表彰式の間、銀色のメダルがやけに重かった。`}${chg({fame:win?5:-1,joy:win?12:-6})}</p>`,win?'good':'bad');
- ctx[kind+'Win']=win;return win;
-}
-
 /* --- decisive league moments --- */
-async function deciderMoment(ctx,type){
+async function deciderMoment(ctx,type){await deciderMoment0(ctx,type);mvNote()}
+async function deciderMoment0(ctx,type){
  const {lgk,lg}=ctx,n=LGN[lgk];
  if(type==='title'){
   const lead=ctx.rank===1,m=lgMatch(),adv=m.side==='H';
@@ -743,165 +904,141 @@ async function deciderMoment(ctx,type){
  }
 }
 
-/* --- random pool of key moments --- */
+/* --- random pool of key moments (every one is a decision that changes the match / mood / skills) --- */
 const MOMS=[];
 const MO=(id,w,ok,run)=>MOMS.push({id,w,ok,run});
+const GKs=()=>S.pos==='GK';
 MO('comeback',3,c=>c.ap>=12,async c=>{
- const m=lgMatch(),hero=FWMF()&&chance(.55);
- const sc=pick(['0-2から後半だけで4得点を奪い、4-2','0-3の劣勢から後半の猛攻で4-3','1-3から終盤の連続ゴールで4-3','0-2から後半アディショナルタイムの2ゴールで3-2','10人になりながら0-2を跳ね返し、3-2']);
- hero?mv(c,{g:1,fame:3,joy:4}):mv(c,{as:S.pos==='GK'?0:1,fame:2,joy:3});
- mom('劇的な大逆転勝利',m,`${sc}。${crowd(m)}解説者は「このクラブの歴史に残る試合」と叫んだ。${hero?'逆転の口火を切ったのは、あなたのゴールだった。':'あなたもピッチで確かな仕事をした。'}`)});
+ const m=lgMatch(),sc=pick(['0-2','0-3','1-3','10人になって0-2']);
+ await decide(c,{title:'逆転を懸けた後半',m,body:`${crowd(m)}ハーフタイム、スコアは${sc}。ロッカールームは静まり返っている。`,q:'後半、あなたは何を変える？',p:.34+(c.o-c.L)*.008,wj:8,wf:3,
+  opts:GKs()?[{l:'声を張って守備を立て直す',mod:.03,k:'pas',team:2},{l:'ロングフィードで一気に前線へ',mod:.04,k:'pas',a:.3},{l:'黙って集中力を高める',mod:.02,k:'def'}]:[{l:'前線に上がって攻撃に火をつける',s:'リスクを取る',mod:.05,k:'sho',g:.4},{l:'チームを鼓舞し、全員で攻め切る',s:'士気を上げる',mod:.03,team:2},{l:'冷静に流れを読み、守備から立て直す',s:'堅実に',mod:.02,k:'def'}],
+  w:`${pick(['後半だけで4得点','後半アディショナルタイムの2ゴール','延長戦までもつれる猛攻'])}で大逆転。解説者は「このクラブの歴史に残る試合」と叫んだ。`,f:'懸命に追い上げたが、あと一歩及ばなかった。試合後、誰も何も言えなかった。',wcls:'big'})});
 MO('late',3,c=>c.ap>=10,async c=>{
  const m=lgMatch(),late=pick(['後半45+3分','後半アディショナルタイム','90分を過ぎて']);
- if(S.pos==='GK'){
-  const i=await ask(`${late}、相手のシュートが枠を襲う。`,[{label:'横っ飛びで止めにいく'},{label:'前に出てコースを消す'},{label:'ポジションを信じて動かない'}]);
-  const ok=chance(clamp([.55,.5,.45][i]+(c.o-c.L)*.008,.25,.85));
-  mom('土壇場の守護神',m,`1点リードの${late}。${ok?'指先で弾き出したボールがバーを叩いた。試合終了の笛と同時に、仲間があなたに飛びついた。':'ボールは無情にもネットに突き刺さった。勝ち点2を、目の前で失った。'}`,ok?'big':'bad');
-  ok?mv(c,{fame:3,joy:5}):mv(c,{joy:-4,fame:-1});return}
- const labels=FWMF()?['ダイレクトで打ち抜く','一歩持ち出して冷静に流し込む','フリーの味方に預ける']:S.pos==='DF'?['ニアに飛び込んで合わせる','ファーでヘディングを狙う','守備に専念する']:['ダイレクトで打ち抜く','冷静に流し込む','味方に預ける'];
- const i=await ask(`${late}、ボールがこぼれてきた。`,labels.map(l=>({label:l})));
- const ok=chance(clamp([.45,.5,.7][i]+(c.o-c.L)*.008-(S.pos==='DF'&&i<2?.15:0),.15,.85));
- const goal=i<2;
- if(ok){goal?mv(c,{g:1,fame:3,joy:5}):mv(c,{as:1,fame:2,joy:4})}else mv(c,{joy:-2});
- mom('土壇場の一撃',m,`同点で迎えた${late}。${ok?(goal?'ゴールネットが揺れた。スタジアム中が爆発し、あなたはユニフォームを脱いで走り出した。':'パスを受けた味方が決めた。ベンチまで走るあなたの背中を、誰かが叩いた。'):'わずかに枠を外れ、試合は引き分けに終わった。頭を抱えたあなたの肩に、キャプテンの手が置かれた。'}`,ok?'big':'')});
+ await decide(c,{title:'土壇場の攻防',m,body:`同点（${GKs()?'1点リード':'1-1'}）で迎えた${late}。${crowd(m)}ボールが、あなたの前にこぼれてきた。`,q:'あなたの決断は？',p:.5+(c.o-c.L)*.008,wj:8,wf:3,w:GKs()?'指先で弾き出したボールがバーを叩いた。笛と同時に、仲間があなたに飛びついた。':'ネットが揺れた。スタジアム中が爆発し、あなたはユニフォームを脱いで走り出した。',f:GKs()?'ボールはネットに突き刺さった。勝ち点2を目の前で失った。':'わずかに枠を外れた。頭を抱えたあなたの肩に、キャプテンの手が置かれた。',wcls:'big'})});
 MO('bigWin',2.5,c=>c.ap>=8,async c=>{
- const m=lgMatch(),ht=S.pos==='FW'&&c.o>=c.L&&chance(.35);
- if(ht){c.g+=3;honor('ハットトリック',0)}
- c.fame+=ht?3:1;c.joy+=ht?3:2;
- mom('記録的な大勝',m,`${pick(['6-0','7-1','5-0','8-0'])}の大勝。${crowd(m)}${ht?'<b>あなたはハットトリックを達成した。</b>試合球は、記念にロッカーに飾られた。':'チームは自信を深めた。'}`,ht?'big':'')});
+ const m=lgMatch();
+ await decide(c,{title:'大量リードの後半',m,body:`${crowd(m)}前半だけで${pick(['4-0','3-0','5-0'])}。後半、ベンチは余裕の空気に包まれている。`,q:'後半、あなたはどう戦う？',p:.7,wf:2,wj:5,
+  opts:GKs()?[{l:'無失点を最後まで狙う',mod:.05,k:'def'},{l:'若手に声をかけて集中を保つ',mod:.02,team:2},{l:'早めの交代を志願して休む',mod:-.05,health:1}]:[{l:'ハットトリックを狙う',s:'ゴール欲',mod:.0,k:'sho',g:.5},{l:'味方にゴールを譲る',s:'アシストに徹する',mod:.03,k:'pas',a:.7,team:1},{l:'体力を温存して早めに交代',s:'疲労を避ける',mod:-.05}],
+  w:`${pick(['6-0','7-1','5-0','8-0'])}の記録的な大勝。チームは自信を深めた。`,f:'油断が出た。後半に3失点して、最後は冷や汗をかく結果になった。'})});
 MO('bigLoss',2,c=>c.ap>=8,async c=>{
- const m=lgMatch();c.joy-=3;c.fame-=1;
- mom('屈辱の大敗',m,`${pick(['0-5','1-6','0-4','0-6'])}の大敗。${crowd(m)}試合後、ロッカールームは重い沈黙に包まれた。監督は何も言わず、ただ全員の目を見回した。`,'bad')});
+ const m=lgMatch();
+ await decide(c,{title:'崩れかけた前半',m,body:`${crowd(m)}前半を終えて${pick(['0-3','0-4','1-4'])}。ロッカールームは重い沈黙に包まれた。監督は何も言わず、全員の目を見回した。`,q:'あなたは？',p:.3+(c.o-c.L)*.006,lj:-6,
+  opts:[{l:'最初に声を上げ、士気を立て直す',s:'リーダーシップ',mod:.05,team:2},{l:'黙って自分のプレーに集中する',s:'個人で立て直す',mod:.02,k:posOpts()[0].k},{l:'戦術変更を直訴する',s:'意見を伝える',mod:.03,k:'def'}],
+  w:'後半、見違える反撃で追い上げ、被害を最小限に食い止めた。ロッカールームに少しだけ笑顔が戻った。',f:`${pick(['0-5','1-6','0-6'])}の大敗。試合後、誰もがうつむいたまま、ロッカールームを出た。`,wcls:''})});
 MO('derby',3,c=>c.ap>=10&&c.lgk!=='D'&&lgClubs().length>0,async c=>{
  const r=DERBY[S.club],k=r&&lgClubs().some(x=>x.k===r)?r:pick(lgClubs()).k;
- const m=mvs(rside(),k),nm=DERBYNM[[S.club,k].sort().join('-')]||DERBYNM[S.club+'-'+k]||DERBYNM[k+'-'+S.club]||'宿敵との一戦';
- const i=await ask('ダービーの前夜、街は二つに割れた。あなたは？',[{label:'ダービーの主役になる',sub:'自分が決める'},{label:'チームのために走り抜く',sub:'泥臭く戦う'},{label:'挑発に乗らず冷静に戦う',sub:'警告に気をつける'}]);
- const win=chance(clamp(.45+(c.o-c.L)*.01+(i===2?.03:0),.25,.75)),draw=!win&&chance(.35);
- if(win){mv(c,{fame:3,joy:7});if(i===0&&FWMF()&&chance(.5))c.g++}else if(draw)mv(c,{joy:1});else mv(c,{fame:-1,joy:-6});
- mom(nm,m,`${crowd(m)}${win?'激闘を制し、街の半分が歓喜に沸いた。':draw?'互いに譲らず、勝ち点を分け合った。':'敗れた翌朝、街の半分はあなたの名前を口にしなかった。'}`,win?'big':draw?'':'bad')});
+ const m=mvs(rside(),k),nm=DERBYNM[[S.club,k].sort().join('-')]||'宿敵との一戦';
+ await decide(c,{title:nm,m,body:`${crowd(m)}街は二つに割れた。ダービーの前夜、あなたはなかなか眠れなかった。`,q:'ダービーでのあなたの役割は？',p:.45+(c.o-c.L)*.01,wj:7,wf:3,
+  opts:[{l:'ダービーの主役になる',s:'自分が決める',mod:.01,k:posOpts()[0].k,g:.45},{l:'チームのために走り抜く',s:'泥臭く戦う',mod:.03,k:'phy',team:2},{l:'挑発に乗らず冷静に戦う',s:'警告に気をつける',mod:.03,k:'def'}],
+  w:'激闘を制し、街の半分が歓喜に沸いた。',f:'敗れた翌朝、街の半分はあなたの名前を口にしなかった。',wcls:'big'})});
 MO('former',2,c=>c.ap>=10&&S.rows.some(r=>!r.u&&r.k!==S.club&&VEN[r.k]),async c=>{
- const rows=S.rows.filter(r=>!r.u&&r.k!==S.club&&VEN[r.k]);const k=rows[rows.length-1].k;const m=mvs(rside(),k);
- const i=await ask(`かつて所属した${cname(k)}との対戦。ゴールを決めたら、どうする？`,[{label:'喜びを我慢する',sub:'古巣への敬意'},{label:'あえて爆発させる',sub:'勝利の喜びを素直に'},{label:'ファンに向かって拍手する',sub:'感謝を伝える'}]);
- const fans=hasFans();
- if(i===0)mv(c,{fame:1,joy:2});else if(i===1)mv(c,{fame:-1,joy:4});else mv(c,{fame:2,joy:3});
- mom('古巣との再会',m,`${crowd(m)}試合前、${cname(k)}のファンが大きなバナーであなたを迎えた。${fans?['敬意を表したあなたに、旧友のファンは静かな拍手を送った。','ブーイングと拍手が入り混じる中、それでも胸に残る温かさがあった。','拍手に拍手で返した。ファンの目に、涙が光っていた。'][i]:'無観客の空席に向かって、あなたは小さく一礼した。'}`)});
+ const rows=S.rows.filter(r=>!r.u&&r.k!==S.club&&VEN[r.k]),k=rows[rows.length-1].k,m=mvs(rside(),k);
+ await decide(c,{title:'古巣との再会',m,body:`${crowd(m)}試合前、${cname(k)}のファンが大きなバナーであなたを迎えた。`,q:'試合に臨むあなたの姿勢は？',p:.5+(c.o-c.L)*.008,wj:6,wf:2,
+  opts:[{l:'古巣への敬意を胸に、冷静にプレーする',mod:.04,k:'pas',team:1},{l:'「恩返し」のつもりで全力で挑む',mod:.02,k:posOpts()[0].k,g:.35},{l:'試合前にファンへ感謝を伝える',mod:.01,fame:1}],
+  w:'試合後、敵地のファンからも温かい拍手が送られた。',f:'苦い再会になった。ブーイングと拍手が入り混じり、胸に複雑な思いが残った。'})});
 MO('redcard',2,c=>c.ap>=10&&S.pos!=='GK',async c=>{
  const m=lgMatch();
- const i=await ask('ボールを奪われ、相手が抜け出した。ゴールまでは30メートル。',[{label:'ファウルで止める',sub:'戦術的ファウル'},{label:'追走して身体を寄せる',sub:'クリーンに奪い返す'},{label:'足を伸ばして奪いにいく',sub:'リスクを承知で'}]);
- const red=chance([.55,.12,.4][i]);
- if(red){c.ap=Math.max(0,c.ap-ri(1,3));c.fame-=1;c.joy-=4}else c.joy+=1;
- mom('決定的な場面',m,`${crowd(m)}${red?'主審はポケットからレッドカードを掲げた。10人で戦う仲間を、ベンチから見つめるしかなかった。数試合の出場停止が告げられた。':'ぎりぎりでボールを奪い返した。スタンドから大きな拍手が起きた。'}`,red?'bad':'')});
+ const d=await decide(c,{title:'決定的な場面',m,body:`${crowd(m)}ボールを奪われ、相手が抜け出した。ゴールまでは30メートル。`,q:'あなたは？',p:.6,wf:2,wj:3,lj:-6,
+  opts:[{l:'ファウルで止める',s:'戦術的ファウル',mod:-.2},{l:'追走して身体を寄せる',s:'クリーンに奪う',mod:.1,k:'pac'},{l:'足を伸ばして奪いにいく',s:'リスクを承知で',mod:-.05,k:'def'}],
+  w:'ぎりぎりでボールを奪い返した。スタンドから大きな拍手が起きた。',f:'主審がポケットからレッドカードを掲げた。10人で戦う仲間を、ベンチから見つめるしかなかった。',wcls:''});
+ if(!d.win){c.ap=Math.max(0,c.ap-ri(1,3))}})  ;
 MO('penalty',2.5,c=>c.ap>=10,async c=>{
  const m=lgMatch();
- if(S.pos==='GK'){
-  const i=await ask('相手のPK。キッカーが助走に入る。',[{label:'右に飛ぶ'},{label:'左に飛ぶ'},{label:'中央に残る'}]);
-  const stop=chance(.28+(c.o-c.L)*.004+(i===2?.02:0));
-  stop?mv(c,{fame:3,joy:5}):mv(c,{joy:-2});
-  mom('PKの攻防',m,`${crowd(m)}${stop?'指先がボールに触れ、軌道を変えた。ポストを叩いて、ボールは外へ。あなたはユニフォームの胸のエンブレムを叩いて叫んだ。':'ボールは逆を突いてネットを揺らした。あなたは膝をついて、芝を拳で叩いた。'}`,stop?'big':'');return}
- const i=await ask('PKを獲得した。誰が蹴る？',[{label:'自分で蹴る',sub:'責任を背負う'},{label:'キャプテンに譲る',sub:'チームの序列に従う'},{label:'監督の指名を待つ',sub:'ベンチを見る'}]);
- if(i===0){const ok=chance(clamp(.72+(c.o-c.L)*.004,.5,.9));ok?mv(c,{g:1,fame:2,joy:4}):mv(c,{fame:-1,joy:-4});
-  mom('PKキッカーは',m,`${crowd(m)}${ok?'ボールをセットし、深く息を吸って右隅に蹴り込んだ。ネットが揺れ、仲間が駆け寄った。':'力みすぎたシュートはバーの上を越えた。肩を落としたあなたに、チームメイトが次々と声をかけた。'}`,ok?'big':'bad')}
- else{mv(c,{joy:1});mom('PKキッカーは',m,`${crowd(m)}キャプテンがボールを受け取った。${chance(.75)?'彼は冷静に沈めた。あなたは真っ先に抱きついた。':'彼のシュートは枠を外れた。誰も責めなかった。'}`)}});
+ if(GKs())return decide(c,{title:'PKの攻防',m,body:`${crowd(m)}相手のPK。キッカーが助走に入る。`,q:'どちらに飛ぶ？',p:.3+(c.o-c.L)*.004,wj:7,wf:3,opts:[{l:'右に飛ぶ',mod:0,k:'pac'},{l:'左に飛ぶ',mod:0,k:'pac'},{l:'中央に残る',mod:.01,k:'def'}],w:'指先がボールに触れ、軌道を変えた。あなたはユニフォームの胸のエンブレムを叩いて叫んだ。',f:'ボールは逆を突いてネットを揺らした。あなたは膝をついて、芝を拳で叩いた。',wcls:'big'});
+ return decide(c,{title:'PKキッカーは',m,body:`${crowd(m)}PKを獲得した。ボールを抱えたあなたに、仲間の視線が集まる。`,q:'誰が蹴る？',p:.74+(c.o-c.L)*.004,wj:5,wf:2,lj:-6,
+  opts:[{l:'自分で蹴る',s:'責任を背負う',mod:.02,k:'sho',g:1},{l:'コースを冷静に狙う',s:'確実に',mod:.05,k:'sho',g:1},{l:'キャプテンに譲る',s:'チームの序列',mod:-.04,team:1}],
+  w:'ネットが揺れた。仲間があなたに駆け寄った。',f:'シュートは枠を外れた。肩を落としたあなたに、チームメイトが次々と声をかけた。'})});
 MO('weather',1.5,c=>c.ap>=8,async c=>{
- const m=lgMatch(),w=pick(['猛烈な豪雨でピッチが水浸しになった','霧が濃すぎて、一時中断になった','雪が降りしきるなか、オレンジ色のボールが使われた','真夏の40度を超える猛暑で、前半から給水タイムが取られた','強風でコーナーキックがまともに蹴れなかった']);
- c.joy+=1;c.fame+=1;
- mom('語り草になった一戦',m,`${w}。${pick(['泥だらけの勝利は、いつもより特別な味がした。','結果は引き分けだったが、ファンの間で何年も語り継がれる試合になった。','ボールを蹴る感覚だけが、子供の頃の広場を思い出させた。'])}`,'')});
+ const m=lgMatch(),w=pick(['猛烈な豪雨でピッチが水浸しになった','霧が濃く、視界が数メートルしかなかった','雪が降りしきり、オレンジ色のボールが使われた','真夏の40度を超える猛暑で、前半から給水タイムが取られた','強風でコーナーキックがまともに蹴れなかった']);
+ await decide(c,{title:'語り草になった一戦',m,body:`${w}。`,q:'この条件で、あなたはどう戦う？',p:.5+(c.o-c.L)*.008,wj:5,wf:2,
+  opts:[{l:'足元で繋いで、リスクを減らす',mod:.03,k:'pas'},{l:'ロングボールで割り切る',mod:.02,k:'phy'},{l:'体力を温存し、終盤勝負',mod:.03,health:0,k:'phy'}],
+  w:'泥だらけの勝利は、いつもより特別な味がした。',f:'条件に最後まで苦しめられ、悔しい黒星になった。'})});
 MO('empty',6,c=>(S.year===2020||S.year===2021)&&c.ap>=8,async c=>{
- const m=lgMatch('H');c.joy-=1;
- mom('無観客試合',m,`感染症の影響で、スタンドには誰もいなかった。ゴールが決まっても、聞こえるのはチームメイトの声だけ。${pick(['それでも、画面の向こうのファンへ、手を振った。','ふと、子供の頃の広場の静けさを思い出した。'])}`,'')});
+ const m=lgMatch('H');
+ await decide(c,{title:'無観客試合',m,body:'感染症の影響で、スタンドには誰もいなかった。ゴールが決まっても、聞こえるのはチームメイトの声だけ。',q:'この静けさの中で、あなたは？',p:.52+(c.o-c.L)*.008,wj:4,wf:1,
+  opts:[{l:'声を出して、チームの熱を保つ',mod:.04,team:2},{l:'自分のリズムに集中する',mod:.03,k:posOpts()[0].k},{l:'画面の向こうのファンへ手を振る',mod:.0,fame:1}],
+  w:'静かなスタジアムで、確かな勝ち点を手にした。画面の向こうのファンが、SNSで祝福してくれた。',f:'静けさに飲まれ、集中を欠いた。'})});
 MO('newcoach',1.8,c=>c.ap>=10&&c.lgk!=='D',async c=>{
  const m=lgMatch('H');
- const i=await ask('成績不振で監督が交代した。新監督の初陣、あなたは？',[{label:'新戦術に順応する',sub:'まず話を聞く'},{label:'自分のスタイルを主張する',sub:'信念を曲げない'}]);
- const ok=chance(i===0?.65:.5);
- ok?mv(c,{joy:4,fame:1}):mv(c,{joy:-3});
- mom('新監督の初陣',m,`${ok?'指揮官の策がはまり、終わってみれば快勝だった。ロッカールームに笑顔が戻った。':'連係がかみ合わず、苦いスタートとなった。監督は静かに言った。「まだ始まったばかりだ」。'}`,ok?'':'bad')});
+ await decide(c,{title:'新監督の初陣',m,body:'成績不振で監督が交代した。新指揮官の初めての試合、ロッカールームには不安と期待が入り混じっている。',q:'新監督に対して、あなたは？',p:.5+(c.o-c.L)*.008,wj:5,wf:1,
+  opts:[{l:'新戦術に素直に順応する',mod:.05,k:'pas',team:2},{l:'自分のスタイルを主張する',mod:.0,k:posOpts()[0].k},{l:'まずは話を聞きにいく',mod:.03,team:1}],
+  w:'指揮官の策がはまり、見事な初陣勝利。ロッカールームに笑顔が戻った。',f:'連係がかみ合わず、苦いスタートに。監督は静かに言った。「まだ始まったばかりだ」。'})});
 MO('streak',1.5,c=>c.ap>=20&&c.rank<=Math.ceil(LGN[c.lgk]/2),async c=>{
- const m=lgMatch(),n=ri(8,14);c.fame+=2;c.joy+=3;
- mom('連勝記録',m,`クラブはこの一戦で${n}連勝を達成。${pick(['クラブ記録に並んだ。','地元紙は一面で「止まらない」と報じた。'])}勝利のたびに、ロッカーの笑い声が大きくなっていった。`,'big')});
+ const m=lgMatch(),n=ri(8,14);
+ await decide(c,{title:'連勝記録への挑戦',m,body:`クラブは${n-1}連勝中。今日勝てば、クラブ記録だ。${crowd(m)}`,q:'プレッシャーの中、あなたは？',p:.55+(c.o-c.L)*.01,wj:8,wf:3,
+  opts:[{l:'いつも通りの準備を貫く',mod:.04,k:'phy'},{l:'チーム全員で円陣を組む',mod:.03,team:2},{l:'記録を意識して攻めに出る',mod:.0,k:posOpts()[0].k,g:.3}],
+  w:`${n}連勝。クラブ記録に並んだ。地元紙は一面で「止まらない」と報じた。`,f:'重圧に飲まれ、連勝は止まった。それでも、チームは胸を張って次を見ていた。',wcls:'big'})});
 MO('young',2,c=>c.ap>=8&&S.age<=20,async c=>{
- const m=lgMatch('H'),g=FWMF()&&chance(.7);
- g?mv(c,{g:1,fame:4,joy:7}):mv(c,{fame:2,joy:4});
- mom(g?'若き主役の初ゴール':'若き才能の台頭',m,`${S.age}歳。${crowd(m)}${g?'ペナルティエリアのこぼれ球を押し込んだ。祖母が見ていたかもしれない、と思った。':'ベテランに混じって堂々とプレーし、試合後の取材エリアには記者が列をなした。'}`)});
+ const m=lgMatch('H');
+ await decide(c,{title:'若き才能の台頭',m,body:`${S.age}歳。${crowd(m)}ベテランに混じって先発したあなたに、記者が列をなしている。`,q:'この大きな舞台で、あなたは？',p:.5+(c.o-c.L)*.01,wj:7,wf:4,
+  opts:[{l:'臆せず、積極的に仕掛ける',mod:.02,k:posOpts()[0].k,g:.4},{l:'先輩に声をかけ、助けを借りる',mod:.04,k:'pas',team:1},{l:'まずは基本に忠実にプレーする',mod:.03,k:'def'}],
+  w:'堂々としたプレーで評価を一気に高めた。取材エリアには記者が列をなした。',f:'緊張で体が動かなかった。試合後、ベテランが肩を叩いた。「誰にでもある」。'})});
 MO('farewell',1.4,c=>c.ap>=8&&S.age>=33,async c=>{
- const m=lgMatch('H');mv(c,{fame:1,joy:3});
- mom('ベテランの花道',m,`長年クラブを支えた盟友の引退試合。${hasFans()?'スタジアムは総立ちで彼を送り出した。':'無観客のスタジアムで、仲間だけが彼を胴上げした。'}あなたはその背中に、自分の未来の姿を重ねた。`)});
-MO('euKO',6,c=>c.euE>=1&&c.ap>=10,async c=>{
- const e=c.euE,t=ri(1,Math.min(e,3)),won=e>=4||t<e;const m=euMatch();
- const nm=['','ラウンド16','準々決勝','準決勝'][t];
- const i=await ask(`${UCLN()} ${nm}・第2戦。合計スコアは並んでいる。`,[{label:'攻撃で流れを引き寄せる',sub:'先に点を取る'},{label:'守備を締めて延長を狙う',sub:'粘り強く'},{label:'声を張り上げ、チームを鼓舞する',sub:'空気を変える'}]);
- const bonus=chance(.45)&&won;
- if(won){mv(c,{fame:4,joy:6});if(bonus&&FWMF()&&i===0)c.g++;else if(bonus)c.as+=S.pos==='GK'?0:1}else mv(c,{fame:-1,joy:-6});
- mom(`${UCLN()} ${nm}`,m,`${crowd(m)}${won?`合計スコア${pick(['3-2','4-3','2-1','5-4'])}で突破。${pick(['ベンチの全員が駆け出してきた。','見上げた夜空が、やけに広く見えた。'])}`:`延長でも決着はつかず、PK戦で力尽きた。欧州の夢は、ここで途絶えた。`}`,won?'big':'bad')});
-MO('cupTie',2.5,c=>c.cupW>=0&&c.lg.cup&&c.lgk!=='D'&&c.ap>=8,async c=>{
- const w=c.cupW,t=ri(0,Math.min(w,3)),won=w>=4||t<w;const o=cupOpp();if(!o)return;
- const m=mvs(rside(),o.k),nm=['1回戦','ラウンド16','準々決勝','準決勝'][t],up=o.lv>c.L+6;
- const i=await ask(`${c.lg.cup} ${nm}。${up?'相手は格上':'同格の相手'}との一発勝負。`,[{label:'主力として決めにいく'},{label:'チームの戦術に徹する'},{label:'延長・PK戦に備える'}]);
- if(won){mv(c,{fame:up?4:2,joy:up?7:4});if(i===0&&FWMF()&&chance(.5))c.g++}else mv(c,{fame:-1,joy:-5});
- mom(`${c.lg.cup} ${nm}`,m,`${crowd(m)}${won?(up?'格上を相手に番狂わせを演じた。新聞の見出しは「ジャイアントキリング」。':'ミスのない戦いぶりで、次のラウンドに駒を進めた。'):'力の差はなかったはずなのに、運がなかった。カップ戦の旅はここで終わった。'}`,won&&up?'big':won?'':'bad')});
+ const m=lgMatch('H');
+ await decide(c,{title:'ベテランの花道',m,body:`長年クラブを支えた盟友の引退試合。${hasFans()?'スタジアムは総立ち。':'無観客のスタジアム。'}あなたはその背中に、自分の未来の姿を重ねた。`,q:'あなたは？',p:.58+(c.o-c.L)*.008,wj:6,wf:2,
+  opts:[{l:'盟友にゴールをお膳立てする',mod:.04,k:'pas',a:.6,team:1},{l:'キャプテンマークを預かり、先頭に立つ',mod:.03,team:2},{l:'黙って守備を支える',mod:.03,k:'def'}],
+  w:'盟友が決めたゴールに、スタジアム中が涙した。あなたは彼を真っ先に抱きしめた。',f:'勝利はつかめなかったが、盟友は笑って言った。「いい引退試合だった」。'})});
 MO('duel',2,c=>c.ap>=10&&c.lgk!=='D',async c=>{
  const m=lgMatch();
- const i=await ask(`相手には${pick(['代表経験豊富のスター','世界的に知られた点取り屋','年間最優秀候補の司令塔'])}がいる。あなたは？`,[{label:'真っ向勝負を挑む'},{label:'冷静に研究して封じる'},{label:'周囲と連係して挟み込む'}]);
- const ok=chance(clamp(.5+(c.o-c.L)*.01+[0,.04,.06][i],.25,.8));
- ok?mv(c,{fame:3,joy:5}):mv(c,{fame:-1,joy:-3});
- mom('スターとの直接対決',m,`${crowd(m)}${ok?'試合後、相手がユニフォームを交換しようとやってきた。「いい選手だ。覚えておく」。':'終始振り回され、前半だけで交代を告げられた。翌朝、敗因ばかりを考えていた。'}`,ok?'big':'bad')});
+ await decide(c,{title:'スターとの直接対決',m,body:`${crowd(m)}相手には${pick(['代表経験豊富のスター','世界的に知られた点取り屋','年間最優秀候補の司令塔'])}がいる。`,q:'あなたは？',p:.5+(c.o-c.L)*.01,wj:5,wf:3,
+  opts:[{l:'真っ向勝負を挑む',mod:0,k:posOpts()[0].k,g:.25},{l:'冷静に研究して封じる',mod:.04,k:'def'},{l:'周囲と連係して挟み込む',mod:.05,team:1}],
+  w:'試合後、相手がユニフォームを交換しようとやってきた。「いい選手だ。覚えておく」。',f:'終始振り回され、悔しさだけが残った。翌朝、敗因ばかりを考えていた。'})});
 MO('goalOfSeason',2,c=>c.ap>=10&&FWMF()&&c.o>=c.L,async c=>{
- const m=lgMatch();mv(c,{g:1,fame:3,joy:5});
- mom('シーズン屈指のゴラッソ',m,`${pick(['ハーフウェイライン付近から','ペナルティエリアの外から','アクロバティックなオーバーヘッドで','5人を抜き去って'])}ネットを揺らした。${crowd(m)}映像は世界中のSNSで拡散し、シーズン最優秀ゴール候補に挙がった。`,'big')});
+ const m=lgMatch();
+ await decide(c,{title:'シーズン屈指のゴラッソを狙え',m,body:`${crowd(m)}ボールが、ペナルティエリアの外であなたの足元に収まった。`,q:'どうする？',p:.4+(c.o-c.L)*.008,wj:6,wf:4,
+  opts:[{l:'思い切ってミドルシュート',mod:.0,k:'sho',g:1},{l:'ドリブルで5人を抜きにいく',mod:-.05,k:'dri',g:1},{l:'ワンツーで崩す',mod:.05,k:'pas',g:.6,a:.4}],
+  w:`${pick(['ハーフウェイライン付近から','ペナルティエリアの外から','アクロバティックなシュートで'])}ネットを揺らした。映像は世界中で拡散し、シーズン最優秀ゴール候補に挙がった。`,f:'狙いすましたシュートは、わずかに枠を外れた。観客のため息が耳に残った。',wcls:'big'})});
 MO('fans',1.5,c=>c.ap>=8&&hasFans(),async c=>{
- const m=lgMatch('H');mv(c,{fame:2,joy:4});
- mom('スタンドからの声',m,`試合前、ゴール裏が「${esc(S.name.split(' ').pop())}」の名前を大合唱した。${pick(['あなたのためのコレオグラフィが、ゴール裏に広がった。','子供たちが、あなたのユニフォームを着てピッチを囲んだ。'])}涙をこらえて、あなたはキックオフの笛を待った。`)});
+ const m=lgMatch('H');
+ await decide(c,{title:'スタンドからの声',m,body:`試合前、ゴール裏が「${esc(S.name.split(' ').pop())}」の名前を大合唱した。`,q:'この声援に、あなたは？',p:.55+(c.o-c.L)*.008,wj:6,wf:2,
+  opts:[{l:'胸のエンブレムを叩いて応える',mod:.03,team:2},{l:'平常心を保ち、プレーで返す',mod:.03,k:'pas'},{l:'ゴールを決めて応えると誓う',mod:.0,k:posOpts()[0].k,g:.3}],
+  w:'声援を力に変えて、最高の90分になった。試合後、スタンドへ深々と一礼した。',f:'空回りして、期待に応えられなかった。それでも、スタンドは最後まで名前を呼び続けてくれた。'})});
 
 async function seasonMoments(ctx,n){
  const {lgk}=ctx,N=LGN[lgk],played=S.role==='ace'||S.role==='starter';
  const was=AUTO;if(!played)AUTO=true;
  try{
   let dec=null;
-  if(lgk==='B'||lgk==='C'){if(ctx.rank<=2)dec='promo';else if(ctx.rank<=5)dec='playoff';else if(ctx.rank>=N-3)dec='relegation'}
-  else if(lgk!=='D'){if(ctx.rank<=3&&ctx.lg.g>=30)dec='title';else if(ctx.rank>=N-3)dec='relegation'}
-  const must=[];
-  if(dec)must.push('dec');
-  if(ctx.euE>=4&&ctx.ap>=10&&!ctx.noFinal)must.push('eu');
-  if(ctx.cupW>=4&&ctx.lgk!=='D'&&ctx.ap>=10&&!ctx.noFinal)must.push('cup');
-  const mine=must.slice(0,n);
-  const free=Math.max(0,n-mine.length);
-  // random moments first (the season's story), then finals, then the league decider
-  const used=new Set();
+  const lower=!!UP[lgk]&&lgk!=='D';
+  if(lower){if(ctx.rank<=2)dec='promo';else if(ctx.rank<=5)dec='playoff';else if(ctx.rank>=N-3&&DN[lgk])dec='relegation'}
+  else if(lgk!=='D'&&lgk!=='MLS'){if(ctx.rank<=3&&ctx.lg.g>=30)dec='title';else if(ctx.rank>=N-3&&DN[lgk])dec='relegation'}
+  const must=(dec?1:0)+(ctx.euComp&&ctx.ap>=10?1:0)+(ctx.lg.cup&&lgk!=='D'&&ctx.ap>=10?1:0);
+  const free=Math.max(0,n-must),used=new Set();
   for(let j=0;j<free;j++){
    const cand=MOMS.filter(m=>!used.has(m.id)&&m.ok(ctx));if(!cand.length)break;
    let t=cand.reduce((a,m)=>a+m.w,0)*Math.random(),pk=cand[0];
    for(const m of cand){t-=m.w;if(t<=0){pk=m;break}}
-   used.add(pk.id);await pk.run(ctx);ctx.mom=(ctx.mom||0)+1;
+   used.add(pk.id);await pk.run(ctx);
   }
-  if(mine.includes('cup')){await finalEvent('cup',ctx);ctx.mom=(ctx.mom||0)+1}
-  if(mine.includes('eu')){await finalEvent('eu',ctx);ctx.mom=(ctx.mom||0)+1}
-  if(mine.includes('dec')){await deciderMoment(ctx,dec);ctx.mom=(ctx.mom||0)+1}
+  await cupSeason(ctx);
+  await euroSeason(ctx);
+  if(dec){await deciderMoment(ctx,dec);ctx.mom=(ctx.mom||0)+1;ctx.decided=true}
  }finally{AUTO=was}
 }
-/* ===== national team: qualifiers + tournament ===== */
-const natStageNm=['グループステージ','ラウンド16','準々決勝','準決勝','決勝'];
+/* ===== national team: qualifiers + tournament (formats by era; results are decided AFTER the player's choice) ===== */
 const scW=()=>pick(['1-0','2-0','2-1','3-1','3-0','1-0','4-1','2-1']),scD=()=>pick(['1-1','0-0','2-2','1-1']),scL=()=>pick(['0-1','1-2','0-2','1-3','0-1']);
 const natOpp=(ex,wc)=>{const L=wc?NATOPP:NATS.map(x=>x[0]);let o,g=0;do{o=pick(L);g++}while(ex&&ex.includes(o)&&g<30);return o};
-function natGroup(pass){ // 3 group matches: [res,...]
- return pass?pick([['W','W','D'],['W','D','D'],['W','W','L'],['D','W','W'],['W','W','W'],['L','W','W'],['W','D','L']]):pick([['L','L','D'],['D','L','L'],['W','L','L'],['D','D','L'],['L','D','L']]);
-}
-async function natMoment(nm,st,won,m,opp,pS,adv){
- // one key scene inside the finals. st:0..4 stage index, won: result of this match
- const GK=S.pos==='GK',lab=GK?['決定的なシュートを止めにいく','最終ラインを声で動かす','PK戦に備える']:['決めにいく','チームのために走り続ける','PKを志願する'];
- const tag=['グループ最終戦','ラウンド16','準々決勝','準決勝','決勝'][st];
- mom(`${nm} ${tag}`,m,`${st===0?(adv?'決勝トーナメント進出を懸けた最終戦。':'突破をかけた最終戦。勝たなければ、大会を去ることになる。'):st===4?(nm==='ワールドカップ'?'世界の頂点を懸けた90分。':'欧州の頂点を懸けた90分。'):'負ければ終わりの一発勝負。'}${esc(opp)}との一戦、${crowd(m)}国歌のあと、アッズーリのジャージを着たあなたは、ピッチに立った。`);
- const was=AUTO;if(!pS)AUTO=true;
- const i=await ask('この大一番で、あなたは？',lab.map(l=>({label:l})));AUTO=was;
- const bonus=chance(clamp(.4+(ovr()-75)*.01,.15,.6)),big=st>=3;
- let body;
- if(won){
-  if(i===0&&bonus&&!GK){S.capGoals+=1;body=pick(['値千金のゴール。','ゴール前の混戦から押し込んだ。','正確なシュートがネットを揺らした。'])+'青いジャージの仲間と抱き合った。'}
-  else if(i===2&&bonus)body=GK?'PK戦でキッカーのシュートを止め、英雄になった。':'PK戦で最初のキッカーを務め、見事に沈めた。';
-  else body=pick(['全員でもぎ取った勝利だった。','苦しみ抜いて、ようやく勝った。','最後の笛が鳴って、全員が芝に倒れ込んだ。']);
-  say(`<p>${body}${chg({fame:big?4:2,joy:big?8:4})}</p>`,'good');
- }else{
-  body=st===4?pick(['あと一歩届かなかった。','表彰台で、銀のメダルが重くのしかかった。']):(st===0&&adv)?'勝ち切れなかったが、他会場の結果にも助けられ、決勝トーナメント進出を決めた。':pick(['力及ばず、大会を去ることになった。','最後の笛。ピッチに座り込んだまま、動けなかった。']);
-  say(`<p>${body}${chg(st===0&&adv?{joy:1}:{joy:-6,fame:1})}</p>`,st===0&&adv?'':'bad');
+/* FIFA / UEFA formats: WC 2026- 48 teams (12 groups, R32), 1998-2022 32 teams, 1986-94 24 teams … / EURO 2016- 24 teams, 1996-2012 16 teams … */
+function tourStages(y,wc){
+ if(wc){
+  if(y>=2026)return ['グループステージ','ラウンド32','ラウンド16','準々決勝','準決勝','決勝'];
+  if(y>=1986)return ['グループステージ','ラウンド16','準々決勝','準決勝','決勝'];
+  if(y===1982)return ['グループステージ','2次リーグ','準決勝','決勝'];
+  if(y>=1974)return ['グループステージ','2次リーグ','決勝'];
+  return ['グループステージ','準々決勝','準決勝','決勝'];
  }
+ if(y>=2016)return ['グループステージ','ラウンド16','準々決勝','準決勝','決勝'];
+ if(y>=1996)return ['グループステージ','準々決勝','準決勝','決勝'];
+ if(y>=1984)return ['グループステージ','準決勝','決勝'];
+ if(y===1980)return ['グループステージ','決勝'];
+ return ['準決勝','決勝'];
+}
+const hasThirds=(y,wc)=>wc?(y>=2026||(y>=1986&&y<=1994)):y>=2016;
+function stageLabel(stages,k,won){ // k: index of stage where the run ended (last played)
+ const sn=stages[k];if(won&&sn==='決勝')return '優勝';
+ if(sn==='決勝')return '準優勝';if(sn==='グループステージ')return 'グループ敗退';
+ if(sn==='準決勝')return 'ベスト4';if(sn==='準々決勝')return 'ベスト8';if(sn==='2次リーグ')return '2次リーグ敗退';return sn+'敗退';
 }
 async function nationalStep(miss){
  const o=ovr(),y=S.year,wc=y%4===2,eu=y%4===0,nm=wc?'ワールドカップ':'欧州選手権';
@@ -917,78 +1054,103 @@ async function nationalStep(miss){
   S.caps+=n;S.capGoals+=ng;
  }
  if(!(wc||eu)||S.lv!=='pro'||S.age<19)return;
- const [host,vens]=tourOf(y,wc),finalV=vens[0];
- // --- team results (decided regardless of the player's squad status) ---
- const qual=chance(wc?.72:.88);
- const direct=qual&&chance(wc?.7:.92);
- const IS=77+(o-80)*.35+ri(-5,5),pp=clamp(.6+(IS-80)*.012,.3,.88);
- let w=0;
- if(chance(clamp(pp+.18,.4,.95))){w=1;for(let i=0;i<4;i++){if(chance(pp))w++;else break}}
- // w: 0 group out, 1 R16 out, 2 QF out, 3 SF out, 4 final lost (runner-up), 5 champion
+ const [host,vens]=tourOf(y,wc),finalV=vens[0],stages=tourStages(y,wc);
+ const IS=77+(o-80)*.35+ri(-5,5),pq=clamp(.6+(IS-80)*.012,.3,.9),pp=clamp(.6+(IS-80)*.012,.3,.88);
+ const pS=chance(clamp((o-70)/14,.15,.95)),injured=miss>=.4;
+ const can=called&&pS&&!injured;
+ const nat={g:0,as:0,team:0,ap:99,o,L:o};
+ // ---- not called: just the team's story (decided by chance, no choices) ----
  if(!called){
   if(o>=62){
-   say(`<h3>${nm} ${y}</h3><p>${qual?`イタリア代表は${host}大会の本大会へ。結果は<b>${wasStage[w]}</b>。`:'イタリア代表は予選で敗退し、本大会には進めなかった。'}代表メンバーの中に、あなたの名前はなかった。</p>`,'');
+   const qual=chance(wc?.72:.88);
+   let k=0,champ=false;
+   if(qual){for(;k<stages.length;k++){if(!chance(clamp(pp-.015*k+.05,.25,.9)))break;if(k===stages.length-1)champ=true}}
+   const lab=champ?'優勝':stageLabel(stages,Math.min(k,stages.length-1),false);
+   say(`<h3>${nm} ${y}</h3><p>${qual?`イタリア代表は${host}大会の本大会へ。結果は<b>${lab}</b>。`:'イタリア代表は予選で敗退し、本大会には進めなかった。'}代表メンバーの中に、あなたの名前はなかった。</p>`,'');
   }
   return;
  }
- // --- qualifiers ---
+ // ---- qualifiers ----
  const qm=ri(8,10),qside=rside();
- const pS=chance(clamp((o-70)/14,.15,.95)); // is the player a regular in the squad?
- const ph=[wc?'欧州予選':'予選',qual?(direct?'グループ首位で突破':wc?'プレーオフを勝ち抜き突破':'2位で突破'):(wc?'プレーオフで敗退':'グループ3位で敗退')];
- const w3=Math.round(qm*(qual?.68:.45)),d3=Math.round(qm*.2),l3=qm-w3-d3;
- const injured=miss>=.4;
- say(`<h3>${nm} ${y} ${ph[0]}</h3><p>${host}大会を目指す予選。イタリアは${qm}試合で${w3}勝${d3}分${Math.max(0,l3)}敗。<b>${ph[1]}</b>。${injured?'あなたは故障のため、予選の大半を欠場した。':pS?'あなたも主力として予選を戦い抜いた。':'あなたは控えとして予選に貢献した。'}</p>`,qual?'':'bad');
- if(!injured&&pS&&chance(.75)){
-  const opp=pick(NATS),m=qside==='H'?{side:'H',city:pick(ITH)[0],stad:'',opp:opp[0]}:{side:'A',city:opp[1],stad:opp[2],opp:opp[0]};
-  if(qside==='H'){const h=pick(ITH);m.city=h[0];m.stad=h[1]}
-  mom(`${nm}予選 ${direct||!qual&&!wc?'最終節':'プレーオフ'}`,m,`${qual?'本大会への切符を懸けた一戦。':'ここで勝たなければ、本大会への道が閉ざされる。'}${crowd(m)}`,'big');
-  const was=AUTO;AUTO=!pS;
-  const i=await ask('あなたは？',(S.pos==='GK'?['ゴールを死守する','最終ラインを声で動かす','PKを止めにいく']:['決めにいく','チームのために走り続ける','PKを志願する']).map(l=>({label:l})));AUTO=was;
-  const ok=qual;
-  say(`<p>${ok?pick(['激闘を制し、本大会行きの切符を手にした。','最後の笛とともに、全員が抱き合った。']):pick(['力及ばず、本大会への道は閉ざされた。','スタンドの沈黙が、結果のすべてを物語っていた。'])}${chg(ok?{fame:2,joy:5}:{joy:-6})}</p>`,ok?'good':'bad');
+ const qlines=[];let qual=false,path='';
+ const clinch=chance(.3+(IS-77)*.012);
+ if(clinch){qual=true;path='最終節を待たずにグループ突破を決めた'}
+ else{
+  const opp=pick(NATS),m=qside==='H'?(()=>{const h=pick(ITH);return {side:'H',city:h[0],stad:h[1],opp:opp[0]}})():{side:'A',city:opp[1],stad:opp[2],opp:opp[0]};
+  let direct=false;
+  if(can){
+   const d=await decide(nat,{title:`${nm}予選 最終節`,m,body:`${wc?'グループ首位で本大会へ直行、2位ならプレーオフ。':'上位に入れば本大会へ。'}ここで勝てるかどうかで運命が変わる。${crowd(m)}`,q:'この一戦、あなたの決断は？',p:pq,wj:8,wf:3,w:'激闘を制し、本大会への切符を手にした。',f:'勝ち切れなかった。残された道は、プレーオフだけになった。',wcls:'big',lcls:'bad'});
+   direct=d.win;
+  }else direct=chance(pq);
+  if(direct){qual=true;path='グループを突破して本大会へ'}
+  else{
+   const opp2=pick(NATS),m2={side:rside(),city:'',stad:'',opp:opp2[0]};
+   if(m2.side==='H'){const h=pick(ITH);m2.city=h[0];m2.stad=h[1]}else{m2.city=opp2[1];m2.stad=opp2[2]}
+   if(can){
+    const d=await decide(nat,{title:`${nm}予選 プレーオフ決勝`,m:m2,body:`本大会への最後の切符を懸けた一発勝負。${crowd(m2)}`,q:'この一戦、あなたの決断は？',p:pq-.06,wj:8,wf:3,w:'プレーオフを勝ち抜き、本大会への切符をもぎ取った。',f:'力及ばず、本大会への道は閉ざされた。スタンドの沈黙が、すべてを物語っていた。',wcls:'big'});
+    qual=d.win;
+   }else qual=chance(pq-.06);
+   path=qual?'プレーオフを勝ち抜いて本大会へ':'プレーオフで敗退';
+  }
  }
- if(!qual){chg({joy:-8,fame:-1});say(`<p>アッズーリは予選で敗退した。本大会のピッチに、イタリアの青はなかった。</p>`,'bad');return}
+ say(`<h3>${nm} ${y} ${wc?'欧州予選':'予選'}</h3><p>${host}大会を目指す予選は${qm}試合。<b>${path}</b>。${injured?'あなたは故障のため、予選の大半を欠場した。':pS?'あなたも主力として予選を戦い抜いた。':'あなたは控えとして予選に貢献した。'}</p>`,qual?'':'bad');
+ if(!qual){chg({joy:-8,fame:-1});say(`<p>アッズーリは予選で敗退した。本大会のピッチに、イタリアの青はなかった。</p>`,'bad');mvNote();return}
  if(injured){say(`<h3>${nm} ${y}</h3><p>故障のため、代表メンバー入りは叶わなかった。テレビの前で、あなたはただ祈った。</p>`,'bad');return}
  if(!chance(.9)){say(`<h3>${nm} ${y}</h3><p>最終メンバー発表の電話は、鳴らなかった。</p>`,'bad');chg({joy:-10});return}
- // --- finals ---
- const matches=3+Math.min(w,4);
- const lines=[],used=[],grp=natGroup(w>=1);
- grp.forEach((r,j)=>{const v=pick(vens),op=natOpp(used,wc);used.push(op);lines.push({lab:`グループ第${j+1}戦`,op,sc:r==='W'?scW():r==='D'?scD():scL(),r,v})});
- const koRes=[];
- for(let st=1;st<=Math.min(w,4);st++){
-  const win=st<w||w===5,v=st===4?finalV:pick(vens.slice(1).concat([vens[0]])),op=natOpp(used,wc);used.push(op);
-  let sc=win?scW():scL(),pk=false;if(chance(.25)){pk=true;sc=win?'PK戦 4-3':'PK戦 3-4'}
-  lines.push({lab:natStageNm[st],op,sc,r:win?'W':'L',v,pk,st})
+ // ---- finals ----
+ const lines=[],used=[];let alive=true,champ=false,endK=0;
+ for(let k=0;k<stages.length&&alive;k++){
+  const sn=stages[k];
+  if(sn==='グループステージ'){
+   // matches 1 and 2 are simulated; the last group match is a decision (result AFTER the choice)
+   const rs=[],opps=[];let pts=0;
+   for(let j=0;j<2;j++){const op=natOpp(used,wc);used.push(op);const v=pick(vens);const x=Math.random(),r=x<pp?'W':x<pp+.22?'D':'L';pts+=r==='W'?3:r==='D'?1:0;lines.push({lab:`グループ第${j+1}戦`,op,r,sc:r==='W'?scW():r==='D'?scD():scL(),v})}
+   const third=hasThirds(y,wc);
+   let pAdv=pts>=6?1:pts===4?.8:pts===3?.55:pts===2?.4:pts===1?.3:.16;if(pts<6)pAdv=clamp(pAdv+(third?.08:0)+(IS-80)*.005,.05,.95);
+   const op=natOpp(used,wc);used.push(op);const v=pick(vens),m={side:'N',city:v[0],stad:v[1],opp:op};
+   let adv,res;
+   if(can&&pts<6){
+    const d=await decide(nat,{title:`${nm} グループステージ最終戦`,m,body:`2試合を終えて勝点${pts}。${pts>=4?'引き分けでも道は開けるが、油断はできない。':'勝たなければ、大会を去ることになる。'}${crowd(m)}`,q:'最終戦、あなたの決断は？',p:pAdv,wj:7,wf:3,w:'見事に勝ち切り、決勝トーナメント進出を決めた。',f:'勝ち切れず、他会場の結果を待つしかなかった。',wcls:'big'});
+    adv=d.win;res=adv?'W':chance(.4)?'D':'L';
+   }else{adv=chance(pAdv);res=adv?(pts>=6?pick(['W','D']):'W'):chance(.5)?'L':'D'}
+   lines.push({lab:'グループ最終戦',op,r:res,sc:res==='W'?scW():res==='D'?scD():scL(),v});
+   if(!adv){alive=false;endK=0}
+   used.length=0;
+  }else{
+   const fin=sn==='決勝',op=natOpp(used,wc);used.push(op);
+   const v=fin?finalV:pick(vens.slice(1).concat([vens[0]])),m={side:'N',city:v[0],stad:v[1],opp:op};
+   const pT=clamp(pp-.015*k,.2,.85),pre=chance(pT);let won=pre;
+   if(can&&(!pre||fin)){
+    const lab=wc?'世界':'欧州';
+    const d=await decide(nat,{title:`${nm} ${sn}`,m,body:`${fin?lab+'の頂点を懸けた90分。':'負ければ終わりの一発勝負。'}${esc(op)}との一戦、${crowd(m)}国歌のあと、アッズーリのジャージを着たあなたは、ピッチに立った。`,q:fin?'決勝、あなたの決断は？':'この大一番、あなたの決断は？',p:pT,wj:fin?20:7,wf:fin?10:4,
+     w:fin?pick(['延長戦の末の勝利。','PK戦を制して、世界一。','1点を守り抜いて、勝利。']).replace('世界一',wc?'世界一':'欧州王者')+`${nm}優勝。歓喜の輪の中で、あなたは膝から崩れ落ちた。`:pick(['苦しみ抜いて、勝ち上がった。','PK戦を制し、次のラウンドへ。']),
+     f:fin?`あと一歩届かなかった。${nm}準優勝。銀メダルの重さは、金のそれより重かった。`:pick(['力及ばず、大会を去ることになった。','最後の笛。ピッチに座り込んだまま、動けなかった。']),wcls:fin?'big':'good'});
+    won=d.win;
+   }
+   const pk=chance(.22);
+   lines.push({lab:sn,op,r:won?'W':'L',sc:pk?(won?'PK戦 4-3':'PK戦 3-4'):(won?scW():scL()),v});
+   if(won){if(fin){champ=true;alive=false;endK=k}}else{alive=false;endK=k}
+  }
  }
- // appearance share
+ // summary
+ const matches=lines.length;
  const share=pS?1:.5,games=Math.max(1,Math.round(matches*share));
- let tg=S.pos==='GK'?0:Math.round(games*(pS?.9:.6)*rate[S.pos].g*Math.pow(o/75,3)*(1+gauss()*.3));tg=Math.max(0,tg);
- // key moment (always, if the player is a regular)
- let keySt=-1;
- if(pS){const played=lines.length-3+1;keySt=(w>=4)?4:(chance(.5)?Math.min(w,4):ri(0,Math.min(w,4)))}
- // tournament summary
+ const wlabel=champ?'優勝':stageLabel(stages,endK,false);
+ let tg=S.pos==='GK'?0:Math.round(games*(pS?.9:.6)*rate[S.pos].g*Math.pow(o/75,3)*(1+gauss()*.3));tg=Math.max(0,tg);tg=Math.max(tg,nat.g);
+ S.capGoals+=tg;S.caps+=games;S.wcs.push(y);
  const li=lines.map(l=>`<li><b>${l.lab}</b>　vs ${esc(l.op)}　${l.r==='W'?'○':l.r==='D'?'△':'●'} ${l.sc}<small>${esc(l.v[0])}／${esc(l.v[1])}</small></li>`).join('');
- say(`<h3>${nm} ${y}　${esc(host)}</h3><p>${pS?'主力としてメンバー入り':'メンバーに選出'}。大会の道のりを辿る。</p><ul class="mt">${li}</ul>`,'big');
- if(keySt>=0){
-  let l;
-  if(keySt===0)l={r:lines[2].r,v:lines[2].v,op:lines[2].op};
-  else l=lines.find(x=>x.st===keySt);
-  const won=keySt===0?(lines[2].r==='W'):(keySt<w||w===5);
-  const mm=keySt===4?{side:'N',city:finalV[0],stad:finalV[1],opp:l.op}:{side:'N',city:l.v[0],stad:l.v[1],opp:l.op};
-  await natMoment(nm,keySt,won,mm,l.op,pS,keySt===0&&w>=1);
- }
- S.capGoals+=tg;S.caps+=games;
- S.wcs.push(y);
- let msg=`${w===4?'準優勝':wasStage[w]}${w>=1&&w<=3?'敗退':''}。${games}試合に出場、${S.pos==='GK'?'':tg+'得点。'}`;
- let cls='';
- if(w===5){honor(wc?'ワールドカップ優勝':'EURO優勝',wc?12:6);msg+=wc?'<br><b>イタリアは世界の頂点に立った。街という街で、緑・白・赤が夜明けまで揺れた。</b>':'<br><b>イタリアが欧州の頂点に立った。トロフィーを掲げたのは、あなたたちだった。</b>';cls='big';S.flags.natWin=y}
- else if(w===4){honor(wc?'ワールドカップ準優勝':'EURO準優勝',wc?4:2);msg+='<br>決勝で敗れ、準優勝。銀メダルの重さは、金のそれより重かった。'}
- else if(w===0)msg+='<br>屈辱的な早期敗退。帰国した空港で、サポーターの沈黙が耳に刺さった。';
+ say(`<h3>${nm} ${y}　${esc(host)}　大会の道のり</h3><p>${pS?'主力としてメンバー入り':'メンバーに選出'}。</p><ul class="mt">${li}</ul>`,champ?'big':'');
+ let msg=`<b>${wlabel}</b>。${games}試合に出場${S.pos==='GK'?'':'、'+tg+'得点'}。`;let cls='';
+ if(champ){honor(wc?'ワールドカップ優勝':'EURO優勝',wc?12:6);msg+=wc?'<br>イタリアは世界の頂点に立った。街という街で、緑・白・赤が夜明けまで揺れた。':'<br>イタリアが欧州の頂点に立った。トロフィーを掲げたのは、あなたたちだった。';cls='big';S.flags.natWin=y}
+ else if(wlabel==='準優勝'){honor(wc?'ワールドカップ準優勝':'EURO準優勝',wc?4:2);msg+='<br>決勝で敗れ、準優勝。銀メダルの重さは、金のそれより重かった。'}
+ else if(endK===0&&stages[0]==='グループステージ')msg+='<br>屈辱的な早期敗退。帰国した空港で、サポーターの沈黙が耳に刺さった。';
  else msg+='<br>敗退が決まった夜、ロッカールームには誰の声もなかった。';
  if(tg>=6){honor(nm+'得点王',3);msg+='<br>大会得点王に輝いた。'}
- const h=chg({fame:w===5?14:w>=3?7:w>=1?3:-2,joy:w===5?25:w>=3?6:w===0?-8:-2});
- say(`<h3>${nm} ${y}　総括</h3><p>${msg}</p><p>${h}</p>`,cls||(w===0?'bad':''));
- S.flags.tour={y,w};
+ const ki=champ?6:endK;
+ const h=chg({fame:champ?14:ki>=stages.length-2?7:ki>=1?3:-2,joy:champ?25:ki>=stages.length-2?6:ki===0?-8:-2});
+ say(`<h3>${nm} ${y}　総括</h3><p>${msg}</p><p>${h}</p>`,cls||(ki===0?'bad':''));
+ mvNote();
+ S.flags.tour={y,w:champ?5:wlabel==='準優勝'?4:Math.min(3,endK)};
 }
 /* ===== events ===== */
 const EVENTS=[];
@@ -1055,11 +1217,12 @@ EV('viral',2,()=>youth()&&S.age>=14&&ovr()>=45&&S.year>=2008,()=>scene('拡散�
 EV('rival',3,()=>youth()&&S.age>=14,()=>scene('ライバル出現',`同じポジションに${esc(S.rival)}が入ってきた。評判は上々で、すでに上の学年の練習にも呼ばれている。`,'どうする？',[
  {l:'負けないように、猛練習する',f:()=>({t:'練習後も居残り。結局、ポジションを争う二人は互いを磨き合った。',c:{tec:2,phy:2,health:-2}})},
  {l:'彼とも仲良くなる',f:()=>({t:'一緒にジェラートを食べるうちに、親友のようになった。いつか敵として対峙する日が来るのだろう。',c:{joy:5,iq:1}})}]));
-EV('growth',2,()=>youth()&&S.age>=13&&S.age<=16,()=>{
- const good=chance(.5);return say(`<h3>身体の変化</h3><p>${good?'この一年で身長が一気に10センチ伸びた。体がついてこないほどのスピードだったが、確かに視界は広がった。':'同級生が次々に背を伸ばす中、あなたの成長はなかなか訪れなかった。'}</p>${chg(good?{phy:3,joy:3}:{phy:-2,men:3,joy:-3})}`,'res')});
-EV('u17',3,()=>youth()&&S.age>=15&&S.age<=17&&ovr()>=46,async()=>{
- say(`<h3>U-17イタリア代表に初招集</h3><p>初めて袖を通した青いユニフォーム。胸の「FIGC」のエンブレムが、驚くほど誇らしかった。</p>`,'good');honor('U-17イタリア代表',1);S.ycaps+=ri(3,10);
- say(`<p>${chg({fame:3,joy:6,men:2})}</p>`,'res')});
+EV('growth',2,()=>youth()&&S.age>=13&&S.age<=16,()=>scene('身体の変化','この一年で身長が一気に伸びた。体がついてこないほどのスピードで、膝が痛む日もある。','どう向き合う？',[
+ {r:-2,l:'無理せず、フォームを整える',f:()=>({t:'体の使い方を一から学び直した。成長痛が引いたとき、視界は確かに広がっていた。',c:{phy:2,tec:1,joy:3}})},
+ {r:2,l:'筋トレで一気に追いつこうとする',f:()=>chance(.5)?{t:'体幹が一回り太くなった。ひと夏で、競り合いに負けなくなった。',c:{phy:3,joy:2}}:{t:'負荷をかけすぎて、一か月の離脱に。焦りだけが残った。',c:{phy:1,health:-3,joy:-4}}}]));
+EV('u17',3,()=>youth()&&S.age>=15&&S.age<=17&&ovr()>=46,()=>scene('U-17イタリア代表に初招集','初めて袖を通した青いユニフォーム。胸の「FIGC」のエンブレムが、驚くほど誇らしかった。','合宿で、あなたは？',[
+ {l:'全力で自分をアピールする',f:()=>{honor('U-17イタリア代表',1);S.ycaps+=ri(5,10);return chance(.55)?{t:'紅白戦で結果を出し、レギュラーを勝ち取った。',c:{fame:4,joy:8,men:2},k:'good'}:{t:'力みすぎてミスを連発。それでもベンチから見守る時間が、学びになった。',c:{fame:2,joy:2,men:2}}}},
+ {l:'周囲を観察して、学ぶ',f:()=>{honor('U-17イタリア代表',1);S.ycaps+=ri(3,6);return{t:'同世代のトップ選手たちの動きを吸収した。出場は少なかったが、視野は一気に広がった。',c:{fame:2,joy:5,iq:3}}}}]));
 EV('nightout',2,()=>youth()&&S.age>=16,()=>scene('夜の誘い','仲間に誘われた夜のパーティー。明日は朝から練習試合がある。「一晩くらい平気だって」','どうする？',[
  {r:6,l:'行く',f:()=>chance(.5)?{t:'ほんの少しの羽目外しのつもりが、翌日の試合でまるで足が動かなかった。コーチの視線が痛い。',c:{tec:-1,men:-1,joy:3,health:-3},k:'bad'}:{t:'ばれなかったが、後ろめたさは残った。楽しい夜ではあった。',c:{joy:6}}},
  {r:-5,l:'断って早く寝る',f:()=>({t:'翌日の試合は、体が軽かった。ストイックさが少し身についた。',c:{men:2,health:2}})}]));
@@ -1116,9 +1279,11 @@ EV('marriage',5,()=>pro()&&S.age>=23&&S.age<=36&&!S.spouse,()=>{
  return scene('結婚',`プロの暮らしの中で出会った${nm}。いつしか、帰る場所が彼女の隣になっていた。`,'どうする？',[
  {l:`プロポーズして結婚する`,f:()=>{S.spouse={name:nm,y:S.year};return{t:`${nm}はリングを見て泣いた。祖母は教会の最前列で、涙を拭っていた。ささやかな、でも最高の結婚式だった。`,c:{joy:15,fame:1,money:-20000},k:'good'}}},
  {l:'まだサッカーを優先する',f:()=>({t:'彼女は静かに頷いた。待つのか、去るのかは、まだ分からない。',c:{tec:1,joy:-3}})}])},true);
-EV('child',5,()=>(pro()||ret())&&S.spouse&&S.kids.length<3&&S.age<=44&&S.age>=24,async()=>{
- const g=chance(.5);const nm=g?pick(KID_F):pick(KID_M);S.kids.push({n:nm,g:g?'f':'m',y:S.year});
- say(`<h3>${nm}の誕生</h3><p>${esc(S.spouse.name)}の腕の中で、小さな命が泣いていた。試合の何倍もの緊張の中で、あなたは初めて父親になった。祖母は「名前はこの子の運命だよ」と言って、小さな靴下を編み始めた。</p>${chg({joy:15,men:3,fame:1})}`,'good')},true);
+EV('child',5,()=>(pro()||ret())&&S.spouse&&S.kids.length<3&&S.age<=44&&S.age>=24,()=>{
+ const g=chance(.5),nm=g?pick(KID_F):pick(KID_M),add=()=>S.kids.push({n:nm,g:g?'f':'m',y:S.year});
+ return scene(`${nm}の誕生`,`${esc(S.spouse.name)}が産気づいた。${pro()?'明日はリーグ戦だ。':''}`,'あなたは？',[
+ {l:'出産に立ち会う',f:()=>{add();return{t:'小さな命の泣き声を聞いた瞬間、試合の何倍もの緊張がほどけた。祖母は「名前はこの子の運命だよ」と、小さな靴下を編み始めた。',c:{joy:16,men:2,fame:1},k:'good'}}},
+ {l:pro()?'試合に出て、終わってから駆けつける':'仕事を終えてから向かう',f:()=>{add();return{t:chance(.6)?'試合後、病院に駆け込んだ。間に合った。腕の中で眠る小さな命に、涙が止まらなかった。':'間に合わなかった。それでも、腕に抱いた温もりは忘れられない。',c:{joy:10,fame:pro()?1:0,men:2}}}}])},true);
 EV('invest',2,()=>pro()&&S.money>=500000,()=>scene('投資話','古い友人が、新しいレストランチェーンへの出資話を持ってきた。「イタリア飯の新しい形だ」。','どうする？',[
  {l:'大胆に€300K出資する',f:()=>chance(.5)?{t:'数年後、店は大繁盛。出資額の何倍にもなって戻ってきた。',c:{money:900000}}:{t:'半年で店は潰れた。友人は逃げた。',c:{money:-300000,joy:-8},k:'bad'}},
  {l:'断って堅実に貯蓄',f:()=>({t:'地味だが確実な資産運用を続けた。',c:{money:Math.round(S.money*.04)}})}]));
@@ -1142,8 +1307,9 @@ EV('coachclash',2,()=>pro()&&S.role!=='ace',()=>scene('監督との確執','新�
  {l:'黙々と練習し、チャンスを待つ',f:()=>({t:'1ヶ月後、先発の選手が負傷。千載一遇のチャンスを、あなたは逃さなかった。',c:{men:3,fame:2,joy:3}})},
  {l:'監督に直談判する',f:()=>chance(.5)?{t:'真剣に話し合った結果、起用の道筋が示された。',c:{men:2,joy:3}}:{t:'「態度が悪い」と一蹴された。ベンチの時間は、さらに増えた。',c:{joy:-8,men:1},k:'bad'}}]));
 EV('u21',3,()=>pro()&&S.age>=19&&S.age<=21&&ovr()>=60&&!done('u21'),async()=>{
- const w=chance(.45+ovr()/300);
- say(`<h3>U-21欧州選手権</h3><p>イタリアU-21代表として臨んだ大会。${w?'決勝で宿敵を破り、若き青のジャージが欧州の頂に立った！':'準決勝で惜しくも敗れた。悔しさは、次のステップへの糧になった。'}</p>${chg({fame:w?6:2,joy:w?12:-2,men:2})}`,w?'big':'res');if(w)honor('U-21欧州選手権優勝',3);honor('U-21イタリア代表',0)});
+ const nat={g:0,as:0,team:0},m={side:'N',city:'ブダペスト',stad:'プスカーシュ・アレーナ',opp:pick(['ドイツU-21','スペインU-21','フランスU-21','イングランドU-21'])};
+ const d=await decide(nat,{title:'U-21欧州選手権 決勝',m,body:`イタリアU-21代表として臨んだ大会。決勝の相手は${m.opp}。${crowd(m)}`,q:'決勝、あなたの決断は？',p:.45+ovr()/300,wj:12,wf:6,lj:-2,lf:2,w:'決勝で宿敵を破り、若き青のジャージが欧州の頂に立った！',f:'あと一歩届かなかった。悔しさは、次のステップへの糧になった。',wcls:'big'});
+ if(d.win)honor('U-21欧州選手権優勝',3);honor('U-21イタリア代表',0)});
 EV('license',2,()=>pro()&&S.age>=31&&!S.flags.license,()=>scene('コーチングライセンス','コヴェルチャーノで、指導者ライセンスの講座が始まる。引退後を見据えるなら、今から始めるのが良い。','どうする？',[
  {l:'受講する',f:()=>{S.flags.license=1;return{t:'現役を続けながら、ホワイトボードの前でノートを取る日々。戦術の見方が、少し変わった。',c:{iq:3,joy:-2}}}},
  {l:'今は現役に集中する',f:()=>({t:'まだ引退を考えたくない。ピッチの上の方がずっと居心地がいい。',c:{men:1}})}]));
@@ -1154,23 +1320,36 @@ EV('hotel',1,()=>pro()&&S.age>=24&&S.age<=36&&S.spouse&&S.fame>=40,()=>scene('�
  {l:'オフを丸ごと彼女と過ごす',f:()=>({t:'二人でトスカーナの田舎道を歩いた。「あなたが好きなのは、まだ私だったのね」と彼女は笑った。',c:{joy:12,tec:-1}})},
  {l:'「シーズンが終われば落ち着く」と答える',f:()=>chance(.45)?{t:'彼女は静かに頷いたが、翌年、荷物をまとめて去っていった。',c:{joy:-25,fame:-2},k:'bad',_div:1}:{t:'何とか持ちこたえたが、距離は縮まらなかった。',c:{joy:-6}}}]));
 /* --- retired --- */
-EV('grand',3,()=>ret()&&S.kids.length&&S.age>=55,()=>say(`<h3>孫の誕生</h3><p>${esc(S.kids[0].n)}に子どもが生まれた。まだ目も開かない孫は、あなたの指をぎゅっと握った。「おじいちゃんは昔、ボールを蹴っていたんだよ」と、いつか話そう。</p>${chg({joy:12})}`,'good'));
+EV('grand',3,()=>ret()&&S.kids.length&&S.age>=55,()=>scene('孫の誕生',`${esc(S.kids[0].n)}に子どもが生まれた。まだ目も開かない孫は、あなたの指をぎゅっと握った。`,'あなたは？',[
+ {l:'すぐに駆けつけて抱く',f:()=>({t:'「おじいちゃんは昔、ボールを蹴っていたんだよ」。いつか話そう、と思った。',c:{joy:12,health:1},k:'good'})},
+ {l:'古いボールにサインして贈る',f:()=>({t:'小さな手がボールを抱きしめた。何十年後かに、このボールが物語になる。',c:{joy:9,fame:1}})}]));
 EV('reunion',3,()=>ret()&&S.age>=45,()=>scene('同窓会','かつてのチームメイトたちが、現役時代の話をしにやってきた。バールの奥の大きなテーブルが、すぐに満席になった。','どんな話をする？',[
  {l:'あの日の決勝点を語る',f:()=>({t:'笑い声と、少し潤んだ目。あの日のスタジアムの音が、記憶の中でまだ鳴っていた。',c:{joy:10}})},
  {l:'みんなの「今」を聞く',f:()=>({t:'社長になった者、監督になった者、病気と闘う者。年月は誰にも等しく流れていた。',c:{joy:6,iq:1}})}]));
-EV('hall',2,()=>ret()&&S.fame>=55&&S.age>=45,()=>say(`<h3>殿堂入り</h3><p>イタリア・サッカー殿堂から、あなたの名前が呼ばれた。壇上で、${S.spouse?esc(S.spouse.name)+'と':''}母が拍手してくれていた。「僕はただ、ボールが好きだっただけです」とスピーチで言うと、会場は暖かい笑いに包まれた。</p>${chg({fame:6,joy:12})}`,'big'));
+EV('hall',2,()=>ret()&&S.fame>=55&&S.age>=45,()=>scene('殿堂入り','イタリア・サッカー殿堂から、あなたの名前が呼ばれた。壇上のスピーチを任されている。','どんなスピーチをする？',[
+ {l:'「僕はただ、ボールが好きだっただけです」',s:'素朴に',f:()=>({t:'会場は暖かい笑いに包まれた。母の拍手が、一番大きく聞こえた。',c:{fame:6,joy:12},k:'big'})},
+ {l:'共に戦った仲間と監督の名前を挙げる',s:'感謝を伝える',f:()=>({t:'名前を呼ばれた旧友たちが、客席で目頭を押さえていた。',c:{fame:4,joy:14,men:1},k:'big'})}]));
 EV('healthchk',3,()=>ret()&&S.age>=50,()=>scene('健康診断','医師は言った。「現役時代の膝が、そろそろ悲鳴を上げていますね」。','どうする？',[
  {l:'毎日散歩とストレッチを続ける',f:()=>({t:'地元の公園で、顔なじみのおじいさんたちと散歩する朝。悪くない。',c:{health:8,joy:3}})},
  {l:'今まで通り暮らす',f:()=>({t:'好きなものを食べて、好きなだけ飲んだ。ただ体は、素直だった。',c:{health:-5,joy:3}})}]));
 EV('kidball',3,()=>ret()&&S.kids.length&&S.age>=40&&S.age<=60,()=>scene('子どもがボールを蹴り始めた',`${esc(S.kids[0].n)}が、あなたの古いボールを抱えて庭に出てきた。「パパ、教えて」。`,'どうする？',[
  {l:'ボールを蹴って、一緒に遊ぶ',f:()=>({t:'下手くそな子のシュートが、不意に枠を捉えた。「ほら、できた！」二人で大笑いした。',c:{joy:12}})},
  {l:'サッカー以外の道もあることを話す',f:()=>({t:'「パパみたいになりたいんだけどな」。子の言葉に、胸の奥が熱くなった。',c:{joy:6,iq:1}})}]));
-EV('plaza',2,()=>ret()&&S.fame>=50&&S.age>=50,()=>say(`<h3>広場の名前</h3><p>${esc(S.city)}のあの広場に、あなたの名前が付けられることになった。除幕式で、見知らぬ少年がボールを抱えて叫んだ。「僕もいつかここから出ていくよ！」</p>${chg({fame:4,joy:10})}`,'good'));
-EV('lastvisit',3,()=>ret()&&S.age>=75,()=>say(`<h3>最後の帰郷</h3><p>${esc(S.city)}に戻った。あの広場も、バールも、少し小さく見えた。小さな少年たちがボールを蹴っている。あなたは、ベンチに腰掛けて、ずっとその様子を眺めていた。</p>${chg({joy:12})}`,'good'));
-EV('oldfriend',3,()=>ret()&&S.age>=65&&S.flags.friendTight,()=>say(`<h3>旧友の訃報</h3><p>${esc(S.friend)}が亡くなったと知らされた。葬儀の日、棺の上には、あの日二人で蹴ったボールが置かれていた。</p>${chg({joy:-10,health:-2})}`,'bad'));
-EV('spouseloss',2,()=>ret()&&S.spouse&&S.age>=72&&!S.flags.widow,()=>{S.flags.widow=1;return say(`<h3>別れ</h3><p>長年連れ添った${esc(S.spouse.name)}が、静かに旅立った。手を握ったまま、あなたは長いあいだ、その場から動けなかった。</p>${chg({joy:-25,health:-6})}`,'bad')});
-EV('monument',1.5,()=>ret()&&S.fame>=65&&S.age>=60,()=>say(`<h3>銅像</h3><p>${cname(S.lastClub||S.club)||'故郷'}のスタジアム前に、あなたの銅像が建てられた。除幕の日、ファンの老若男女が列をなした。「ここに立つ自分を、あの子供の頃の自分に見せたい」と、あなたは思った。</p>${chg({fame:3,joy:12})}`,'big'));
-/* ===== more childhood events (randomised; each game draws different ones) ===== */
+EV('plaza',2,()=>ret()&&S.fame>=50&&S.age>=50,()=>scene('広場の名前',`${esc(S.city)}のあの広場に、あなたの名前が付けられることになった。除幕式が開かれる。`,'どうする？',[
+ {l:'集まった少年たちとボールを蹴る',f:()=>({t:'少年が叫んだ。「僕もいつかここから出ていくよ！」。あなたは笑って、ボールを預けた。',c:{fame:4,joy:12},k:'good'})},
+ {l:'静かに式典を見守る',f:()=>({t:'広場の石畳に刻まれた自分の名前を、何度も撫でた。',c:{fame:3,joy:9}})}]));
+EV('lastvisit',3,()=>ret()&&S.age>=75,()=>scene('最後の帰郷',`${esc(S.city)}に戻った。あの広場も、バールも、少し小さく見えた。小さな少年たちがボールを蹴っている。`,'あなたは？',[
+ {l:'ベンチに腰掛けて、眺め続ける',f:()=>({t:'日が暮れるまで、ずっとその様子を眺めていた。胸の奥が、じんわりと温かかった。',c:{joy:12}})},
+ {l:'少年たちの輪に入ってボールを蹴る',f:()=>chance(.7)?{t:'ボールが足に吸い付いた。少年たちが目を丸くした。「おじいちゃん、うまい！」',c:{joy:16,fame:1},k:'good'}:{t:'ふくらはぎがつった。しかし、笑いがこぼれた。',c:{joy:8,health:-2}}}]));
+EV('oldfriend',3,()=>ret()&&S.age>=65&&S.flags.friendTight,()=>scene('旧友の訃報',`${esc(S.friend)}が亡くなったと知らされた。棺の上には、あの日二人で蹴ったボールが置かれていた。`,'あなたは？',[
+ {l:'弔辞を読んで、思い出を語る',f:()=>({t:'あの広場の夕焼けを思い出した。言葉に詰まりながら、最後まで読み切った。',c:{joy:-4,men:2,fame:1}})},
+ {l:'一人で墓前に座って、静かに祈る',f:()=>({t:'ボールをそっと供えた。風が、遠い歓声のように聞こえた。',c:{joy:-8,health:-1}})}]));
+EV('spouseloss',2,()=>ret()&&S.spouse&&S.age>=72&&!S.flags.widow,()=>{S.flags.widow=1;return scene('別れ',`長年連れ添った${esc(S.spouse.name)}が、静かに旅立った。`,'あなたは？',[
+ {l:'家族と思い出を語り合う',f:()=>({t:'子どもたちと、笑いながら泣いた。写真の中の二人は、どれも少し照れていた。',c:{joy:-14,health:-2},k:'bad'})},
+ {l:'一人で静かに過ごす',f:()=>({t:'台所には、まだ彼女のエスプレッソの香りが残っていた。長いあいだ、その場から動けなかった。',c:{joy:-25,health:-6},k:'bad'})}])});
+EV('monument',1.5,()=>ret()&&S.fame>=65&&S.age>=60,()=>scene('銅像',`${cname(S.lastClub||S.club)||'故郷'}のスタジアム前に、あなたの銅像が建てられることになった。除幕の日が来た。`,'あなたは？',[
+ {l:'除幕式でスピーチをする',f:()=>({t:'ファンの老若男女が列をなした。「ここに立つ自分を、子供の頃の自分に見せたい」と、あなたは思った。',c:{fame:3,joy:12},k:'big'})},
+ {l:'遠くから静かに見守る',f:()=>({t:'人混みの後ろで、銅像が布を外されるのを眺めた。少し照れくさく、でも誇らしかった。',c:{fame:2,joy:10}})}]));/* ===== more childhood events (randomised; each game draws different ones) ===== */
 const kidAge=(a,b)=>()=>kid()&&S.age>=a&&S.age<=b;
 EV('fountain',3,kidAge(4,8),()=>scene('広場の噴水','蹴ったボールが、広場の噴水にぽちゃんと落ちた。通りがかりの大人たちが笑っている。','どうする？',[
  {r:2,l:'服のまま飛び込んで取りに行く',f:()=>chance(.6)?{t:'びしょ濡れで取り返し、拍手が起きた。母には怒られたが、胸を張って帰った。',c:{men:2,joy:5}}:{t:'滑って転んで大泣きした。それでも、ボールは離さなかった。',c:{men:2,joy:-2}}},
@@ -1276,19 +1455,20 @@ async function initPost(t){
   const ks=Object.keys(SECT);
   const i=await ask('どんな事業を起こす？',ks.map(k=>({label:SECT[k].n,sub:SECT[k].sub})));
   P.sect=ks[i];P.size=1;P.corp=S.name.split(' ').pop()+' '+({food:'Ristorazione',academy:'Academy',brand:'Sportswear',estate:'Hotels',wine:'Vini',media:'Media'}[ks[i]]||'Group');
-  const j=await ask('創業の資金計画は？',[{label:'貯金の半分を投じて本格的に始める',sub:'中程度のリスク'},{label:'小さく始めて、育てる',sub:'堅実'},{label:'融資を受けて大きく勝負する',sub:'成功すれば大きいが、失敗すれば重い'}]);
+  const j=await ask('創業の資金計画は？',[{label:'貯金の半分を投じて本格的に始める',sub:'中程度のリスク'},{label:'小さく始めて、育てる',sub:'堅実'},{label:'融資を受けて大きく勝負する',sub:'成功すれば大きいが、失敗すれば重い'},...(S.fame>=25?[{label:'現役時代の人脈に出資を頼む',sub:`元チームメイトや、${S.lastClub&&C[S.lastClub]?cname(S.lastClub)+'時代の':''}知人が力を貸してくれるかも`}]:[])]);
   const V=Math.round(Math.max(S.money*.5,60000*infl(S.year)));
   let t2;
   if(j===0){P.size=2;t2='資金の半分を事業に注ぎ込んだ。';chg({money:-V})}
   else if(j===1){t2='小さな店構えから始めた。';chg({money:-Math.round(V*.2)})}
+  else if(j===3){const ok=chance(clamp(.45+S.fame/200-SECT[P.sect].risk*.1,.3,.85));P.size=ok?3:2;t2=ok?`${pick(['かつてのチームメイト','現役時代のスポンサー','元監督の紹介で出会った投資家'])}が出資を決めてくれた。人脈が、最大の資産だった。`:'何人かが力を貸してくれたが、資金は思うように集まらなかった。';chg({money:ok?0:-Math.round(V*.2),joy:ok?4:-2})}
   else{const ok=chance(.55-SECT[P.sect].risk*.2);P.size=ok?3:1;t2=ok?'融資を受けて大きく出た。立ち上げは大成功だった。':'融資を受けて大きく出たが、立ち上げに苦戦した。';chg({money:ok?0:-Math.round(V*.6)})}
   P.title='実業家（'+SECT[P.sect].n+'）';
   say(`<h3>起業</h3><p>${t2}<b>${SECT[P.sect].tiers[P.size-1]}</b>としての船出だった。</p>`,'big');
  }else if(t==='media'){
   const ks=Object.keys(MSTYLE);
   const i=await ask('どんな解説者を目指す？',ks.map(k=>({label:MSTYLE[k][0],sub:MSTYLE[k][1]})));
-  P.style=ks[i];P.rep=clamp(15+S.fame*.4,10,60);P.title='解説者（'+MSTYLE[P.style][0]+'）';
-  say(`<h3>解説者として</h3><p>スタジオの照明の下で、あなたは<b>${MSTYLE[P.style][0]}</b>の道を選んだ。</p>`,'big');
+  P.style=ks[i];P.rep=clamp(15+S.fame*.4+(S.lastClub?3:0),10,60);P.title='解説者（'+MSTYLE[P.style][0]+'）';
+  say(`<h3>解説者として</h3><p>スタジオの照明の下で、あなたは<b>${MSTYLE[P.style][0]}</b>の道を選んだ。${S.lastClub&&S.fame>=20?`${esc(cname(S.lastClub))}時代に親しかった記者が、局に口をきいてくれた。`:''}</p>`,'big');
  }else if(t==='coach'||t==='sd'){
   const isC=t==='coach';P.cr=initCr();
   const opts=isC?[{label:'少年チームの指導者から下積みを始める',sub:'ライセンス取得と現場経験を積む'},{label:'古巣のコーチ（アシスタント）になる',sub:'監督の下で学ぶ'},{label:'いきなり下部リーグの監督に挑む',sub:'知名度を頼りに、経験不足を覚悟で'}]:[{label:'スカウトとして現場を回る',sub:'才能の見極め方を学ぶ'},{label:'育成ディレクターとしてクラブに入る',sub:'下部組織を預かる'},{label:'名声を活かして経営陣に直接入る',sub:'実務経験は乏しい'}];
@@ -1400,9 +1580,12 @@ async function managerStep(){
  let pool=Object.values(C).filter(c=>c.k!=='KID'&&avail(c)&&c.lv<=cr+3&&c.lv>=cr-16&&(LG[c.lg].ct==='IT'||cr>=70));
  if(!pool.length)pool=['D1','D2','D3','D4'].map(k=>C[k]);
  pool.sort(()=>Math.random()-.5);
- const picks=pool.filter(c=>c.k!==P.club).slice(0,3),opts=[],acts=[];
+ const hist=[...new Set(S.rows.filter(r=>!r.u&&C[r.k]&&r.k!=='KID').map(r=>r.k))];
+ const old=hist.filter(k=>k!==P.club&&avail(C[k])&&C[k].lv<=cr+3+Math.floor(S.fame/10)&&(LG[C[k].lg].ct==='IT'||cr>=70)).sort(()=>Math.random()-.5).slice(0,chance(.4+S.fame/200)?2:1);
+ const cont=new Set(old);
+ const picks=[...old.map(k=>C[k]),...pool.filter(c=>c.k!==P.club&&!cont.has(c.k))].slice(0,3),opts=[],acts=[];
  if(P.club){opts.push({label:`${cname(P.club)}で続ける`,sub:`現在の役職：${P.title}`});acts.push({k:P.club})}
- for(const c of picks){opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）の${isC?'監督':'強化担当'}に就く`,sub:c.lv>cr+1?'格上のクラブ。挑戦になる':c.lv<cr-6?'格下のクラブ。確実に成績を残せる':'実力相応のクラブ'});acts.push({k:c.k})}
+ for(const c of picks){opts.push({label:`${cname(c.k)}（${LG[c.lg].n}）の${isC?'監督':'強化担当'}に就く`,sub:cont.has(c.k)?`かつて所属した縁で、声がかかった${c.lv>cr+1?'（格上のクラブ）':''}`:c.lv>cr+1?'格上のクラブ。挑戦になる':c.lv<cr-6?'格下のクラブ。確実に成績を残せる':'実力相応のクラブ'});acts.push({k:c.k})}
  if(isC&&cr>=85&&S.caps>=10&&!P.nat){opts.push({label:'イタリア代表の監督に就く',sub:'ワールドカップ・欧州選手権を戦う'});acts.push({nat:1})}
  say(`<h3>${S.age}歳　次のポスト</h3><p>${P.title}${P.club?'（'+esc(cname(P.club))+'）':''}。${isC?'ベンチの経験を重ねるたび、選手時代に見えなかった景色が見えてきた。':'クラブの運営を学ぶたび、ピッチの外にも勝負があると知った。'}</p>`);
  const a=acts[await ask(isC?'次の指揮官のポストは？':'次のポストは？',opts)];
@@ -1580,6 +1763,7 @@ async function runEvents(mode,count){
   if(!ev.rep)S.flags['d_'+ev.id]=1;
   AUTO=!(mode==='all'||(mode==='imp'&&IMP.has(ev.id)));
   try{await ev.run()}finally{AUTO=false}
+  mvNote();
   if(S.flags.forceRetire)break;
  }
 }
@@ -1637,6 +1821,7 @@ async function childStep(){
 async function yearFlow(){
  const a=S.age;
  if(S.lv==='youth'||S.lv==='pro'){if(a===15){await stylePrompt()}else autoFocus()}
+ S.mvYear=marketValue();S.mvLast=S.mvYear;
  if(S.lv==='youth'){
   await runEvents(a===15?'auto':'imp',a===15?1:undefined);
   const miss=await injuryEvent();await playSeason(miss);
@@ -1727,15 +1912,16 @@ async function title(){
  RUN++;AUTO=false;setSheet(false);S=null;feed.innerHTML='';act.innerHTML='';renderCard();
  const sv=loadSave();
  const wrap=document.createElement('div');wrap.className='title-screen';
- wrap.innerHTML=`<div class="psub" style="letter-spacing:.14em">ITALIA ・ CALCIO ・ VITA</div><h2>イタリアに生まれ、<br>ボールとともに生きて、死ぬ。</h2><p>0歳から最期の日まで。名前も、生まれた町も、才能も、選べるのはほんの一部だけ。<br>ポジション、移籍、恋、スキャンダル、そして引退後の人生まで。サッカー選手の一生を、追体験しよう。</p><label for="nm">あなたの名前（空欄ならイタリア風の名前がランダムで付きます）</label><input id="nm" maxlength="24" autocomplete="off" placeholder="例：Luca Ferrari"><label for="rg">生まれる場所</label><select id="rg"><option value="-1">おまかせ（ランダム）</option>${REGIONS.map((r,i)=>`<option value="${i}">${r.n}州</option>`).join('')}</select><label for="era">生まれる年（1970年から5年刻み。選んだ年から人生が始まります）</label><select id="era"><option value="-1">おまかせ（ランダム）</option>${BYEARS.map(y=>`<option value="${y}">${y}年${y===2026?'（現在）':''}</option>`).join('')}</select>`;
+ wrap.innerHTML=`<div class="psub" style="letter-spacing:.14em">ITALIA ・ CALCIO ・ VITA</div><h2>イタリアに生まれ、<br>ボールとともに生きて、死ぬ。</h2><p>0歳から最期の日まで。名前も、生まれた町も、才能も、選べるのはほんの一部だけ。<br>ポジション、移籍、恋、スキャンダル、そして引退後の人生まで。サッカー選手の一生を、追体験しよう。</p><label for="nm">あなたの名前（空欄ならイタリア風の名前がランダムで付きます）</label><input id="nm" maxlength="24" autocomplete="off" placeholder="例：Luca Ferrari"><label for="rg">生まれる場所</label><select id="rg"><option value="-1">おまかせ（ランダム）</option>${REGIONS.map((r,i)=>`<option value="${i}">${r.n}州</option>`).join('')}</select><label for="era">生まれる年（1970年から1年刻み。選んだ年から人生が始まります）</label><select id="era"><option value="-1">おまかせ（ランダム）</option>${BYEARS.map(y=>`<option value="${y}">${y}年${y===2026?'（現在）':''}</option>`).join('')}</select><label>進行スピード（全人生を通しでプレイした場合の目安時間）</label><div class="spd" role="group" aria-label="進行スピード">${['ゆっくり','ふつう','はやい'].map((n,i)=>`<button type="button" data-sp="${i}" aria-pressed="${i===SPEED}"><b>${n}</b><span>100字を${T100[i]}秒で読む想定</span><em>約${estMin(i)}</em></button>`).join('')}</div><p class="psub" style="margin:6px 0 0">所要時間 ＝ 選択（判断）1回につき${DECIDE_SEC}秒 ＋ 本文の文字数÷100×読む秒数。平均で判断およそ${EST.dec}回、本文およそ${Math.round(EST.chars/1000)*1000}字（ランダム人生の実測平均）。</p>`;
  feed.appendChild(wrap);
+ wrap.querySelectorAll('[data-sp]').forEach(b=>b.onclick=()=>{SPEED=+b.dataset.sp;wrap.querySelectorAll('[data-sp]').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#btn-speed').textContent='速度：'+['ゆっくり','ふつう','はやい'][SPEED]});
  const opts=[{label:'新しい人生を始める',sub:'出身と年代は上で選べます。家庭と才能はランダム'}];
  if(sv&&!sv.dead&&sv.age>=3)opts.push({label:`続きから（${sv.name}・${sv.age}歳）`,sub:'前回の自動保存から再開'});
  const i=await ask(null,opts);
  const nm=($('#nm')?$('#nm').value.trim():'').slice(0,24);
  const rgv=$('#rg')?$('#rg').value:'-1',erv=$('#era')?$('#era').value:'-1';
  feed.innerHTML='';
- if(i===1){S=sv;ensureKid();renderLog();renderCard();lifeLoop()}
+ if(i===1){S=sv;applyWorld(sv);if(!S.lgMap)S.lgMap={};if(!S.clubPrev)S.clubPrev={};ensureKid();renderLog();renderCard();lifeLoop()}
  else{S=newState(nm,+rgv,+erv);renderCard();lifeLoop()}
 }
 $('#btn-pause').onclick=()=>setPaused(!PAUSED);
