@@ -319,9 +319,9 @@ const growF=a=>{if(a>=25)return 1;for(let i=1;i<GROW.length;i++)if(a<=GROW[i][0]
 
 /* ===== state ===== */
 let S=null, tabSel='st', AUTO=false, RUN=0, PAUSED=false, SPEED=1, HOLD=0, sheetOpen=false;
-const PACES=[2400,1300,450], waiters=[];
+const PACES=[480,260,90], waiters=[];
 /* 読み上げ時間：100文字あたりの秒数（ゆっくり／ふつう／はやい）。判断1回は5秒 */
-const T100=[18,12,6],DECIDE_SEC=5;
+const T100=[3.6,2.4,1.2],DECIDE_SEC=5;
 const EST={dec:90,chars:26000}; // ランダム人生の実測平均（tools/measure）
 const estMin=i=>{const m=Math.round((EST.dec*DECIDE_SEC+EST.chars/100*T100[i])/60);return m>=60?Math.floor(m/60)+'時間'+(m%60?m%60+'分':''):m+'分'};
 const SAVE='vita-da-calciatore-v4';
@@ -386,7 +386,7 @@ const phase=()=>({child:'幼少期',kid:'少年期',youth:'ユース',pro:'プ�
 const feed=$('#feed'),act=$('#actions');
 const calmMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const toEnd=force=>requestAnimationFrame(()=>{const de=document.documentElement;const dist=de.scrollHeight-(window.scrollY+innerHeight);if(force||dist<800)window.scrollTo({top:de.scrollHeight,behavior:calmMotion?'auto':'smooth'})});
-function addEntry(h,c,store=true){if(store&&S){const L=h.replace(/<[^>]+>/g,'').length;S.chars=(S.chars||0)+L;S.charsTot=(S.charsTot||0)+L}const e=document.createElement('div');e.className='entry '+(c||'');e.innerHTML=h;feed.appendChild(e);if(store&&S)S.log.push({t:'e',h,c});if(/big/.test(c||''))HOLD=1500;toEnd();return e}
+function addEntry(h,c,store=true){if(store&&S){const L=h.replace(/<[^>]+>/g,'').length;S.chars=(S.chars||0)+L;S.charsTot=(S.charsTot||0)+L}const e=document.createElement('div');e.className='entry '+(c||'');e.innerHTML=h;feed.appendChild(e);if(store&&S)S.log.push({t:'e',h,c});if(/big/.test(c||''))HOLD=300;toEnd();return e}
 const say=(h,c)=>addEntry(h,c);
 function yrHead(){
  const af=affil(),h=`<b>${S.year}</b><span>${S.age}歳${af?'　'+esc(af.txt):''}</span><span class="ph">${phase()}</span>`;
